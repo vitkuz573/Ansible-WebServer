@@ -55,14 +55,14 @@
   tags:
   - copy_info_php
 
-- name: Create {{ http_host }} virtual host
+- name: Create virtual host
   template:
     src: "templates/apache.conf.j2"
     dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
 
-- name: Enable {{ http_host }} virtual host
+- name: Enable virtual host
   command: sudo a2ensite {{ http_host }}
-  
+
 - name: Hide Apache version
   blockinfile:
     path: "/etc/apache2/apache2.conf"

@@ -6,16 +6,16 @@
   vars:
     packages:
     - ufw
-    
+
 - name: Set default policy
   ufw:
     policy: deny
-    
+
 - name: Set logging
   ufw:
     logging: full
-    
-- name: Deny all access to port {{ apache_port }}
+
+- name: Deny access to Apache port
   ufw:
     rule: deny
     port: "{{ apache_port }}"
@@ -23,7 +23,7 @@
   tags:
   - security
   - block_apache_port
-    
+
 - name: Allow OpenSSH
   ufw:
     rule: allow
