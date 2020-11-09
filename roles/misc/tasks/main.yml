@@ -1,0 +1,22 @@
+---
+- name: Update cache
+  apt:
+    update_cache: yes
+
+- name: Install prerequisites (deb packages)
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - sudo
+      - wget
+      - python-pip
+        
+- name: Install prerequisites (python2 packages)
+  pip:
+    name: setuptools
+    
+- name: Set hostname
+  hostname:
+    name: "{{ hostname }}"

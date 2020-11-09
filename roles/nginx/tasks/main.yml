@@ -1,0 +1,46 @@
+---
+- name: Install Nginx
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - nginx
+    
+- name: Remove default host
+  command: sudo rm /etc/nginx/sites-enabled/default
+    
+- name: Create host
+  template:
+    src: "templates/nginx.conf.j2"
+    dest: "/etc/nginx/sites-available/apache"
+    
+- name: Enable host
+  file:
+    src: "/etc/nginx/sites-available/apache"
+    dest: "/etc/nginx/sites-enabled/apache"
+    state: link
+    
+- name: Block access by IP
+  blockinfile:
+    path: "/etc/nginx/nginx.conf"
+    insertafter: "http {"
+    block: |
+      server {
+      listen 80 default_server;
+      server_name _;
+      return 444;
+      }
+  tags:
+  - security
+  - block_access_by_ip
+    
+- name: Hide Nginx version
+  lineinfile:
+    dest: "/etc/nginx/nginx.conf"
+    regexp: "server_tokens"
+    line: "server_tokens off;"
+  tags:
+  - security
+  - hide_nginx_version
+  notify: Restart Nginx

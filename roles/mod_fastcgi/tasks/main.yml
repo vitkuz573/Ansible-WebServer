@@ -1,0 +1,15 @@
+---
+- name: Install mod_fastcgi
+  apt:
+    deb: https://mirrors.edge.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
+    
+- name: Backup fastcgi.conf
+  command: sudo mv /etc/apache2/mods-enabled/fastcgi.conf /etc/apache2/mods-enabled/fastcgi.conf.backup
+
+- name: Configuring to use mod_fastcgi
+  template:
+    src: "templates/fastcgi.conf.j2"
+    dest: "/etc/apache2/mods-enabled/fastcgi.conf"
+  tags:
+  - mod_fastcgi
+  notify: Restart Apache

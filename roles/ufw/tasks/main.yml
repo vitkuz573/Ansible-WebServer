@@ -1,0 +1,44 @@
+---
+- name: Install UFW
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+    - ufw
+    
+- name: Set default policy
+  ufw:
+    policy: deny
+    
+- name: Set logging
+  ufw:
+    logging: full
+    
+- name: Deny all access to port {{ apache_port }}
+  ufw:
+    rule: deny
+    port: "{{ apache_port }}"
+    proto: tcp
+  tags:
+  - security
+  - block_apache_port
+    
+- name: Allow OpenSSH
+  ufw:
+    rule: allow
+    name: "OpenSSH"
+
+- name: Allow Nginx
+  ufw:
+    rule: allow
+    name: "Nginx HTTP"
+
+- name: Allow Apache
+  ufw:
+    rule: allow
+    name: "WWW"
+
+- name: Enable UFW
+  ufw:
+    state: enabled

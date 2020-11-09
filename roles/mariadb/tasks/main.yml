@@ -1,0 +1,44 @@
+---
+- name: Install MariaDB
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - mariadb-server
+      - python3-pymysql
+
+- name: Install PyMySQL
+  pip:
+    name: pymysql
+    state: present
+    
+- name: Set root password
+  mysql_user:
+    name: root
+    password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Remove all anonymous user accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Remove MySQL test database
+  mysql_db:
+    name: test
+    state: absent
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    
+- name: Edit my.cnf
+  blockinfile:
+    path: "/etc/mysql/my.cnf"
+    block: |
+      [mysqld]
+      bind-address = 127.0.0.1
+  tags:
+  - security
+  - bind-localhost
+  notify: Restart MariaDB

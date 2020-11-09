@@ -1,0 +1,75 @@
+---
+- name: Install Apache and PHP-FPM
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - apache2
+      - php-fpm
+
+- name: Backup ports.conf
+  command: sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.backup
+
+- name: Change port in ports.conf
+  copy:
+    content: "Listen {{ apache_port }}"
+    dest: "/etc/apache2/ports.conf"
+
+- name: Disable the default virtual host
+  command: sudo a2dissite 000-default
+
+- name: Create a new virtual host
+  command: sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/001-default.conf
+
+- name: Change port in virtual host
+  lineinfile:
+    dest: "/etc/apache2/sites-available/001-default.conf"
+    regexp: "^#?<VirtualHost"
+    line: "<VirtualHost *:{{ apache_port }}>"
+
+- name: Enable new virtual host
+  command: sudo a2ensite 001-default
+
+- name: Enable mod_actions
+  apache2_module:
+    name: actions
+    state: present
+
+- name: Creating directory for virtual host
+  file:
+    path: "/var/www/{{ http_host }}/html"
+    state: directory
+
+- name: Create index.html
+  template:
+    src: "templates/index.html.j2"
+    dest: "/var/www/{{ http_host }}/html/index.html"
+  tags:
+  - gen_index
+
+- name: Create info.php
+  copy:
+    src: "file/info.php"
+    dest: "/var/www/{{ http_host }}/html/info.php"
+  tags:
+  - copy_info_php
+
+- name: Create {{ http_host }} virtual host
+  template:
+    src: "templates/apache.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
+
+- name: Enable {{ http_host }} virtual host
+  command: sudo a2ensite {{ http_host }}
+  
+- name: Hide Apache version
+  blockinfile:
+    path: "/etc/apache2/apache2.conf"
+    block: |
+      ServerSignature Off
+      ServerTokens Prod
+  tags:
+  - security
+  - hide_apache_version
+  notify: Restart Apache

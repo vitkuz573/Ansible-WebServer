@@ -1,0 +1,26 @@
+---
+- name: Install mod_rpaf
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      libapache2-mod-rpaf
+
+- name: Load mod_rpaf
+  copy:
+    src: "files/rpaf.load"
+    dest: "/etc/apache2/mods-available/rpaf.load"
+
+- name: Configure mod_rpaf
+  template:
+    src: "templates/rpaf.conf.j2"
+    dest: "/etc/apache2/mods-available/rpaf.conf"
+
+- name: Enable mod_rpaf
+  apache2_module:
+    name: rpaf
+    state: present
+  tags:
+  - mod_rpaf
+  notify: Restart Apache
