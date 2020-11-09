@@ -22,4 +22,5 @@ There will also be some actions taken to ensure security:
 - Hiding Nginx and Apache versions
 - Blocking access to the Apache port
 - Blocking access to MariaDB from outside
+- Blocking access by IP address
 - Protecting Nginx from slow requests
