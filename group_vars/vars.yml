@@ -1,3 +1,5 @@
 ---
-apache_port: ""
-nginx_port: "80"
+  apache_port: ""
+  nginx_port: "80"
+
+  php_fpm_version: ""

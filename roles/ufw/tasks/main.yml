@@ -1,40 +1,55 @@
 ---
-- name: Install UFW
-  apt:
-    name: ufw
+  - name: Install UFW
+    apt:
+      name: ufw
+    tags:
+      - ufw
 
-- name: Set default policy
-  ufw:
-    policy: deny
+  - name: Set default policy
+    ufw:
+      policy: deny
+    tags:
+      - ufw
 
-- name: Set logging
-  ufw:
-    logging: full
+  - name: Set logging
+    ufw:
+      logging: full
+    tags:
+      - ufw
 
-- name: Deny access to Apache port
-  ufw:
-    rule: deny
-    port: "{{ apache_port }}"
-    proto: tcp
-  tags:
-  - security
-  - block_apache_port
+  - name: Deny access to Apache port
+    ufw:
+      rule: deny
+      port: "{{ apache_port }}"
+      proto: tcp
+    tags:
+      - ufw
+      - security
+      - block_apache_port
 
-- name: Allow OpenSSH
-  ufw:
-    rule: allow
-    name: "OpenSSH"
+  - name: Allow OpenSSH
+    ufw:
+      rule: allow
+      name: "OpenSSH"
+    tags:
+      - ufw
 
-- name: Allow Nginx
-  ufw:
-    rule: allow
-    name: "Nginx HTTP"
+  - name: Allow Nginx
+    ufw:
+      rule: allow
+      name: "Nginx HTTP"
+    tags:
+      - ufw
 
-- name: Allow Apache
-  ufw:
-    rule: allow
-    name: "WWW"
+  - name: Allow Apache
+    ufw:
+      rule: allow
+      name: "WWW"
+    tags:
+      - ufw
 
-- name: Enable UFW
-  ufw:
-    state: enabled
+  - name: Enable UFW
+    ufw:
+      state: enabled
+    tags:
+      - ufw

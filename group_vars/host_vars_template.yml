@@ -1,4 +1,4 @@
 ---
-http_host: ""
-hostname: ""
-mysql_root_password: ""
+  http_host: ""
+  hostname: ""
+  mysql_root_password: ""

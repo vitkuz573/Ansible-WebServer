@@ -1,52 +1,52 @@
 ---
-- name: Install MariaDB
-  apt:
-    pkg:
-      - mariadb-server
-      - python3-pymysql
-  tags:
-    - mariadb
+  - name: Install MariaDB
+    apt:
+      pkg:
+        - mariadb-server
+        - python3-pymysql
+    tags:
+      - mariadb
 
-- name: Install PyMySQL
-  pip:
-    name: pymysql
-    state: present
-  tags:
-    - mariadb
+  - name: Install PyMySQL
+    pip:
+      name: pymysql
+      state: present
+    tags:
+      - mariadb
 
-- name: Set root password
-  mysql_user:
-    name: root
-    password: "{{ mysql_root_password }}"
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-  tags:
-    - mariadb
+  - name: Set root password
+    mysql_user:
+      name: root
+      password: "{{ mysql_root_password }}"
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+    tags:
+      - mariadb
 
-- name: Remove all anonymous user accounts
-  mysql_user:
-    name: ''
-    host_all: yes
-    state: absent
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-  tags:
-    - mariadb
+  - name: Remove all anonymous user accounts
+    mysql_user:
+      name: ''
+      host_all: yes
+      state: absent
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+    tags:
+      - mariadb
 
-- name: Remove MySQL test database
-  mysql_db:
-    name: test
-    state: absent
-    login_unix_socket: /var/run/mysqld/mysqld.sock
-  tags:
-    - mariadb
+  - name: Remove MySQL test database
+    mysql_db:
+      name: test
+      state: absent
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+    tags:
+      - mariadb
 
-- name: Edit my.cnf
-  blockinfile:
-    path: "/etc/mysql/my.cnf"
-    block: |
-      [mysqld]
-      bind-address = 127.0.0.1
-  tags:
-    - mariadb
-    - security
-    - bind-localhost
-  notify: Restart MariaDB
+  - name: Edit my.cnf
+    blockinfile:
+      path: "/etc/mysql/my.cnf"
+      block: |
+        [mysqld]
+        bind-address = 127.0.0.1
+    tags:
+      - mariadb
+      - security
+      - bind-localhost
+    notify: Restart MariaDB
