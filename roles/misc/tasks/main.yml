@@ -5,18 +5,15 @@
 
 - name: Install prerequisites (deb packages)
   apt:
-    name: "{{ packages }}"
-    state: latest
-  vars:
-    packages:
+    pkg:
       - sudo
       - wget
       - python-pip
-        
+
 - name: Install prerequisites (python2 packages)
   pip:
     name: setuptools
-    
+
 - name: Set hostname
   hostname:
     name: "{{ hostname }}"

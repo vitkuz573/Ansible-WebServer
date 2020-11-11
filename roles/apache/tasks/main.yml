@@ -1,40 +1,31 @@
 ---
 - name: Install Apache and PHP-FPM
   apt:
-    name: "{{ packages }}"
-    state: latest
-  vars:
-    packages:
+    pkg:
       - apache2
       - php-fpm
 
-- name: Backup ports.conf
-  command: sudo mv /etc/apache2/ports.conf /etc/apache2/ports.conf.backup
-
 - name: Change port in ports.conf
-  copy:
-    content: "Listen {{ apache_port }}"
-    dest: "/etc/apache2/ports.conf"
-
-- name: Disable the default virtual host
-  command: sudo a2dissite 000-default
-
-- name: Create a new virtual host
-  command: sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/001-default.conf
-
-- name: Change port in virtual host
   lineinfile:
-    dest: "/etc/apache2/sites-available/001-default.conf"
+    dest: "/etc/apache2/ports.conf"
+    regexp: "^#?Listen"
+    line: "Listen {{ apache_port }}"
+
+- name: Change port in 000-default.conf
+  lineinfile:
+    dest: "/etc/apache2/sites-available/000-default.conf"
     regexp: "^#?<VirtualHost"
     line: "<VirtualHost *:{{ apache_port }}>"
-
-- name: Enable new virtual host
-  command: sudo a2ensite 001-default
 
 - name: Enable mod_actions
   apache2_module:
     name: actions
     state: present
+
+- name: Create virtual host
+  template:
+    src: "templates/apache.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
 
 - name: Creating directory for virtual host
   file:
@@ -47,18 +38,6 @@
     dest: "/var/www/{{ http_host }}/html/index.html"
   tags:
   - gen_index
-
-- name: Create info.php
-  copy:
-    src: "file/info.php"
-    dest: "/var/www/{{ http_host }}/html/info.php"
-  tags:
-  - copy_info_php
-
-- name: Create virtual host
-  template:
-    src: "templates/apache.conf.j2"
-    dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
 
 - name: Enable virtual host
   command: sudo a2ensite {{ http_host }}

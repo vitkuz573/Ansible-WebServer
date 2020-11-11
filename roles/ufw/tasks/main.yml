@@ -1,11 +1,7 @@
 ---
 - name: Install UFW
   apt:
-    name: "{{ packages }}"
-    state: latest
-  vars:
-    packages:
-    - ufw
+    name: ufw
 
 - name: Set default policy
   ufw:
