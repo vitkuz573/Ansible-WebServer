@@ -5,19 +5,9 @@ ____
 
 ## Usage
 
-Before running playbook, specify the Apache port (apache_port) and the PHP version (php_fpm_version) in the vars/vars.yml file. The value of the Nginx port (nginx_port) must be left at 80 to save access to the web server without specifying the port.
+Configure ssh authorization by keys on all hosts you want to deploy and run the init script, and then follow the instructions.
 
-Also create a file with individual host variables (the template is in the file vars/host_vars_template.yml) in which you specify:
-- domain name (http_host)
-- hostname (hostname)
-- password to access the DBMS (mysql_root_password)
-
-The file name format should be: ip_address.yml
-For example: 192.168.52.129.yml
-
-Finally, specify the ip addresses of hosts in the hosts.ini file.
-
-NOTE: before running playbook you need to set up ssh authorization by keys!
+NOTE: To save access to a web server without specifying a port, specify port 80 for Nginx.
 
 ## What will be installed and configured?
 - Nginx
