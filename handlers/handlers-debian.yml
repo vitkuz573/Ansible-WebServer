@@ -1,0 +1,24 @@
+---
+  - name: Restart Nginx (Debian)
+    service:
+      name: nginx
+      enabled: yes
+      state: restarted
+
+  - name: Restart Apache (Debian)
+    service:
+      name: apache2
+      enabled: yes
+      state: restarted
+
+  - name: Restart MariaDB (Debian)
+    service:
+      name: mariadb
+      enabled: yes
+      state: restarted
+
+  - name: Restart PHP-FPM (Debian)
+    service:
+      name: php{{ php_fpm_version }}-fpm
+      enabled: yes
+      state: restarted

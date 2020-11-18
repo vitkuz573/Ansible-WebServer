@@ -4,6 +4,8 @@
     vars_files:
       - ./vars/vars.yml
       - ./vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
+    handlers:
+      - include: handlers/handlers-debian.yml
     roles:
       - misc
       - apache
@@ -13,5 +15,3 @@
       - nginx
       - mariadb
       - ufw
-    handlers:
-      - include: handlers/main.yml

@@ -1,6 +1,3 @@
 ---
-  - name: Install PHP-FPM
-    apt:
-      name: php{{ php_fpm_version }}-fpm
-    tags:
-      - php-fpm
+  - include_tasks: "setup/setup-{{ ansible_os_family | lower }}.yml"
+  - include_tasks: "configure/configure-{{ ansible_os_family | lower }}.yml"
