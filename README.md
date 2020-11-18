@@ -5,9 +5,18 @@ ____
 
 ## Usage
 
-Before starting the playbook, specify the Apache port in the group_vars/vars.yml file. You can also specify the port for Nginx, but in order for the server to be available without specifying the port, you must leave the standard value - 80.
+Before running playbook, specify the Apache port (apache_port) and the PHP version (php_fpm_version) in the vars/vars.yml file. The value of the Nginx port (nginx_port) must be left at 80 to save access to the web server without specifying the port.
 
-You also need to fill in the hosts.ini file with the ip addresses of the hosts that you want to configure and create files in the group_vars folder with the name containing this ip address for each of the specified hosts, for example: 192.168.18.112.yml and define variables that are unique for this host. The format of this file is given in the group_vars/host_vars_template.yml file.
+Also create a file with individual host variables (the template is in the file vars/host_vars_template.yml) in which you specify:
+- domain name
+- hostname
+- password to access the DBMS
+The file name format should be: ip_address.yml
+For example: 192.168.52.129.yml
+
+Finally, specify the ip addresses of hosts in the hosts.ini file.
+
+NOTE: before running playbook you need to set up ssh authorization by keys!
 
 ## What will be installed and configured?
 - Nginx
