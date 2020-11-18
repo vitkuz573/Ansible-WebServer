@@ -1,9 +1,9 @@
 ---
-  - hosts: debian-servers
+  - hosts: debian
     gather_facts: yes
     vars_files:
-      - ./group_vars/vars.yml
-      - ./group_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
+      - ./vars/vars.yml
+      - ./vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
     roles:
       - misc
       - apache

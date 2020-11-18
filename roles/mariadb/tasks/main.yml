@@ -14,7 +14,7 @@
     tags:
       - mariadb
 
-  - name: Set root password
+  - name: Sets the root password
     mysql_user:
       name: root
       password: "{{ mysql_root_password }}"
@@ -22,23 +22,25 @@
     tags:
       - mariadb
 
-  - name: Remove all anonymous user accounts
+  - name: Removes all anonymous user accounts
     mysql_user:
       name: ''
       host_all: yes
       state: absent
-      login_unix_socket: /var/run/mysqld/mysqld.sock
+      login_user: root
+      login_password: "{{ mysql_root_password }}"
     tags:
       - mariadb
 
-  - name: Remove MySQL test database
+  - name: Removes the MySQL test database
     mysql_db:
       name: test
       state: absent
-      login_unix_socket: /var/run/mysqld/mysqld.sock
+      login_user: root
+      login_password: "{{ mysql_root_password }}"
     tags:
       - mariadb
-
+  
   - name: Edit my.cnf
     blockinfile:
       path: "/etc/mysql/my.cnf"
