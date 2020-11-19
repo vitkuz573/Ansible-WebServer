@@ -5,7 +5,7 @@ ____
 
 ## Usage
 
-Configure ssh authorization by keys on all hosts you want to deploy and run the init script, and then follow the instructions.
+Run the init script, and then follow the instructions.
 
 NOTE: To save access to a web server without specifying a port, specify port 80 for Nginx.
 
