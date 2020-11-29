@@ -2,30 +2,23 @@
   - name: Remove default host
     command: sudo rm /etc/nginx/sites-enabled/default
 
-  - name: Create host
+  - name: Create host (without HTTPS)
     template:
-      src: "templates/nginx.conf.j2"
+      src: "templates/nginx_http.conf.j2"
       dest: "/etc/nginx/sites-available/apache"
+    when: https_enabled == "no"
+
+  - name: Create host (with HTTPS)
+    template:
+      src: "templates/nginx_https.conf.j2"
+      dest: "/etc/nginx/sites-available/apache"
+    when: https_enabled == "yes"
 
   - name: Enable host
     file:
       src: "/etc/nginx/sites-available/apache"
       dest: "/etc/nginx/sites-enabled/apache"
       state: link
-
-  - name: Block access by IP
-    blockinfile:
-      path: "/etc/nginx/nginx.conf"
-      insertafter: "http {"
-      block: |
-        server {
-        listen 80 default_server;
-        server_name _;
-        return 444;
-        }
-    tags:
-      - security
-      - block_access_by_ip
 
   - name: Hide Nginx version
     lineinfile:
