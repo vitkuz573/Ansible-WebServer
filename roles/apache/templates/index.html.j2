@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <title>Добро пожаловать на {{ http_host }}</title>
+  <title>Добро пожаловать на {{ domain_name }}</title>
 </head>
 <body>
 
@@ -13,7 +13,7 @@
 <article>
  Краткая информация: <br><br>
  IP-адрес сервера: {{ ansible_ssh_host }} <br>
- Доменное имя: {{ http_host }} <br><br>
+ Доменное имя: {{ domain_name }} <br><br>
 
  ОС: {{ ansible_system }} <br>
  Семейство ОС: {{ ansible_os_family }} <br>

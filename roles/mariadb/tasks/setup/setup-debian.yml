@@ -6,3 +6,10 @@
         - python3-pymysql
     tags:
       - mariadb
+
+  - name: Install PyMySQL
+    pip:
+      name: pymysql
+      state: present
+    tags:
+      - mariadb

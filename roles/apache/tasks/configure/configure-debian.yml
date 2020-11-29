@@ -19,22 +19,22 @@
   - name: Create virtual host
     template:
       src: "templates/apache.conf.j2"
-      dest: "/etc/apache2/sites-available/{{ http_host }}.conf"
+      dest: "/etc/apache2/sites-available/{{ domain_name }}.conf"
 
   - name: Create directory for virtual host
     file:
-      path: "/var/www/{{ http_host }}/html"
+      path: "/var/www/{{ domain_name }}/html"
       state: directory
 
   - name: Create index.html
     template:
       src: "templates/index.html.j2"
-      dest: "/var/www/{{ http_host }}/html/index.html"
+      dest: "/var/www/{{ domain_name }}/html/index.html"
     tags:
       - gen_index
 
   - name: Enable virtual host
-    command: sudo a2ensite {{ http_host }}
+    command: sudo a2ensite {{ domain_name }}
 
   - name: Hide Apache version
     blockinfile:

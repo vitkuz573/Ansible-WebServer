@@ -19,6 +19,6 @@
 
   - name: Restart PHP-FPM (Debian)
     service:
-      name: php{{ php_fpm_version }}-fpm
+      name: php{{ php_version }}-fpm
       enabled: yes
       state: restarted

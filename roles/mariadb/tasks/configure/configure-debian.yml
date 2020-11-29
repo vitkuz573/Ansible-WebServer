@@ -1,15 +1,8 @@
 ---
-  - name: Install PyMySQL
-    pip:
-      name: pymysql
-      state: present
-    tags:
-      - mariadb
-
   - name: Set root password
     mysql_user:
       name: root
-      password: "{{ mysql_root_password }}"
+      password: "{{ mariadb_password }}"
       login_unix_socket: /var/run/mysqld/mysqld.sock
     tags:
       - mariadb
@@ -20,16 +13,16 @@
       host_all: yes
       state: absent
       login_user: root
-      login_password: "{{ mysql_root_password }}"
+      login_password: "{{ mariadb_password }}"
     tags:
       - mariadb
 
-  - name: Removs MySQL test database
+  - name: Remove test database
     mysql_db:
       name: test
       state: absent
       login_user: root
-      login_password: "{{ mysql_root_password }}"
+      login_password: "{{ mariadb_password }}"
     tags:
       - mariadb
 
