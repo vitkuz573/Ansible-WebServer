@@ -1,23 +1,23 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Добро пожаловать на {{ domain_name }}</title>
+  <title>Welcome to {{ domain_name }}</title>
 </head>
 <body>
 
 <header>
-<h1>Веб-сервер успешно развернут с помощью Ansible!</h1>
+<h1>Web server has been successfully deployed with Ansible!</h1>
 </header>
 
 <article>
- Краткая информация: <br><br>
- IP-адрес сервера: {{ ansible_ssh_host }} <br>
- Доменное имя: {{ domain_name }} <br><br>
+ Brief info: <br><br>
+ Server IP address: {{ ansible_ssh_host }} <br>
+ Domain name: {{ domain_name }} <br><br>
 
- ОС: {{ ansible_system }} <br>
- Семейство ОС: {{ ansible_os_family }} <br>
- Дистрибутив: {{ ansible_distribution }} {{ ansible_distribution_major_version }} {{ ansible_distribution_release }}<br>
- Имя хоста: {{ ansible_nodename }} <br>
- Пакетный менеджер: {{ ansible_pkg_mgr }} <br>
+ OS: {{ ansible_system }} <br>
+ OS Family: {{ ansible_os_family }} <br>
+ Distribution: {{ ansible_distribution }} {{ ansible_distribution_major_version }} {{ ansible_distribution_release }}<br>
+ Hostname: {{ ansible_nodename }} <br>
+ Package Manager: {{ ansible_pkg_mgr }} <br>
 </article>
