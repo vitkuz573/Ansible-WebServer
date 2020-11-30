@@ -1,11 +1,11 @@
 server {
     listen {{ nginx_port }};
     server_name {{ domain_name }} www.{{ domain_name }};
-	  root /var/www/{{ domain_name }}/html;
-	  index index.php index.html index.html;
-	  client_body_timeout {{ client_body_timeout }}s;
-	  client_header_timeout {{ client_header_timeout }}s;
-	  charset utf-8;
+    root /var/www/{{ domain_name }}/html;
+    index index.php index.html index.html;
+    client_body_timeout {{ client_body_timeout }}s;
+    client_header_timeout {{ client_header_timeout }}s;
+    charset utf-8;
 
     location / {
         try_files $uri $uri/ /index.php;
@@ -23,10 +23,10 @@ server {
         deny all;
     }
 
-	  location /nginx_status {
-		  stub_status on;
-		  access_log off;
-		  allow 127.0.0.1;
-		  deny all;
-	  }
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
 }

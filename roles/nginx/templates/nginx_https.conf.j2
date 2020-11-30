@@ -7,7 +7,7 @@ server {
     index index.php index.html index.html;
     return 301 https://$host:443$request_uri;
     client_body_timeout {{ client_body_timeout }}s;
-	  client_header_timeout {{ client_header_timeout }}s;
+    client_header_timeout {{ client_header_timeout }}s;
     charset utf-8;
 
     location / {
@@ -27,11 +27,11 @@ server {
     }
 
     location /nginx_status {
-		  stub_status on;
-		  access_log off;
-		  allow 127.0.0.1;
-		  deny all;
-	  }
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
 }
 
 server {
