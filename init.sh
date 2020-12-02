@@ -83,11 +83,7 @@ EOF
 read -p "To start deploying? [yes, no]: " answer_deploy
 
 if [[ $answer_deploy == "yes" ]] || [[ -z $answer_deploy ]]; then
-  ansible-
- 
-.yml
+  ansible-playbook playbook.yml
 else
-  echo "The deployment was aborted. To start the process, run ansible-
- 
-.yml"
+  echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml"
 fi
