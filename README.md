@@ -3,7 +3,12 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
 
 ## Usage
 
-Run the init.sh script, and then follow the instructions.
+First, install ansible:
+```
+pip3 install ansible
+```
+
+Then run init.sh and follow the instructions:
 ```
 chmod +x init.sh
 ./init.sh
@@ -27,7 +32,7 @@ NOTE: To save access to a web server without specifying a port, specify port 80 
 - Blocking access to MariaDB from outside
 - Protecting Nginx from slow requests
 
-# Into the plan
+# Roadmap
 
 - [X] Adding HTTPS support
 - [ ] Adding support for other OSes
