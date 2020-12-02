@@ -38,15 +38,15 @@ EOF
 touch vars/$server_ip.yml
 cat <<EOF> vars/$server_ip.yml
 ---
-  https_enabled: "$answer_https"
-  ssl_certificate_path: "$ssl_certificate_path"
-  ssl_certificate_key_path: "$ssl_certificate_key_path"
+https_enabled: "$answer_https"
+ssl_certificate_path: "$ssl_certificate_path"
+ssl_certificate_key_path: "$ssl_certificate_key_path"
 
-  domain_name: "$domain_name"
+domain_name: "$domain_name"
 
-  hostname: "$hostname"
+hostname: "$hostname"
 
-  mariadb_password: "$mariadb_password"
+mariadb_password: "$mariadb_password"
 EOF
 
 echo "Enter your account password on the destination host to copy the public key to it!"
@@ -71,19 +71,23 @@ read -p "Enter client header timeout: (example: 5): " client_header_timeout
 
 cat <<EOF> vars/vars.yml
 ---
-  apache_port: "$apache_port"
-  nginx_port: "$nginx_port"
+apache_port: "$apache_port"
+nginx_port: "$nginx_port"
 
-  php_version: "$php_version"
+php_version: "$php_version"
 
-  client_body_timeout: "$client_body_timeout"
-  client_header_timeout: "$client_header_timeout"
+client_body_timeout: "$client_body_timeout"
+client_header_timeout: "$client_header_timeout"
 EOF
 
 read -p "To start deploying? [yes, no]: " answer_deploy
 
 if [[ $answer_deploy == "yes" ]] || [[ -z $answer_deploy ]]; then
-  ansible-playbook playbook.yml
+  ansible-
+ 
+.yml
 else
-  echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml"
+  echo "The deployment was aborted. To start the process, run ansible-
+ 
+.yml"
 fi

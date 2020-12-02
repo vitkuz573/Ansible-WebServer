@@ -1,17 +1,17 @@
 ---
-  - hosts: debian
-    gather_facts: yes
-    vars_files:
-      - ./vars/vars.yml
-      - ./vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
-    handlers:
-      - include: handlers/handlers-debian.yml
-    roles:
-      - misc
-      - apache
-      - php-fpm
-      - mod_fastcgi
-      - mod_rpaf
-      - nginx
-      - mariadb
-      - ufw
+- hosts: debian
+  gather_facts: yes
+  vars_files:
+    - ./vars/vars.yml
+    - ./vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
+  handlers:
+    - include: handlers/handlers-debian.yml
+  roles:
+    - misc
+    - apache
+    - php-fpm
+    - mod_fastcgi
+    - mod_rpaf
+    - nginx
+    - mariadb
+    - ufw

@@ -1,4 +1,4 @@
 ---
-  - name: Install Nginx
-    apt:
-      name: nginx
+- name: Install Nginx
+  apt:
+    name: nginx

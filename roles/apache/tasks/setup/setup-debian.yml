@@ -1,4 +1,4 @@
 ---
-  - name: Install Apache
-    apt:
-      name: apache2
+- name: Install Apache
+  apt:
+    name: apache2

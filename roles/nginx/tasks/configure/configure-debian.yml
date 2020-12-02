@@ -1,31 +1,31 @@
 ---
-  - name: Remove default host
-    command: sudo rm /etc/nginx/sites-enabled/default
+- name: Remove default host
+  command: sudo rm /etc/nginx/sites-enabled/default
 
-  - name: Create host (without HTTPS)
-    template:
-      src: "templates/nginx_http.conf.j2"
-      dest: "/etc/nginx/sites-available/apache"
-    when: https_enabled == "no"
+- name: Create host (without HTTPS)
+  template:
+    src: "templates/nginx_http.conf.j2"
+    dest: "/etc/nginx/sites-available/apache"
+  when: https_enabled == "no"
 
-  - name: Create host (with HTTPS)
-    template:
-      src: "templates/nginx_https.conf.j2"
-      dest: "/etc/nginx/sites-available/apache"
-    when: https_enabled == "yes"
+- name: Create host (with HTTPS)
+  template:
+    src: "templates/nginx_https.conf.j2"
+    dest: "/etc/nginx/sites-available/apache"
+  when: https_enabled == "yes"
 
-  - name: Enable host
-    file:
-      src: "/etc/nginx/sites-available/apache"
-      dest: "/etc/nginx/sites-enabled/apache"
-      state: link
+- name: Enable host
+  file:
+    src: "/etc/nginx/sites-available/apache"
+    dest: "/etc/nginx/sites-enabled/apache"
+    state: link
 
-  - name: Hide Nginx version
-    lineinfile:
-      dest: "/etc/nginx/nginx.conf"
-      regexp: "server_tokens"
-      line: "server_tokens off;"
-    tags:
-      - security
-      - hide_nginx_version
-    notify: Restart Nginx (Debian)
+- name: Hide Nginx version
+  lineinfile:
+    dest: "/etc/nginx/nginx.conf"
+    regexp: "server_tokens"
+    line: "server_tokens off;"
+  tags:
+    - security
+    - hide_nginx_version
+  notify: Restart Nginx (Debian)
