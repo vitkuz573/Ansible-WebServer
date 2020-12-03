@@ -7,6 +7,10 @@ server {
     client_header_timeout {{ client_header_timeout }}s;
     charset utf-8;
 
+    if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+        return 444;
+    }
+
     location / {
         try_files $uri $uri/ /index.php;
     }
