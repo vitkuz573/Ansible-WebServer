@@ -1,0 +1,6 @@
+---
+- name: Restart MariaDB (Debian)
+  service:
+    name: mariadb
+    enabled: yes
+    state: restarted

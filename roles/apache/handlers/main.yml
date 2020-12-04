@@ -1,0 +1,6 @@
+---
+- name: Restart Apache (Debian)
+  service:
+    name: apache2
+    enabled: yes
+    state: restarted

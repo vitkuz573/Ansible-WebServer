@@ -4,8 +4,6 @@
   vars_files:
     - ./group_vars/vars.yml
     - ./host_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
-  handlers:
-    - include: handlers/handlers-{{ ansible_os_family | lower }}.yml
   roles:
     - misc
     - apache
