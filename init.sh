@@ -11,13 +11,17 @@ fi
 read -p "Enter the number of hosts: " hosts_number
 echo " "
 
-rm -R vars
-mkdir vars
+rm -R host_vars
+rm -R group_vars
+mkdir host_vars
+mkdir group_vars
 
 count=0
 
 while [ $count -lt $hosts_number ]
 do
+  echo "Configure host $count"
+  echo " "
   read -p "Enable HTTPS? [yes, no]: " answer_https
   if [[ $answer_https == "yes" ]] || [[ -z $answer_https ]]; then
     read -p "Enter SSL Certificate Path: " ssl_certificate_path
@@ -35,8 +39,8 @@ cat <<EOF> hosts.ini
 $server_ip
 EOF
 
-touch vars/$server_ip.yml
-cat <<EOF> vars/$server_ip.yml
+touch host_vars/$server_ip.yml
+cat <<EOF> host_vars/$server_ip.yml
 ---
 https_enabled: "$answer_https"
 ssl_certificate_path: "$ssl_certificate_path"
@@ -58,18 +62,20 @@ echo " "
 (( count++ ))
 done
 
+echo "Configuration of global parameters"
+echo " "
 echo "Web-Server Ports"
 read -p "Enter Apache port: " apache_port
 read -p "Enter Nginx port: " nginx_port
 echo " "
-echo "PHP Configuration"
+echo "PHP configuration"
 read -p "Enter PHP version: (example: 7.3): " php_version
 echo " "
-echo "Nginx Secure"
+echo "Nginx protection"
 read -p "Enter client body timeout: (example: 5): " client_body_timeout
 read -p "Enter client header timeout: (example: 5): " client_header_timeout
 
-cat <<EOF> vars/vars.yml
+cat <<EOF> group_vars/vars.yml
 ---
 apache_port: "$apache_port"
 nginx_port: "$nginx_port"

@@ -44,4 +44,8 @@ server {
     ssl_certificate_key {{ ssl_certificate_key_path }};
     index index.php index.html index.html;
     root /var/www/{{ domain_name }}/html;
+
+    if ($request_method !~ ^(GET|HEAD|POST)$ ) {
+        return 444;
+    }
 }
