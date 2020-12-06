@@ -36,3 +36,4 @@ NOTE: To save access to a web server without specifying a port, specify port 80 
 
 - [X] Adding HTTPS support
 - [ ] Adding support for other OSes
+    - [ ] RHEL7/CentOS7
