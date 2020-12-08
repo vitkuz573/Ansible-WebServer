@@ -25,7 +25,7 @@ do
   read -p "Enable HTTPS? [yes, no]: " answer_https
   if [[ $answer_https == "yes" ]] || [[ -z $answer_https ]]; then
     read -p "Enter SSL Certificate Path: " ssl_certificate_path
-    read -p "Enter SSL Certificate Key Path: "ssl_certificate_key_path
+    read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
   fi
   read -p "Enter IP: " server_ip
   read -p "Enter domain name: " domain_name
