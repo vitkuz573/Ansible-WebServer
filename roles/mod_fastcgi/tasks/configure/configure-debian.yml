@@ -1,7 +1,7 @@
 ---
 - name: Configure mod_fastcgi
   template:
-    src: "files/fastcgi.conf"
+    src: "templates/fastcgi.conf.j2"
     dest: "/etc/apache2/mods-enabled/fastcgi.conf"
   tags:
     - php-fpm
