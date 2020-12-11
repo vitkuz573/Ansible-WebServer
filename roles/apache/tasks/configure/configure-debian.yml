@@ -23,13 +23,13 @@
 
 - name: Create directory for virtual host
   file:
-    path: "/var/www/{{ domain_name }}/html"
+    path: "/var/www/{{ domain_name }}/public"
     state: directory
 
 - name: Create index.html
   template:
     src: "templates/index.html.j2"
-    dest: "/var/www/{{ domain_name }}/html/index.html"
+    dest: "/var/www/{{ domain_name }}/public/index.html"
   tags:
     - gen_index
 

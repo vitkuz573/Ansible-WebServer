@@ -28,12 +28,21 @@
   tags:
     - ufw
 
-- name: Allow Nginx
+- name: Allow Nginx HTTP
   ufw:
     rule: allow
     name: "Nginx HTTP"
   tags:
     - ufw
+  when: https_enabled == "no"
+
+- name: Allow Nginx Full
+  ufw:
+    rule: allow
+    name: "Nginx Full"
+  tags:
+    - ufw
+  when: https_enabled == "yes"
 
 - name: Allow Apache
   ufw:

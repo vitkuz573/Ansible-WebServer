@@ -1,31 +1,51 @@
 ---
-- name: Remove default host
-  command: sudo rm /etc/nginx/sites-enabled/default
+- name: Removing the default Nginx config
+  file:
+    state: absent
+    path: "/etc/nginx/nginx.conf"
+
+- name: Configure Nginx
+  template:
+    src: "files/nginx.conf"
+    dest: "/etc/nginx/nginx.conf"
+
+- name: Creating a directory for additional configuration files
+  file:
+    path: "/etc/nginx/ansiblewebserver.configs"
+    state: directory
+
+- name: Copying security.conf (without HTTPS)
+  copy:
+    src: "files/security_http.conf"
+    dest: "/etc/nginx/ansiblewebserver.configs/security.conf"
+  when: https_enabled == "no"
+
+- name: Copying security.conf (with HTTPS)
+  copy:
+    src: "files/security_https.conf"
+    dest: "/etc/nginx/ansiblewebserver.configs/security.conf"
+  when: https_enabled == "yes"
+
+- name: Copying general.conf
+  copy:
+    src: "files/general.conf"
+    dest: "/etc/nginx/ansiblewebserver.configs/general.conf"
 
 - name: Create host (without HTTPS)
   template:
-    src: "templates/nginx_http.conf.j2"
-    dest: "/etc/nginx/sites-available/apache"
+    src: "templates/domain_http.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
   when: https_enabled == "no"
 
 - name: Create host (with HTTPS)
   template:
-    src: "templates/nginx_https.conf.j2"
-    dest: "/etc/nginx/sites-available/apache"
+    src: "templates/domain_https.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
   when: https_enabled == "yes"
 
 - name: Enable host
   file:
-    src: "/etc/nginx/sites-available/apache"
-    dest: "/etc/nginx/sites-enabled/apache"
+    src: "/etc/nginx/sites-available/{{ domain_name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain_name}}.conf"
     state: link
-
-- name: Hide Nginx version
-  lineinfile:
-    dest: "/etc/nginx/nginx.conf"
-    regexp: "server_tokens"
-    line: "server_tokens off;"
-  tags:
-    - security
-    - hide_nginx_version
   notify: Restart Nginx (Debian)
