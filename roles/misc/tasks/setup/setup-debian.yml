@@ -1,15 +1,14 @@
 ---
-- name: Update cache
-  apt:
-    update_cache: yes
-
 - name: Install prerequisites (deb packages)
   apt:
+    update_cache: yes
     pkg:
       - sudo
       - wget
-      - python-pip
+      - python3-apt
+      - python3-pip
 
-- name: Install prerequisites (python2 packages)
+- name: Install prerequisites (python3 packages)
   pip:
     name: setuptools
+    executable: pip3

@@ -18,6 +18,12 @@ mkdir group_vars
 
 count=0
 
+rm hosts.ini
+touch hosts.ini
+cat <<EOF> hosts.ini
+[debian]
+EOF
+
 while [ $count -lt $hosts_number ]
 do
   echo "Configure host $count"
@@ -32,12 +38,7 @@ do
   read -p "Enter hostname: " hostname
   read -p "Enter MariaDB password: " mariadb_password
 
-rm hosts.ini
-touch hosts.ini
-cat <<EOF> hosts.ini
-[debian]
-$server_ip
-EOF
+echo $server_ip >> hosts.ini
 
 touch host_vars/$server_ip.yml
 cat <<EOF> host_vars/$server_ip.yml
@@ -61,6 +62,10 @@ echo "Host $server_ip successfully configured!"
 echo " "
 (( count++ ))
 done
+
+echo "" >> hosts.ini
+echo "[debian:vars]" >> hosts.ini
+echo "ansible_python_interpreter=/usr/bin/python3" >> hosts.ini
 
 echo "Configuration of global parameters"
 echo " "

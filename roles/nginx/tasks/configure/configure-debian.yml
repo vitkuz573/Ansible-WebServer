@@ -4,10 +4,17 @@
     state: absent
     path: "/etc/nginx/nginx.conf"
 
-- name: Configure Nginx
-  template:
-    src: "files/nginx.conf"
+- name: Configure Nginx (without HTTPS)
+  copy:
+    src: "files/nginx_http.conf"
     dest: "/etc/nginx/nginx.conf"
+  when: https_enabled == "no"
+
+- name: Configure Nginx (with HTTPS)
+  copy:
+    src: "files/nginx_https.conf"
+    dest: "/etc/nginx/nginx.conf"
+  when: https_enabled == "yes"
 
 - name: Creating a directory for additional configuration files
   file:
@@ -26,10 +33,22 @@
     dest: "/etc/nginx/ansiblewebserver.configs/security.conf"
   when: https_enabled == "yes"
 
+- name: Generate Diffie-Hellman parameters
+  openssl_dhparam:
+    path: "/etc/nginx/dhparam.pem"
+    size: 2048
+    force: True
+  when: https_enabled == "yes"
+
 - name: Copying general.conf
   copy:
     src: "files/general.conf"
     dest: "/etc/nginx/ansiblewebserver.configs/general.conf"
+
+- name: Copying proxy.conf
+  copy:
+    src: "files/proxy.conf"
+    dest: "/etc/nginx/ansiblewebserver.configs/proxy.conf"
 
 - name: Create host (without HTTPS)
   template:

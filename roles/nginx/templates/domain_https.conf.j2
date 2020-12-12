@@ -25,16 +25,14 @@ server {
 
     location ~ \.php$ {
         proxy_pass http://{{ ansible_ssh_host }}:{{ apache_port }};
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
+        include    ansiblewebserver.configs/proxy.conf;
     }
 
     include ansiblewebserver.configs/security.conf;
     include ansiblewebserver.configs/general.conf;
 }
 
+# HTTP redirect
 server {
     listen      {{ ansible_ssh_host }}:80;
     listen      [::]:80;
