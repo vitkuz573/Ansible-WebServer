@@ -36,5 +36,5 @@ NOTE (2): In case of deploying a web server with HTTPS, the *.crt and *.key file
 # Roadmap
 
 - [X] Adding HTTPS support
-- [X] GUI development for easier deployment
+- [ ] GUI development for easier deployment
 - [ ] Adding support for other OSes
