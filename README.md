@@ -10,7 +10,6 @@ sudo apt install ansible
 
 Then run init.sh and follow the instructions:
 ```
-chmod +x init.sh
 ./init.sh
 ```
 WARNING: For correct playbook operation, do not run it directly from the server where the deployment is planned. Instead, use another server (your PC or virtual machine).

@@ -5,12 +5,6 @@
   tags:
     - ufw
 
-- name: Set logging
-  ufw:
-    logging: full
-  tags:
-    - ufw
-
 - name: Deny access to Apache port
   ufw:
     rule: deny
