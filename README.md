@@ -23,7 +23,7 @@ NOTE (2): In case of deploying a web server with HTTPS, the *.crt and *.key file
 - Apache
 - PHP-FPM
 - mod_fastcgi
-- mod_rpaf
+- mod_remoteip
 - MariaDB
 - UFW
 

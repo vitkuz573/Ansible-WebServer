@@ -1,0 +1,15 @@
+---
+- name: Configure mod_remoteip
+  template:
+    src: "templates/remoteip.conf.j2"
+    dest: "/etc/apache2/mods-available/remoteip.conf"
+  tags:
+    - mod_remoteip
+
+- name: Enable mod_remoteip
+  apache2_module:
+    name: remoteip
+    state: present
+  tags:
+    - mod_remoteip
+  notify: Restart Apache (Debian)

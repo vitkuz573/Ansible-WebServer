@@ -1,6 +1,0 @@
----
-- name: Install mod_rpaf
-  apt:
-    name: libapache2-mod-rpaf
-  tags:
-    - mod_rpaf

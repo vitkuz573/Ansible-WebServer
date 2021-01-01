@@ -1,7 +1,0 @@
----
-- name: Converge
-  hosts: all
-  tasks:
-    - name: "Include mod_rpaf"
-      include_role:
-        name: "mod_rpaf"

@@ -9,7 +9,7 @@
     - apache
     - php-fpm
     - mod_fastcgi
-    - mod_rpaf
+    - mod_remoteip
     - nginx
     - mariadb
     - ufw

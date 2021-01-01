@@ -1,0 +1,5 @@
+<IfModule remoteip_module.c>
+    RemoteIPHeader X-Real-IP
+    RemoteIPInternalProxy 127.0.0.1
+    RemoteIPInternalProxy {{ ansible_ssh_host }}
+</IfModule>
