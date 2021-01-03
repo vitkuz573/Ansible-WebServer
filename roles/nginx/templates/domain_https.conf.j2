@@ -30,9 +30,12 @@ server {
 
     include ansiblewebserver.configs/security.conf;
     include ansiblewebserver.configs/general.conf;
+
+    ssl_stapling on;
+    ssl_stapling_verify on;
+    ssl_trusted_certificate {{ ssl_certificate_path }};
 }
 
-# HTTP redirect
 server {
     listen      {{ ansible_ssh_host }}:80;
     listen      [::]:80;
