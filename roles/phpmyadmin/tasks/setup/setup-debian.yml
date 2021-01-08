@@ -1,0 +1,21 @@
+---
+- name: Install required php extensions
+  apt:
+    pkg:
+      - php-mysql
+      - php-mbstring
+  tags:
+    - phpmyadmin
+
+- name: Install phpMyAdmin
+  unarchive:
+    src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip
+    dest: /var/www/{{ domain_name }}/public/
+    remote_src: yes
+  tags:
+    - phpmyadmin
+
+- name: Rename phpMyAdmin directory
+  command: sudo mv /var/www/{{ domain_name }}/public/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/ /var/www/{{ domain_name }}/public/phpmyadmin
+  tags:
+    - phpmyadmin

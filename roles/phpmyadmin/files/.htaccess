@@ -1,0 +1,7 @@
+AuthType Basic
+AuthName "Private Zone. Only for Administrators!"
+AuthUserFile /var/www/.htpasswd
+require valid-user
+<Files .htpasswd>
+  deny from all
+</Files>

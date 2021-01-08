@@ -1,0 +1,7 @@
+---
+- name: Install knockd
+  apt:
+    pkg:
+      - knockd
+  tags:
+    - knockd

@@ -1,0 +1,6 @@
+---
+- name: Restart Knockd (Debian)
+  service:
+    name: knockd
+    enabled: yes
+    state: restarted

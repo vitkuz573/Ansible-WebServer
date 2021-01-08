@@ -26,17 +26,26 @@ EOF
 
 while [ $count -lt $hosts_number ]
 do
-  echo "Configure host $count"
+  echo "Configure host" $(($count + 1))
   echo " "
+
   read -p "Enable HTTPS? [yes, no]: " answer_https
   if [[ $answer_https == "yes" ]] || [[ -z $answer_https ]]; then
     read -p "Enter SSL Certificate Path: " ssl_certificate_path
     read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
   fi
+
   read -p "Enter IP: " server_ip
   read -p "Enter domain name: " domain_name
   read -p "Enter hostname: " hostname
   read -p "Enter MariaDB password: " mariadb_password
+
+  read -p "Enter phpMyAdmin version (example: 5.0.4): " phpmyadmin_version
+  read -p "Securing phpMyAdmin? [yes, no]: " phpmyadmin_secure_answer
+  read -p "Enter .htpasswd Username: " htpasswd_username
+  read -p "Enter .htpasswd Password: " htpasswd_password
+
+  read -p "Enter port sequence (example: 500,1001,456): " port_sequence
 
 echo $server_ip >> hosts.ini
 
@@ -52,6 +61,13 @@ domain_name: "$domain_name"
 hostname: "$hostname"
 
 mariadb_password: "$mariadb_password"
+
+phpmyadmin_version: "$phpmyadmin_version"
+phpmyadmin_secure: "$phpmyadmin_secure_answer"
+htpasswd_username: "$htpasswd_username"
+htpasswd_password: "$htpasswd_password"
+
+port_sequence: "$port_sequence"
 EOF
 
 echo "Enter your account password on the destination host to copy the public key to it!"

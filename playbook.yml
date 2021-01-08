@@ -12,4 +12,6 @@
     - mod_remoteip
     - nginx
     - mariadb
+    - phpmyadmin
+    - knockd
     - ufw

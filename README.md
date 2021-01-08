@@ -25,6 +25,8 @@ NOTE (2): In case of deploying a web server with HTTPS, the *.crt and *.key file
 - mod_fastcgi
 - mod_remoteip
 - MariaDB
+- phpMyAdmin
+- Knockd
 - UFW
 
 ## What will be done to improve security?
@@ -32,6 +34,7 @@ NOTE (2): In case of deploying a web server with HTTPS, the *.crt and *.key file
 - Blocking access to the Apache port
 - Blocking access to MariaDB from outside
 - Protecting Nginx from slow requests
+- SSH protection with Port-Knocking
 
 # Roadmap
 

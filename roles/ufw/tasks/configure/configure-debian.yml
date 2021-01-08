@@ -21,6 +21,7 @@
     name: "OpenSSH"
   tags:
     - ufw
+  when: knockd_install != "yes"
 
 - name: Allow Nginx HTTP
   ufw:

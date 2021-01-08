@@ -5,8 +5,11 @@
     pkg:
       - sudo
       - wget
+      - pwgen
+      - unzip
       - python3-apt
       - python3-pip
+      - python3-passlib
 
 - name: Install prerequisites (python3 packages)
   pip:

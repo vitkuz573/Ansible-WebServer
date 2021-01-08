@@ -20,6 +20,12 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
+    location ~ ^/phpmyadmin/* {
+        proxy_pass http://{{ ansible_ssh_host }}:{{ apache_port }};
+        root /var/www/{{ domain_name }}/public/phpmyadmin/;
+        include    ansiblewebserver.configs/proxy.conf;
+    }
+
     location ~ \.php$ {
         proxy_pass http://{{ ansible_ssh_host }}:{{ apache_port }};
         include    ansiblewebserver.configs/proxy.conf;

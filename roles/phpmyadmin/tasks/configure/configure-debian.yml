@@ -1,0 +1,29 @@
+---
+- name: Generate blowfish
+  command: pwgen 32 1
+  register: blowfish
+  tags:
+    - phpmyadmin
+
+- name: Copy config.inc.php
+  template:
+    src: "templates/config.inc.php.j2"
+    dest: "/var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php"
+  tags:
+    - phpmyadmin
+
+- name: Generate .htpasswd
+  htpasswd:
+    path: /var/www/.htpasswd
+    name: "{{ htpasswd_username }}"
+    password: "{{ htpasswd_password }}"
+    crypt_scheme: md5_crypt
+  tags:
+    - phpmyadmin
+
+- name: Copy .htaccess
+  copy:
+    src: "files/.htaccess"
+    dest: "/var/www/{{ domain_name }}/public/phpmyadmin/.htaccess"
+  tags:
+    - phpmyadmin
