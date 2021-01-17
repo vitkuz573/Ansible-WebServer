@@ -1,0 +1,50 @@
+---
+- name: Create sftp group
+  group:
+    name: sftpg
+  tags:
+    - sftp
+
+- name: Create sftp user
+  user:
+    name: "{{ sftp_user }}"
+    password: "{{ sftp_password | password_hash('sha512') }}"
+    group: sftpg
+  tags:
+    - sftp
+
+- name: Create sftp root directory
+  file:
+    path: "{{ sftp_root }}"
+    state: directory
+  tags:
+    - sftp
+
+- name: Create sftp user directory
+  file:
+    path: "{{ sftp_root }}/{{ sftp_user }}"
+    owner: root
+    group: sftpg
+    state: directory
+  tags:
+    - sftp
+
+- name: Create upload directory
+  file:
+    path: "{{  sftp_root }}/{{ sftp_user }}/upload"
+    owner: "{{ sftp_user }}"
+    group: sftpg
+    state: directory
+  tags:
+    - sftp
+
+- name: Setting up sshd_config
+  blockinfile:
+    path: "/etc/ssh/sshd_config"
+    block: |
+      Match Group sftpg
+      ChrootDirectory "{{ sftp_root }}/%u"
+      ForceCommand internal-sftp
+  tags:
+    - sftp
+  notify: Restart SSH (Debian)

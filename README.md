@@ -27,6 +27,7 @@ NOTE (2): In case of deploying a web server with HTTPS, the *.crt and *.key file
 - MariaDB
 - phpMyAdmin
 - Knockd
+- SFTP Server
 - UFW
 
 ## What will be done to improve security?
@@ -35,6 +36,7 @@ NOTE (2): In case of deploying a web server with HTTPS, the *.crt and *.key file
 - Blocking access to MariaDB from outside
 - Protecting Nginx from slow requests
 - SSH protection with Port-Knocking
+- Blocking access to phpMyAdmin via .htpasswd and .htaccess
 
 # Roadmap
 

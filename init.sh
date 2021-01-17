@@ -4,6 +4,7 @@ read -p "Continuing will erase the current configuration! Continue? [yes, no]: "
 if [[ $continue_answer == "yes" ]]; then
   rm -R {host_vars,group_vars}
   rm hosts.ini
+  rm ansible.cfg
 
   read -p "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: " answer_ssh_key
 
@@ -62,7 +63,6 @@ EOF
 
   echo "Host $server_ip successfully configured!"
   echo " "
-  skip_tags=""
   (( count++ ))
   done
 
@@ -91,17 +91,26 @@ EOF
       read -p "Enter .htpasswd Username: " htpasswd_username
       read -p "Enter .htpasswd Password: " htpasswd_password
     else
-      skip_tags+=" secure_phpmyadmin"
+      skip_tags+="secure_phpmyadmin,"
     fi
   else
-    skip_tags+=" phpmyadmin"
+    skip_tags+="phpmyadmin,secure_phpmyadmin,"
   fi
 
   read -p "Install knockd? [yes, no]: " install_knockd_answer
   if [[ $install_knockd_answer == "yes" ]]; then
     read -p "Enter port sequence (example: 500,1001,456): " port_sequence
   else
-    skip_tags+=" knockd"
+    skip_tags+="knockd,"
+  fi
+
+  read -p "Configure sftp? [yes, no]: " configure_sftp_answer
+  if [[ $configure_sftp_answer == "yes" ]]; then
+    read -p "Enter sftp root directory: " sftp_root
+    read -p "Enter sftp username: " sftp_user
+    read -p "Enter sftp password: " sftp_password
+  else
+    skip_tags+="sftp,"
   fi
 
 cat <<EOF> group_vars/vars.yml
@@ -123,21 +132,28 @@ htpasswd_password: "$htpasswd_password"
 
 knockd_install: "$install_knockd_answer"
 port_sequence: "$port_sequence"
+
+sftp_configure: "$configure_sftp_answer"
+sftp_root: "$sftp_root"
+sftp_user: "$sftp_user"
+sftp_password: "$sftp_password"
+EOF
+
+touch ansible.cfg
+cat <<EOF>> ansible.cfg
+[defaults]
+inventory = hosts.ini
+remote_user = root
+
+[tags]
+skip=${skip_tags// /}
 EOF
 
   read -p "To start deploying? [yes, no]: " answer_deploy
   if [[ $answer_deploy == "yes" ]]; then
-    if [[ -v $skip_tags ]]; then
-      ansible-playbook playbook.yml --skip-tags $skip_tags
-    else
-      ansible-playbook playbook.yml
-    fi
+    ansible-playbook playbook.yml
   else
-    if [[ -v $skip_tags ]]; then
-      echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml --skip-tags $skip_tags"
-    else
-      echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml"
-    fi
+    echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml"
   fi
 else
   echo "Execution interrupted. To restart, run ./init.sh"

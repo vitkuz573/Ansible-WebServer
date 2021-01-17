@@ -1,0 +1,5 @@
+---
+- name: Restart SSH (Debian)
+  service:
+    name: sshd
+    state: restarted

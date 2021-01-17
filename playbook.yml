@@ -14,4 +14,5 @@
     - mariadb
     - phpmyadmin
     - knockd
+    - sftp
     - ufw
