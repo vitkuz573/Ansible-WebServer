@@ -1,9 +1,4 @@
 ---
-- name: Removing the default Nginx config
-  file:
-    state: absent
-    path: "/etc/nginx/nginx.conf"
-
 - name: Configure Nginx (without HTTPS)
   copy:
     src: "files/nginx_http.conf"
