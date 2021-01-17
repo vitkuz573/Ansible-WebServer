@@ -1,0 +1,13 @@
+galaxy_info:
+  author: vitkuz573
+  description: Misc for Linux
+  license: license (BSD, MIT)
+  min_ansible_version: 2.1
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - misc
+
+dependencies: []

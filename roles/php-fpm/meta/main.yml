@@ -1,0 +1,17 @@
+galaxy_info:
+  author: vitkuz573
+  description: php-fpm for Linux
+  license: license (BSD, MIT)
+  min_ansible_version: 2.1
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - web
+    - php
+    - php-fpm
+    - fpm
+    - webserver
+
+dependencies: []

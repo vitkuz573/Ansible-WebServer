@@ -1,0 +1,18 @@
+galaxy_info:
+  author: vitkuz573
+  description: mod_fastcgi for Linux
+  license: license (BSD, MIT)
+  min_ansible_version: 2.1
+  platforms:
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags:
+    - web
+    - apache
+    - webserver
+    - httpd
+    - mod_fastcgi
+    - fastcgi
+
+dependencies: []
