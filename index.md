@@ -2,6 +2,6 @@
 
 There will be page content here soon :)
 
-In the meantime, go to https://github.com/vitkuz573/Ansible-WebServer and use this project for fully automated deployment of your web servers!
+In the meantime, go to [Ansible WebServer](https://github.com/vitkuz573/Ansible-WebServer) and use this project for fully automated deployment of your web servers!
 
 Regards, Vitaly Kuzyaev.
