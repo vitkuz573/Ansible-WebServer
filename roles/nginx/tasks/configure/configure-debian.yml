@@ -1,65 +1,91 @@
 ---
-- name: Configure Nginx (without HTTPS)
+- name: Setting up Nginx (without HTTPS)
   copy:
     src: "files/nginx_http.conf"
     dest: "/etc/nginx/nginx.conf"
+    mode: 0644
   when: https_enabled == "no"
 
-- name: Configure Nginx (with HTTPS)
+- name: Setting up Nginx (with HTTPS)
   copy:
     src: "files/nginx_https.conf"
     dest: "/etc/nginx/nginx.conf"
+    mode: 0644
   when: https_enabled == "yes"
+
+- name: Checking the ansiblewebserver.configs directory for existence
+  stat:
+    path: "/etc/nginx/ansiblewebserver.configs"
+  register: ansiblewebserver_configs_details
 
 - name: Creating a directory for additional configuration files
   file:
     path: "/etc/nginx/ansiblewebserver.configs"
+    mode: 0755
     state: directory
+  when: not ansiblewebserver_configs_details.stat.exists
 
 - name: Copying security.conf (without HTTPS)
   copy:
     src: "files/security_http.conf"
     dest: "/etc/nginx/ansiblewebserver.configs/security.conf"
+    mode: 0644
   when: https_enabled == "no"
 
 - name: Copying security.conf (with HTTPS)
   copy:
     src: "files/security_https.conf"
     dest: "/etc/nginx/ansiblewebserver.configs/security.conf"
+    mode: 0644
   when: https_enabled == "yes"
 
-- name: Generate Diffie-Hellman parameters
+- name: Checking dhparam.pem file for existence
+  stat:
+    path: "/etc/nginx/dhparam.pem"
+  register: dhparam_pem_details
+
+- name: Generation of Diffie-Hellman parameters
   openssl_dhparam:
     path: "/etc/nginx/dhparam.pem"
     size: 2048
     force: True
-  when: https_enabled == "yes"
+  when: https_enabled == "yes" and not dhparam_pem_details.stat.exists
 
 - name: Copying general.conf
   copy:
     src: "files/general.conf"
     dest: "/etc/nginx/ansiblewebserver.configs/general.conf"
+    mode: 0644
 
 - name: Copying proxy.conf
   copy:
     src: "files/proxy.conf"
     dest: "/etc/nginx/ansiblewebserver.configs/proxy.conf"
+    mode: 0644
 
-- name: Create host (without HTTPS)
+- name: Creating a host (without HTTPS)
   template:
     src: "templates/domain_http.conf.j2"
     dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
+    mode: 0644
   when: https_enabled == "no"
 
-- name: Create host (with HTTPS)
+- name: Creating a host (with HTTPS)
   template:
     src: "templates/domain_https.conf.j2"
     dest: "/etc/nginx/sites-available/{{ domain_name }}.conf"
+    mode: 0644
   when: https_enabled == "yes"
 
-- name: Enable host
+- name: Checking whether the host is turned on
+  stat:
+    path: "/etc/nginx/sites-enabled/{{ domain_name }}.conf"
+  register: enabled_nginx_host_details
+
+- name: Enabling the host
   file:
     src: "/etc/nginx/sites-available/{{ domain_name }}.conf"
-    dest: "/etc/nginx/sites-enabled/{{ domain_name}}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain_name }}.conf"
     state: link
+  when: not enabled_nginx_host_details.stat.exists
   notify: Restart Nginx (Debian)

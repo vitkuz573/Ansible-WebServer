@@ -1,11 +1,11 @@
 ---
-- name: Create sftp group
+- name: Creating an sftp group
   group:
     name: sftpg
   tags:
     - sftp
 
-- name: Create sftp user
+- name: Creating an sftp user
   user:
     name: "{{ sftp_user }}"
     password: "{{ sftp_password | password_hash('sha512') }}"
@@ -13,28 +13,49 @@
   tags:
     - sftp
 
-- name: Create sftp root directory
+- name: Checking the existence of the sftp root directory
+  stat:
+    path: "{{ sftp_root }}"
+  register: sftp_root_dir_details
+
+- name: Creating the sftp root directory
   file:
     path: "{{ sftp_root }}"
+    mode: 0755
     state: directory
+  when: not sftp_root_dir_details.stat.exists
   tags:
     - sftp
 
-- name: Create sftp user directory
+- name: Checking the existence of the sftp user directory
+  stat:
+    path: "{{ sftp_root }}"
+  register: sftp_user_dir_details
+
+- name: Creating a user sftp directory
   file:
     path: "{{ sftp_root }}/{{ sftp_user }}"
     owner: root
     group: sftpg
+    mode: 0755
     state: directory
+  when: not sftp_user_dir_details.stat.exists
   tags:
     - sftp
 
-- name: Create upload directory
+- name: Checking the existence of the upload directory
+  stat:
+    path: "{{ sftp_root }}"
+  register: upload_dir_details
+
+- name: Creating an upload directory
   file:
     path: "{{  sftp_root }}/{{ sftp_user }}/upload"
     owner: "{{ sftp_user }}"
     group: sftpg
+    mode: 0755
     state: directory
+  when: not upload_dir_details.stat.exists
   tags:
     - sftp
 

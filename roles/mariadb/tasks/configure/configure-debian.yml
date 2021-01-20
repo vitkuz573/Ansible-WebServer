@@ -1,5 +1,5 @@
 ---
-- name: Set root password
+- name: Setting the root password
   mysql_user:
     name: root
     password: "{{ mariadb_password }}"
@@ -7,7 +7,7 @@
   tags:
     - mariadb
 
-- name: Remove all anonymous users
+- name: Deleting all anonymous users
   mysql_user:
     name: ''
     host_all: yes
@@ -17,7 +17,7 @@
   tags:
     - mariadb
 
-- name: Remove test database
+- name: Deleting the test database
   mysql_db:
     name: test
     state: absent
@@ -26,7 +26,7 @@
   tags:
     - mariadb
 
-- name: Edit my.cnf
+- name: Prohibiting connections to the DBMS from the outside
   blockinfile:
     path: "/etc/mysql/my.cnf"
     block: |

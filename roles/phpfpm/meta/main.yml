@@ -10,7 +10,7 @@ galaxy_info:
   galaxy_tags:
     - web
     - php
-    - php-fpm
+    - phpfpm
     - fpm
     - webserver
 

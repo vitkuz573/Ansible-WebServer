@@ -1,11 +1,11 @@
 ---
-- name: Set default policy
+- name: Setting the default policy
   ufw:
     policy: deny
   tags:
     - ufw
 
-- name: Deny access to Apache port
+- name: Blocking access to the Apache port
   ufw:
     rule: deny
     port: "{{ apache_port }}"
@@ -15,7 +15,7 @@
     - security
     - block_apache_port
 
-- name: Allow OpenSSH
+- name: Allow SSH access
   ufw:
     rule: allow
     name: "OpenSSH"
@@ -23,7 +23,7 @@
     - ufw
   when: knockd_install != "yes"
 
-- name: Allow Nginx HTTP
+- name: Allowing HTTP traffic (Nginx)
   ufw:
     rule: allow
     name: "Nginx HTTP"
@@ -31,7 +31,7 @@
     - ufw
   when: https_enabled == "no"
 
-- name: Allow Nginx Full
+- name: Allowing HTTP and HTTPS traffic (Nginx)
   ufw:
     rule: allow
     name: "Nginx Full"
@@ -39,14 +39,14 @@
     - ufw
   when: https_enabled == "yes"
 
-- name: Allow Apache
+- name: Allowing Apache
   ufw:
     rule: allow
     name: "WWW"
   tags:
     - ufw
 
-- name: Enable UFW
+- name: Enabling UFW
   ufw:
     state: enabled
   tags:

@@ -1,4 +1,5 @@
 ---
-- name: Install Apache
+- name: Installing Apache
   apt:
-    name: apache2
+    pkg:
+      - apache2

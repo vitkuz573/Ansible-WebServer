@@ -12,7 +12,7 @@ galaxy_info:
     - apache
     - webserver
     - httpd
-    - mod_remoteip
+    - modremoteip
     - remoteip
 
 dependencies: []

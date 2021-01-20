@@ -1,29 +1,41 @@
 ---
-- name: Generate blowfish
+- name: Checking the config.inc.php file for existence
+  stat:
+    path: "/var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php"
+  register: config_inc_php_details
+
+- name: Generating a blowfish phrase
   command: pwgen 32 1
   register: blowfish
+  when: not config_inc_php_details.stat.exists
   tags:
     - phpmyadmin
 
-- name: Copy config.inc.php
+- name: Setting up phpMyAdmin
   template:
     src: "templates/config.inc.php.j2"
     dest: "/var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php"
+    mode: 0644
+  when: not config_inc_php_details.stat.exists
   tags:
     - phpmyadmin
 
-- name: Generate .htpasswd
+- name: Generating .htpasswd
   htpasswd:
-    path: /var/www/.htpasswd
+    path: "/var/www/.htpasswd"
+    mode: 0644
     name: "{{ htpasswd_username }}"
     password: "{{ htpasswd_password }}"
     crypt_scheme: md5_crypt
   tags:
     - phpmyadmin
+    - protecting_phpmyadmin
 
-- name: Copy .htaccess
+- name: Copying .htaccess
   copy:
     src: "files/.htaccess"
     dest: "/var/www/{{ domain_name }}/public/phpmyadmin/.htaccess"
+    mode: 0644
   tags:
     - phpmyadmin
+    - protecting_phpmyadmin

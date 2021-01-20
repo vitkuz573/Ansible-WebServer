@@ -1,15 +1,17 @@
 ---
-- name: Enable knockd
+- name: Enabling knockd
   copy:
     src: "files/knockd"
     dest: "/etc/default/knockd"
+    mode: 0644
   tags:
     - knockd
 
-- name: Copy knockd.conf
+- name: Setting up knockd
   template:
     src: "templates/knockd.conf.j2"
     dest: "/etc/knockd.conf"
+    mode: 0644
   notify: Restart Knockd (Debian)
   tags:
     - knockd

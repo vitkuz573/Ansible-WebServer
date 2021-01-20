@@ -1,5 +1,5 @@
 ---
-- name: Install prerequisites (deb packages)
+- name: Installing the required deb packages
   apt:
     update_cache: yes
     pkg:
@@ -11,7 +11,7 @@
       - python3-pip
       - python3-passlib
 
-- name: Install prerequisites (python3 packages)
+- name: Installing the required python packages
   pip:
     name: setuptools
     executable: pip3

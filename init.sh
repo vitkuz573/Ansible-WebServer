@@ -91,10 +91,10 @@ EOF
       read -p "Enter .htpasswd Username: " htpasswd_username
       read -p "Enter .htpasswd Password: " htpasswd_password
     else
-      skip_tags+="secure_phpmyadmin,"
+      skip_tags+="protecting_phpmyadmin,"
     fi
   else
-    skip_tags+="phpmyadmin,secure_phpmyadmin,"
+    skip_tags+="phpmyadmin,protecting_phpmyadmin,"
   fi
 
   read -p "Install knockd? [yes, no]: " install_knockd_answer

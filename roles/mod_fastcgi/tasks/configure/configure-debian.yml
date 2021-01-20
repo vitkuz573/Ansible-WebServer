@@ -1,11 +1,12 @@
 ---
-- name: Configure mod_fastcgi
+- name: Setting up mod_fastcgi
   template:
     src: "templates/fastcgi.conf.j2"
     dest: "/etc/apache2/mods-enabled/fastcgi.conf"
+    mode: 0644
   tags:
-    - php-fpm
-    - mod_fastcgi
+    - phpfpm
+    - modfastcgi
   notify:
     - Restart Apache (Debian)
     - Restart PHP-FPM (Debian)
