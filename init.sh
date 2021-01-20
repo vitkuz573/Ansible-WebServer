@@ -38,6 +38,7 @@ if [[ $continue_answer == "yes" ]]; then
       read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
     fi
 
+    read -p "Enter old MariaDB password (if exists): " mariadb_old_password
     read -p "Enter MariaDB password: " mariadb_password
     read -p "Enter hostname: " hostname
 
@@ -54,6 +55,7 @@ domain_name: "$domain_name"
 
 hostname: "$hostname"
 
+mariadb_old_password: "$mariadb_old_password"
 mariadb_password: "$mariadb_password"
 EOF
 

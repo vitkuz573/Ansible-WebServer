@@ -3,6 +3,8 @@
   mysql_user:
     name: root
     password: "{{ mariadb_password }}"
+    login_user: root
+    login_password: "{{ mariadb_old_password }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
   tags:
     - mariadb
