@@ -2,5 +2,5 @@
 - name: Restart MariaDB (Debian)
   service:
     name: mariadb
-    enabled: yes
+    enabled: true
     state: restarted

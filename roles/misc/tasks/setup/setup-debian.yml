@@ -1,7 +1,7 @@
 ---
 - name: Installing the required deb packages
   apt:
-    update_cache: yes
+    update_cache: true
     pkg:
       - sudo
       - wget

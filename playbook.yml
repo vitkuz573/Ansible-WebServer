@@ -1,6 +1,6 @@
 ---
 - hosts: debian
-  gather_facts: yes
+  gather_facts: true
   vars_files:
     - ./group_vars/vars.yml
     - ./host_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml

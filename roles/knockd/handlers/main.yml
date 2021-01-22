@@ -2,5 +2,5 @@
 - name: Restart Knockd (Debian)
   service:
     name: knockd
-    enabled: yes
+    enabled: true
     state: restarted

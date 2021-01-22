@@ -48,7 +48,7 @@
   openssl_dhparam:
     path: "/etc/nginx/dhparam.pem"
     size: 2048
-    force: True
+    force: true
   when: https_enabled == "yes" and not dhparam_pem_details.stat.exists
 
 - name: Copying general.conf

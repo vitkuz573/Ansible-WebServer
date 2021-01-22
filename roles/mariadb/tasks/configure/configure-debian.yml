@@ -12,7 +12,7 @@
 - name: Deleting all anonymous users
   mysql_user:
     name: ''
-    host_all: yes
+    host_all: true
     state: absent
     login_user: root
     login_password: "{{ mariadb_password }}"

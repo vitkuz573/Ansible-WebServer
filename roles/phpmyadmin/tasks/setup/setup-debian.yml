@@ -11,7 +11,7 @@
   unarchive:
     src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip
     dest: "/var/www/{{ domain_name }}/public/"
-    remote_src: yes
+    remote_src: true
   tags:
     - phpmyadmin
 
