@@ -1,6 +1,8 @@
 # Ansible-WebServer PLAYBOOK
+[![License](https://img.shields.io/github/license/vitkuz573/Ansible-WebServer)](https://github.com/vitkuz573/Ansible-WebServer/blob/master/LICENSE)
 [![Help Wanted](https://img.shields.io/github/issues/vitkuz573/Ansible-WebServer/help%20wanted?color=green)](https://github.com/vitkuz573/Ansible-WebServer/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![Lines Of Code](https://tokei.rs/b1/github/vitkuz573/Ansible-WebServer?category=code)](https://github.com/vitkuz573/Ansible-WebServer)
+[![Version](https://img.shields.io/github/v/release/vitkuz573/Ansible-WebServer?include_prereleases)](https://github.com/vitkuz573/Ansible-WebServer)
 
 Playbook for fully automated deployment of one or more web servers (Nginx + Apache)
 
