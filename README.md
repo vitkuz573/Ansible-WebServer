@@ -1,4 +1,7 @@
 # Ansible-WebServer PLAYBOOK
+[![Help Wanted](https://img.shields.io/github/issues/vitkuz573/Ansible-WebServer/help%20wanted?color=green)](https://github.com/vitkuz573/Ansible-WebServer/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![Lines Of Code](https://tokei.rs/b1/github/vitkuz573/Ansible-WebServer?category=code)](https://github.com/vitkuz573/Ansible-WebServer)
+
 Playbook for fully automated deployment of one or more web servers (Nginx + Apache)
 
 ## Usage
