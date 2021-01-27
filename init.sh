@@ -30,7 +30,10 @@ if [[ $continue_answer == "yes" ]]; then
     echo " "
 
     read -p "Enter IP: " server_ip
+    echo " "
+
     read -p "Enter domain name: " domain_name
+    echo " "
 
     read -p "Enable HTTPS? [yes, no]: " answer_https
     if [[ $answer_https == "yes" ]]; then
@@ -40,6 +43,7 @@ if [[ $continue_answer == "yes" ]]; then
 
     read -p "Enter old MariaDB password (if exists): " mariadb_old_password
     read -p "Enter MariaDB password: " mariadb_password
+
     read -p "Enter hostname: " hostname
 
   echo $server_ip >> hosts.ini
@@ -63,7 +67,7 @@ EOF
 
   ssh-copy-id root@$server_ip
 
-  echo "Host $server_ip successfully configured!"
+  echo "Host $server_ip ($domain_name) successfully configured!"
   echo " "
   (( count++ ))
   done
@@ -85,6 +89,7 @@ EOF
   read -p "Enter client body timeout (example: 5): " client_body_timeout
   read -p "Enter client header timeout (example: 5): " client_header_timeout
 
+  echo ""
   read -p "Install phpMyAdmin? [yes, no]: " install_phpmyadmin_answer
   if [[ $install_phpmyadmin_answer == "yes" ]]; then
     read -p "Enter phpMyAdmin version (example: 5.0.4): " phpmyadmin_version
@@ -99,13 +104,16 @@ EOF
     skip_tags+="phpmyadmin,protecting_phpmyadmin,"
   fi
 
+  echo ""
   read -p "Install knockd? [yes, no]: " install_knockd_answer
   if [[ $install_knockd_answer == "yes" ]]; then
     read -p "Enter port sequence (example: 500,1001,456): " port_sequence
+    read -p "Enter command timeout (example: 10): " command_timeout
   else
     skip_tags+="knockd,"
   fi
 
+  echo ""
   read -p "Configure sftp? [yes, no]: " configure_sftp_answer
   if [[ $configure_sftp_answer == "yes" ]]; then
     read -p "Enter sftp root directory: " sftp_root
@@ -134,6 +142,7 @@ htpasswd_password: "$htpasswd_password"
 
 knockd_install: "$install_knockd_answer"
 port_sequence: "$port_sequence"
+command_timeout: "$command_timeout"
 
 sftp_configure: "$configure_sftp_answer"
 sftp_root: "$sftp_root"

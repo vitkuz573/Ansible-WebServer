@@ -6,6 +6,6 @@
         sequence          = {{ port_sequence }}
         seq_timeout       = 15
         start_command     = /sbin/iptables -A INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
-        cmd_timeout       = 10
+        cmd_timeout       = {{ command_timeout }}
         stop_command      = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
         tcpflags          = syn
