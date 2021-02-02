@@ -3,13 +3,13 @@
   lineinfile:
     dest: "/etc/apache2/ports.conf"
     regexp: "^#?Listen"
-    line: "Listen {{ apache_port }}"
+    line: "Listen {{ apache['port'] }}"
 
 - name: Changing the port in 000-default.conf
   lineinfile:
     dest: "/etc/apache2/sites-available/000-default.conf"
     regexp: "^#?<VirtualHost"
-    line: "<VirtualHost *:{{ apache_port }}>"
+    line: "<VirtualHost *:{{ apache['port'] }}>"
 
 - name: Enabling mod_actions
   apache2_module:

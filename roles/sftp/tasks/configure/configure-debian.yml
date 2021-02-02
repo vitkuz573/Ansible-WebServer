@@ -2,60 +2,71 @@
 - name: Creating an sftp group
   group:
     name: sftpg
+  when: sftp['configure'] == "yes"
   tags:
     - sftp
 
 - name: Creating an sftp user
   user:
-    name: "{{ sftp_user }}"
-    password: "{{ sftp_password | password_hash('sha512') }}"
+    name: "{{ sftp['credentials']['user'] }}"
+    password: "{{ sftp['credentials']['password'] | password_hash('sha512') }}"
     group: sftpg
+  when: sftp['configure'] == "yes"
   tags:
     - sftp
 
 - name: Checking the existence of the sftp root directory
   stat:
-    path: "{{ sftp_root }}"
+    path: "{{ sftp['root'] }}"
   register: sftp_root_dir_details
+  when: sftp['configure'] == "yes"
+  tags:
+    - sftp
 
 - name: Creating the sftp root directory
   file:
-    path: "{{ sftp_root }}"
+    path: "{{ sftp['root'] }}"
     mode: 0755
     state: directory
-  when: not sftp_root_dir_details.stat.exists
+  when: sftp['configure'] == "yes" and not sftp_root_dir_details.stat.exists
   tags:
     - sftp
 
 - name: Checking the existence of the sftp user directory
   stat:
-    path: "{{ sftp_root }}"
+    path: "{{ sftp['root'] }}"
   register: sftp_user_dir_details
+  when: sftp['configure'] == "yes"
+  tags:
+    - sftp
 
 - name: Creating a user sftp directory
   file:
-    path: "{{ sftp_root }}/{{ sftp_user }}"
+    path: "{{ sftp['root'] }}/{{ sftp['credentials']['user'] }}"
     owner: root
     group: sftpg
     mode: 0755
     state: directory
-  when: not sftp_user_dir_details.stat.exists
+  when: sftp['configure'] == "yes" and not sftp_user_dir_details.stat.exists
   tags:
     - sftp
 
 - name: Checking the existence of the upload directory
   stat:
-    path: "{{ sftp_root }}"
+    path: "{{ sftp['root'] }}"
   register: upload_dir_details
+  when: sftp['configure'] == "yes"
+  tags:
+    - sftp
 
 - name: Creating an upload directory
   file:
-    path: "{{  sftp_root }}/{{ sftp_user }}/upload"
-    owner: "{{ sftp_user }}"
+    path: "{{ sftp['root'] }}/{{ sftp['credentials']['user'] }}/upload"
+    owner: "{{ sftp['credentials']['user'] }}"
     group: sftpg
     mode: 0755
     state: directory
-  when: not upload_dir_details.stat.exists
+  when: sftp['configure'] == "yes" and not upload_dir_details.stat.exists
   tags:
     - sftp
 
@@ -64,8 +75,9 @@
     path: "/etc/ssh/sshd_config"
     block: |
       Match Group sftpg
-      ChrootDirectory "{{ sftp_root }}/%u"
+      ChrootDirectory "{{ sftp['root'] }}/%u"
       ForceCommand internal-sftp
+  when: sftp['configure'] == "yes"
   tags:
     - sftp
   notify: Restart SSH (Debian)

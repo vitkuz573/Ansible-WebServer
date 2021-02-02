@@ -1,4 +1,4 @@
-<VirtualHost *:{{ apache_port }}>
+<VirtualHost *:{{ apache['port'] }}>
     ServerName {{ domain_name }}
     ServerAlias www.{{ domain_name }}
     DocumentRoot /var/www/{{ domain_name }}/public

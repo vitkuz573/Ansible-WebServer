@@ -26,7 +26,7 @@ rules:
   indentation: disable
   key-duplicates: enable
   line-length: {
-    max: 150,
+    max: 160,
     allow-non-breakable-words: true,
     allow-non-breakable-inline-mappings: true
   }

@@ -4,6 +4,7 @@
     src: "files/knockd"
     dest: "/etc/default/knockd"
     mode: 0644
+  when: knockd['install'] == "yes"
   tags:
     - knockd
 
@@ -12,6 +13,7 @@
     src: "templates/knockd.conf.j2"
     dest: "/etc/knockd.conf"
     mode: 0644
+  when: knockd['install'] == "yes"
   notify: Restart Knockd (Debian)
   tags:
     - knockd

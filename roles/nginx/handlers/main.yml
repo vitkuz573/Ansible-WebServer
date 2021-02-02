@@ -1,6 +1,0 @@
----
-- name: Restart Nginx (Debian)
-  service:
-    name: nginx
-    enabled: true
-    state: restarted

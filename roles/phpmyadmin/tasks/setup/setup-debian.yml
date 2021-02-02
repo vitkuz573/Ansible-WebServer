@@ -4,14 +4,16 @@
     pkg:
       - php-mysql
       - php-mbstring
+  when: phpmyadmin['install'] == "yes"
   tags:
     - phpmyadmin
 
 - name: Installing phpMyAdmin
   unarchive:
-    src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.zip
+    src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin['version'] }}/phpMyAdmin-{{ phpmyadmin['version'] }}-all-languages.zip
     dest: "/var/www/{{ domain_name }}/public/"
     remote_src: true
+  when: phpmyadmin['install'] == "yes"
   tags:
     - phpmyadmin
 
@@ -19,9 +21,12 @@
   stat:
     path: "/var/www/{{ domain_name }}/public/phpmyadmin"
   register: phpmyadmin_details
+  when: phpmyadmin['install'] == "yes"
+  tags:
+    - phpmyadmin
 
 - name: Renaming the phpMyAdmin directory
-  command: sudo mv /var/www/{{ domain_name }}/public/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/ /var/www/{{ domain_name }}/public/phpmyadmin
-  when: not phpmyadmin_details.stat.exists
+  command: sudo mv /var/www/{{ domain_name }}/public/phpMyAdmin-{{ phpmyadmin['version'] }}-all-languages/ /var/www/{{ domain_name }}/public/phpmyadmin
+  when: phpmyadmin['install'] == "yes" and not phpmyadmin_details.stat.exists
   tags:
     - phpmyadmin

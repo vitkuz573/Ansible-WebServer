@@ -1,6 +1,6 @@
 ---
 - name: Restart PHP-FPM (Debian)
   service:
-    name: php{{ php_version }}-fpm
+    name: php{{ php['version'] }}-fpm
     enabled: true
     state: restarted

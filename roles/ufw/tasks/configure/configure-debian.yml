@@ -8,7 +8,7 @@
 - name: Blocking access to the Apache port
   ufw:
     rule: deny
-    port: "{{ apache_port }}"
+    port: "{{ apache['port'] }}"
     proto: tcp
   tags:
     - ufw
@@ -21,7 +21,7 @@
     name: "OpenSSH"
   tags:
     - ufw
-  when: knockd_install != "yes"
+  when: knockd['install'] != "yes"
 
 - name: Allowing HTTP traffic (Nginx)
   ufw:
@@ -29,7 +29,7 @@
     name: "Nginx HTTP"
   tags:
     - ufw
-  when: https_enabled == "no"
+  when: https['enable'] == "no"
 
 - name: Allowing HTTP and HTTPS traffic (Nginx)
   ufw:
@@ -37,7 +37,7 @@
     name: "Nginx Full"
   tags:
     - ufw
-  when: https_enabled == "yes"
+  when: https['enable'] == "yes"
 
 - name: Allowing Apache
   ufw:
