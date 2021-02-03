@@ -2,9 +2,9 @@
 - name: Setting the root password
   mysql_user:
     name: root
-    password: "{{ mariadb['passwords']['new'] }}"
+    password: "{{ mariadb['password']['new'] }}"
     login_user: root
-    login_password: "{{ mariadb['passwords']['old'] }}"
+    login_password: "{{ mariadb['password']['old'] }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
   tags:
     - mariadb
@@ -15,7 +15,7 @@
     host_all: true
     state: absent
     login_user: root
-    login_password: "{{ mariadb['passwords']['new'] }}"
+    login_password: "{{ mariadb['password']['new'] }}"
   tags:
     - mariadb
 
@@ -24,7 +24,7 @@
     name: test
     state: absent
     login_user: root
-    login_password: "{{ mariadb['passwords']['new'] }}"
+    login_password: "{{ mariadb['password']['new'] }}"
   tags:
     - mariadb
 

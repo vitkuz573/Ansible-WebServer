@@ -247,4 +247,3 @@
     name: nginx
     state: restarted
     enabled: true
-  when: https['enable'] == "yes" and https['option'] == "2"

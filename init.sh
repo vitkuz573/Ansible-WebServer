@@ -67,8 +67,8 @@ if [[ $continue_answer == "yes" ]]; then
       case $install_phpmyadmin_answer in
         [Yy]* )
         read -p "Enter phpMyAdmin version (example: 5.0.4): " phpmyadmin_version;
-        read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_secure_answer;
-        if [[ $phpmyadmin_secure_answer == "yes" ]]; then
+        read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect_answer;
+        if [[ $phpmyadmin_protect_answer == "yes" ]]; then
           read -p "Enter .htpasswd Username: " htpasswd_username
           read -p "Enter .htpasswd Password: " htpasswd_password
         fi;
@@ -129,7 +129,7 @@ phpmyadmin:
   install: "$install_phpmyadmin_answer"
   version: "$phpmyadmin_version"
   protect:
-    enable: "$phpmyadmin_secure_answer"
+    enable: "$phpmyadmin_protect_answer"
     credentials:
       user: "$htpasswd_username"
       password: "$htpasswd_password"
@@ -137,6 +137,7 @@ phpmyadmin:
 knockd:
   install: "$install_knockd_answer"
   port_sequence: "$port_sequence"
+  port_sequence_spaces: "${port_sequence//,/ }"
   command_timeout: "$command_timeout"
 
 sftp:
@@ -147,7 +148,7 @@ sftp:
     password: "$sftp_password"
 
 mariadb:
-  passwords:
+  password:
     old: "$mariadb_old_password"
     new: "$mariadb_password"
 EOF
@@ -178,9 +179,10 @@ apache:
   port: "$apache_port"
 
 nginx:
-  timeouts:
-    client_body: "$client_body_timeout"
-    client_header: "$client_header_timeout"
+  timeout:
+    client:
+      body: "$client_body_timeout"
+      header: "$client_header_timeout"
 
 php:
   version: "$php_version"

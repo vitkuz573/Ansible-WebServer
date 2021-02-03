@@ -3,8 +3,8 @@ server {
     listen                [::]:80;
     server_name           {{ domain_name }};
     root                  /var/www/{{ domain_name }}/public;
-    client_body_timeout   {{ nginx['timeouts']['client_body'] }}s;
-    client_header_timeout {{ nginx['timeouts']['client_header'] }}s;
+    client_body_timeout   {{ nginx['timeout']['client']['body'] }}s;
+    client_header_timeout {{ nginx['timeout']['client']['header'] }}s;
     charset               utf-8;
 
     if ($request_method !~ ^(GET|POST|HEAD)$) {
