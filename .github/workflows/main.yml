@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: debian-debian
+    
+    steps:
+      - uses: actions/checkout@v2
+          
+      - name: ansible-lint
+        uses: ansible/ansible-lint-action@v4.1.0.post0
