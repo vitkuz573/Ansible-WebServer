@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: vitkuz573
-  description: Misc for Linux
+  description: Post-transaction for Linux
   license: license (BSD, MIT)
   min_ansible_version: 2.1
   platforms:
@@ -9,6 +9,6 @@ galaxy_info:
       versions:
         - all
   galaxy_tags:
-    - misc
+    - posttransaction
 
 dependencies: []

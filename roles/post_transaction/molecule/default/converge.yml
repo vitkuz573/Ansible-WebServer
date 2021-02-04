@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include post_transaction"
+      include_role:
+        name: "post_transaction"

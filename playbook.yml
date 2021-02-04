@@ -5,7 +5,7 @@
     - ./group_vars/vars.yml
     - ./host_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
   roles:
-    - misc
+    - pre_transaction
     - apache
     - phpfpm
     - mod_fastcgi
@@ -16,3 +16,4 @@
     - knockd
     - sftp
     - ufw
+    - post_transaction

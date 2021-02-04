@@ -58,7 +58,6 @@ if [[ $continue == "yes" ]]; then
           ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
           ssl_certificate_key_path="/etc/letsencrypt/live/{{ domain_name }}/privkey.pem"
           echo ""
-
           while [[ true ]]; do
             read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
             case $ocsp_must_staple in
@@ -66,8 +65,7 @@ if [[ $continue == "yes" ]]; then
               [Nn]* ) ocsp_must_staple=false; break;;
               * ) echo "Incorrect answer!";;
             esac
-          done
-          
+          done  
         fi
 
         echo ""; break;;
