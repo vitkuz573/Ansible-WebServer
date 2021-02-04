@@ -1,7 +1,7 @@
 #!/bin/bash
 
-read -p "Continuing will erase the current configuration! Continue? [yes, no]: " continue_answer
-if [[ $continue_answer == "yes" ]]; then
+read -p "Continuing will erase the current configuration! Continue? [yes, no]: " continue
+if [[ $continue == "yes" ]]; then
   if [[ -e host_vars ]]; then
     rm -R host_vars
   fi
@@ -13,8 +13,8 @@ if [[ $continue_answer == "yes" ]]; then
   fi
 
   while [[ true ]]; do
-    read -p "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: " answer_ssh_key
-    case $answer_ssh_key in
+    read -p "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: " generate_ssh_key
+    case $generate_ssh_key in
       [Yy]* ) ssh-keygen; break;;
       [Nn]* ) echo -e "You refused to create a key!\n"; break;;
       * ) echo "Incorrect answer!";;
@@ -42,65 +42,82 @@ if [[ $continue_answer == "yes" ]]; then
     echo ""
 
     while [[ true ]]; do
-      read -p "Enable HTTPS? [yes, no]: " answer_https
-      case $answer_https in
+      read -p "Enable HTTPS? [yes, no]: " https_enable
+      case $https_enable in
         [Yy]* )
+        https_enable=yes;
         echo -e "\n1) Use a certificate obtained in advance\n2) Generate a Let's Encrypt certificate\n";
-        read -p "Choose the right option: " ssl_option_answer;
-        if [[ $ssl_option_answer == "1" ]]; then
+        read -p "Choose the right option: " ssl_option;
+        if [[ $ssl_option == "1" ]]; then
           read -p "Enter SSL Certificate Path: " ssl_certificate_path
+          read -p "Enter SSL Trusted Certificate Path: " ssl_trusted_certificate
           read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
         fi
-        if [[ $ssl_option_answer == "2" ]]; then
+        if [[ $ssl_option == "2" ]]; then
           ssl_certificate_path="/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
           ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
           ssl_certificate_key_path="/etc/letsencrypt/live/{{ domain_name }}/privkey.pem"
+          echo ""
+
+          while [[ true ]]; do
+            read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
+            case $ocsp_must_staple in
+              [Yy]* ) ocsp_must_staple=true; break;;
+              [Nn]* ) ocsp_must_staple=false; break;;
+              * ) echo "Incorrect answer!";;
+            esac
+          done
+          
         fi
+
         echo ""; break;;
-        [Nn]* ) echo ""; break;;
+        [Nn]* ) https_enable=no; echo ""; break;;
         * ) echo "Incorrect answer!";
       esac
     done
 
     while [[ true ]]; do
-      read -p "Install phpMyAdmin? [yes, no]: " install_phpmyadmin_answer
-      case $install_phpmyadmin_answer in
+      read -p "Install phpMyAdmin? [yes, no]: " phpmyadmin_install
+      case $phpmyadmin_install in
         [Yy]* )
+        phpmyadmin_install=yes;
         read -p "Enter phpMyAdmin version (example: 5.0.4): " phpmyadmin_version;
-        read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect_answer;
-        if [[ $phpmyadmin_protect_answer == "yes" ]]; then
+        read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect;
+        if [[ $phpmyadmin_protect == "yes" ]]; then
           read -p "Enter .htpasswd Username: " htpasswd_username
           read -p "Enter .htpasswd Password: " htpasswd_password
         fi;
         echo ""; break;;
-        [Nn]* ) echo ""; break;;
+        [Nn]* ) phpmyadmin_install=no; echo ""; break;;
         * ) echo "Incorrect answer!";;
       esac
     done
 
     while [[ true ]]; do
-      read -p "Install knockd? [yes, no]: " install_knockd_answer
-      case $install_knockd_answer in
+      read -p "Install knockd? [yes, no]: " knockd_install
+      case $knockd_install in
         [Yy]* )
+        knockd_install=yes;
         read -p "Enter port sequence (example: 500,1001,456): " port_sequence;
         read -p "Enter command timeout (example: 10): " command_timeout;
         echo "";
         break;;
-        [Nn]* ) echo ""; break;;
+        [Nn]* ) knockd_install=no; echo ""; break;;
         * ) echo "Incorrect answer!";;
       esac
     done
 
     while [[ true ]]; do
-      read -p "Configure sftp? [yes, no]: " configure_sftp_answer
-      case $configure_sftp_answer in
+      read -p "Configure sftp? [yes, no]: " sftp_configure
+      case $sftp_configure in
         [Yy]* )
+        sftp_configure=yes;
         read -p "Enter sftp root directory: " sftp_root;
         read -p "Enter sftp username: " sftp_user;
         read -p "Enter sftp password: " sftp_password;
         break;
         echo "";;
-        [Nn]* ) echo ""; break;;
+        [Nn]* ) sftp_configure=no; echo ""; break;;
         * ) echo "Incorrect answer!";;
       esac
     done
@@ -118,30 +135,32 @@ domain_name: "$domain_name"
 hostname: "$hostname"
 
 https:
-  enable: "$answer_https"
-  option: "$ssl_option_answer"
+  enable: "$https_enable"
+  option: "$ssl_option"
   ssl:
     certificate: "$ssl_certificate_path"
     trusted_certificate: "$ssl_trusted_certificate"
     certificate_key: "$ssl_certificate_key_path"
+  ocsp:
+    must_staple: "$ocsp_must_staple"
 
 phpmyadmin:
-  install: "$install_phpmyadmin_answer"
+  install: "$phpmyadmin_install"
   version: "$phpmyadmin_version"
   protect:
-    enable: "$phpmyadmin_protect_answer"
+    enable: "$phpmyadmin_protect"
     credentials:
       user: "$htpasswd_username"
       password: "$htpasswd_password"
 
 knockd:
-  install: "$install_knockd_answer"
+  install: "$knockd_install"
   port_sequence: "$port_sequence"
   port_sequence_spaces: "${port_sequence//,/ }"
   command_timeout: "$command_timeout"
 
 sftp:
-  configure: "$configure_sftp_answer"
+  configure: "$sftp_configure"
   root: "$sftp_root"
   credentials:
     user: "$sftp_user"
@@ -189,8 +208,8 @@ php:
 EOF
 
   while [[ true ]]; do
-    read -p "To start deploying? [yes, no]: " answer_deploy
-    case $answer_deploy in
+    read -p "To start deploying? [yes, no]: " deploy
+    case $deploy in
       [Yy]* ) ansible-playbook playbook.yml; break;;
       [Nn]* ) echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml"; break;;
       * ) echo "Incorrect answer!";;
