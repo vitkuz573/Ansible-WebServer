@@ -1,10 +1,9 @@
----
 - name: Creating an sftp group
   group:
     name: sftpg
   when: sftp['configure'] == "yes"
   tags:
-    - sftp
+  - sftp
 
 - name: Creating an sftp user
   user:
@@ -13,7 +12,7 @@
     group: sftpg
   when: sftp['configure'] == "yes"
   tags:
-    - sftp
+  - sftp
 
 - name: Checking the existence of the sftp root directory
   stat:
@@ -21,7 +20,7 @@
   register: sftp_root_dir_details
   when: sftp['configure'] == "yes"
   tags:
-    - sftp
+  - sftp
 
 - name: Creating the sftp root directory
   file:
@@ -30,7 +29,7 @@
     state: directory
   when: sftp['configure'] == "yes" and not sftp_root_dir_details.stat.exists
   tags:
-    - sftp
+  - sftp
 
 - name: Checking the existence of the sftp user directory
   stat:
@@ -38,7 +37,7 @@
   register: sftp_user_dir_details
   when: sftp['configure'] == "yes"
   tags:
-    - sftp
+  - sftp
 
 - name: Creating a user sftp directory
   file:
@@ -49,7 +48,7 @@
     state: directory
   when: sftp['configure'] == "yes" and not sftp_user_dir_details.stat.exists
   tags:
-    - sftp
+  - sftp
 
 - name: Checking the existence of the upload directory
   stat:
@@ -57,7 +56,7 @@
   register: upload_dir_details
   when: sftp['configure'] == "yes"
   tags:
-    - sftp
+  - sftp
 
 - name: Creating an upload directory
   file:
@@ -68,16 +67,16 @@
     state: directory
   when: sftp['configure'] == "yes" and not upload_dir_details.stat.exists
   tags:
-    - sftp
+  - sftp
 
 - name: Setting up sshd_config
   blockinfile:
-    path: "/etc/ssh/sshd_config"
+    path: /etc/ssh/sshd_config
     block: |
       Match Group sftpg
       ChrootDirectory "{{ sftp['root'] }}/%u"
       ForceCommand internal-sftp
   when: sftp['configure'] == "yes"
   tags:
-    - sftp
+  - sftp
   notify: Restart SSH (Debian)

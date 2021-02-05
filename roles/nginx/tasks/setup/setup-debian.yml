@@ -1,15 +1,14 @@
----
 - name: Installing Nginx
   apt:
     pkg:
-      - nginx
+    - nginx
 
 - name: Installing required packages (option 2)
   apt:
     pkg:
-      - openssl
-      - python3-cryptography
-      - python3-openssl
+    - openssl
+    - python3-cryptography
+    - python3-openssl
   when: https['enable'] == "yes" and https['option'] == "2"
   tags:
   - letsencrypt

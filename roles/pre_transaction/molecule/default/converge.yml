@@ -1,7 +1,6 @@
----
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include pre_transaction"
-      include_role:
-        name: "pre_transaction"
+  - name: Include pre_transaction
+    include_role:
+      name: pre_transaction

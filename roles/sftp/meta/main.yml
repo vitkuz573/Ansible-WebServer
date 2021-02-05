@@ -1,17 +1,16 @@
----
 galaxy_info:
   author: vitkuz573
   description: sftp for Linux
   license: license (BSD, MIT)
   min_ansible_version: 2.1
   platforms:
-    - name: Debian
-      versions:
-        - all
+  - name: Debian
+    versions:
+    - all
   galaxy_tags:
-    - web
-    - sftp
-    - ftp
-    - webserver
+  - web
+  - sftp
+  - ftp
+  - webserver
 
 dependencies: []

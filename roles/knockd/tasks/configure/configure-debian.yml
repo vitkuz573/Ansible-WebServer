@@ -1,19 +1,18 @@
----
 - name: Enabling knockd
   copy:
-    src: "files/knockd"
-    dest: "/etc/default/knockd"
+    src: files/knockd
+    dest: /etc/default/knockd
     mode: 0644
   when: knockd['install'] == "yes"
   tags:
-    - knockd
+  - knockd
 
 - name: Setting up knockd
   template:
-    src: "templates/knockd.conf.j2"
-    dest: "/etc/knockd.conf"
+    src: templates/knockd.conf.j2
+    dest: /etc/knockd.conf
     mode: 0644
   when: knockd['install'] == "yes"
   notify: Restart Knockd (Debian)
   tags:
-    - knockd
+  - knockd

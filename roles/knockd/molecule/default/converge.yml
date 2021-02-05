@@ -1,7 +1,6 @@
----
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include knockd"
-      include_role:
-        name: "knockd"
+  - name: Include knockd
+    include_role:
+      name: knockd

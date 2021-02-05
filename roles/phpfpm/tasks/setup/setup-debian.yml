@@ -1,7 +1,6 @@
----
 - name: Installing PHP-FPM
   apt:
     pkg:
-      - php{{ php['version'] }}-fpm
+    - php{{ php['version'] }}-fpm
   tags:
-    - phpfpm
+  - phpfpm

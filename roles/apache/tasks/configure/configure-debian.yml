@@ -1,15 +1,14 @@
----
 - name: Changing the port in ports.conf
   lineinfile:
-    dest: "/etc/apache2/ports.conf"
-    regexp: "^#?Listen"
-    line: "Listen {{ apache['port'] }}"
+    dest: /etc/apache2/ports.conf
+    regexp: ^#?Listen
+    line: Listen {{ apache['port'] }}
 
 - name: Changing the port in 000-default.conf
   lineinfile:
-    dest: "/etc/apache2/sites-available/000-default.conf"
-    regexp: "^#?<VirtualHost"
-    line: "<VirtualHost *:{{ apache['port'] }}>"
+    dest: /etc/apache2/sites-available/000-default.conf
+    regexp: ^#?<VirtualHost
+    line: <VirtualHost *:{{ apache['port'] }}>
 
 - name: Enabling mod_actions
   apache2_module:
@@ -18,33 +17,33 @@
 
 - name: Checking for the existence of an available host
   stat:
-    path: "/etc/apache2/sites-available/{{ domain_name }}.conf"
+    path: /etc/apache2/sites-available/{{ domain_name }}.conf
   register: available_host_details
 
 - name: Creating a virtual host
   template:
-    src: "templates/apache.conf.j2"
-    dest: "/etc/apache2/sites-available/{{ domain_name }}.conf"
+    src: templates/apache.conf.j2
+    dest: /etc/apache2/sites-available/{{ domain_name }}.conf
     mode: 0644
   when: not available_host_details.stat.exists
 
 - name: Creating a directory for the virtual host
   file:
-    path: "/var/www/{{ domain_name }}/public"
+    path: /var/www/{{ domain_name }}/public
     mode: 0755
     state: directory
 
 - name: Generating index.html
   template:
-    src: "templates/index.html.j2"
-    dest: "/var/www/{{ domain_name }}/public/index.html"
+    src: templates/index.html.j2
+    dest: /var/www/{{ domain_name }}/public/index.html
     mode: 0644
   tags:
-    - gen_index
+  - gen_index
 
 - name: Checking for the existence of an enabled host
   stat:
-    path: "/etc/apache2/sites-enabled/{{ domain_name }}.conf"
+    path: /etc/apache2/sites-enabled/{{ domain_name }}.conf
   register: enable_host_details
 
 - name: Enabling the virtual host
@@ -53,11 +52,11 @@
 
 - name: Hiding the Apache version
   blockinfile:
-    path: "/etc/apache2/apache2.conf"
+    path: /etc/apache2/apache2.conf
     block: |
       ServerSignature Off
       ServerTokens Prod
   tags:
-    - security
-    - hide_apache_version
+  - security
+  - hide_apache_version
   notify: Restart Apache (Debian)

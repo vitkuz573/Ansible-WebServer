@@ -1,7 +1,6 @@
----
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include mod_fastcgi"
-      include_role:
-        name: "mod_fastcgi"
+  - name: Include mod_fastcgi
+    include_role:
+      name: mod_fastcgi

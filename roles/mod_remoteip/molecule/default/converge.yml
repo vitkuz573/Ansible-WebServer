@@ -1,7 +1,6 @@
----
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include mod_remoteip"
-      include_role:
-        name: "mod_remoteip"
+  - name: Include mod_remoteip
+    include_role:
+      name: mod_remoteip

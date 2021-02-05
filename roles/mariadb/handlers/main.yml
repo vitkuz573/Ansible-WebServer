@@ -1,4 +1,3 @@
----
 - name: Restart MariaDB (Debian)
   service:
     name: mariadb

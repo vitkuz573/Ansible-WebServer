@@ -1,15 +1,14 @@
----
 - name: Installing MariaDB
   apt:
     pkg:
-      - mariadb-server
-      - python3-pymysql
+    - mariadb-server
+    - python3-pymysql
   tags:
-    - mariadb
+  - mariadb
 
 - name: Installing PyMySQL
   pip:
     name: pymysql
     executable: pip3
   tags:
-    - mariadb
+  - mariadb

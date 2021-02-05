@@ -1,2 +1,1 @@
----
-- include_tasks: "setup/setup-{{ ansible_os_family | lower }}.yml"
+- include_tasks: setup/setup-{{ ansible_os_family | lower }}.yml

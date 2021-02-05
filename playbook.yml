@@ -1,19 +1,18 @@
----
 - hosts: debian
   gather_facts: true
   vars_files:
-    - ./group_vars/vars.yml
-    - ./host_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
+  - ./group_vars/vars.yml
+  - ./host_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
   roles:
-    - pre_transaction
-    - apache
-    - phpfpm
-    - mod_fastcgi
-    - mod_remoteip
-    - nginx
-    - mariadb
-    - phpmyadmin
-    - knockd
-    - sftp
-    - ufw
-    - post_transaction
+  - pre_transaction
+  - apache
+  - phpfpm
+  - mod_fastcgi
+  - mod_remoteip
+  - nginx
+  - mariadb
+  - phpmyadmin
+  - knockd
+  - sftp
+  - ufw
+  - post_transaction

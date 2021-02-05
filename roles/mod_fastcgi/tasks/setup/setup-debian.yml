@@ -1,7 +1,6 @@
----
 - name: Installing mod_fastcgi
   apt:
     deb: https://mirrors.edge.kernel.org/ubuntu/pool/multiverse/liba/libapache-mod-fastcgi/libapache2-mod-fastcgi_2.4.7~0910052141-1.2_amd64.deb
   tags:
-    - phpfpm
-    - modfastcgi
+  - phpfpm
+  - modfastcgi

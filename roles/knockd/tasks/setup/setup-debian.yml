@@ -1,8 +1,7 @@
----
 - name: Installing knockd
   apt:
     pkg:
-      - knockd
+    - knockd
   when: knockd['install'] == "yes"
   tags:
-    - knockd
+  - knockd

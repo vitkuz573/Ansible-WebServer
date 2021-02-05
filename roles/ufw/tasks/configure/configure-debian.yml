@@ -1,9 +1,8 @@
----
 - name: Setting the default policy
   ufw:
     policy: deny
   tags:
-    - ufw
+  - ufw
 
 - name: Blocking access to the Apache port
   ufw:
@@ -11,43 +10,43 @@
     port: "{{ apache['port'] }}"
     proto: tcp
   tags:
-    - ufw
-    - security
-    - block_apache_port
+  - ufw
+  - security
+  - block_apache_port
 
 - name: Allow SSH access
   ufw:
     rule: allow
-    name: "OpenSSH"
+    name: OpenSSH
   tags:
-    - ufw
+  - ufw
   when: knockd['install'] != "yes"
 
 - name: Allowing HTTP traffic (Nginx)
   ufw:
     rule: allow
-    name: "Nginx HTTP"
+    name: Nginx HTTP
   tags:
-    - ufw
+  - ufw
   when: https['enable'] == "no"
 
 - name: Allowing HTTP and HTTPS traffic (Nginx)
   ufw:
     rule: allow
-    name: "Nginx Full"
+    name: Nginx Full
   tags:
-    - ufw
+  - ufw
   when: https['enable'] == "yes"
 
 - name: Allowing Apache
   ufw:
     rule: allow
-    name: "WWW"
+    name: WWW
   tags:
-    - ufw
+  - ufw
 
 - name: Enabling UFW
   ufw:
     state: enabled
   tags:
-    - ufw
+  - ufw

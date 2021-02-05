@@ -1,7 +1,6 @@
----
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include phpfpm"
-      include_role:
-        name: "phpfpm"
+  - name: Include phpfpm
+    include_role:
+      name: phpfpm

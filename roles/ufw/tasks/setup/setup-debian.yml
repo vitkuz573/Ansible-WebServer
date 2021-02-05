@@ -1,7 +1,6 @@
----
 - name: Installing UFW
   apt:
     pkg:
-      - ufw
-  tags:
     - ufw
+  tags:
+  - ufw

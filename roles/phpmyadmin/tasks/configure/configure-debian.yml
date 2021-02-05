@@ -1,46 +1,45 @@
----
 - name: Checking the config.inc.php file for existence
   stat:
-    path: "/var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php"
+    path: /var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php
   register: config_inc_php_details
   when: phpmyadmin['install'] == "yes"
   tags:
-    - phpmyadmin
+  - phpmyadmin
 
 - name: Generating a blowfish phrase
   command: pwgen 32 1
   register: blowfish
   when: phpmyadmin['install'] == "yes" and not config_inc_php_details.stat.exists
   tags:
-    - phpmyadmin
+  - phpmyadmin
 
 - name: Setting up phpMyAdmin
   template:
-    src: "templates/config.inc.php.j2"
-    dest: "/var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php"
+    src: templates/config.inc.php.j2
+    dest: /var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php
     mode: 0644
   when: phpmyadmin['install'] == "yes" and not config_inc_php_details.stat.exists
   tags:
-    - phpmyadmin
+  - phpmyadmin
 
 - name: Generating .htpasswd
   htpasswd:
-    path: "/var/www/.htpasswd"
+    path: /var/www/.htpasswd
     mode: 0644
     name: "{{ phpmyadmin['protect']['credentials']['user'] }}"
     password: "{{ phpmyadmin['protect']['credentials']['password'] }}"
     crypt_scheme: md5_crypt
   when: phpmyadmin['install'] == "yes" and phpmyadmin['protect']['enable'] == "yes"
   tags:
-    - phpmyadmin
-    - protecting_phpmyadmin
+  - phpmyadmin
+  - protecting_phpmyadmin
 
 - name: Copying .htaccess
   copy:
-    src: "files/.htaccess"
-    dest: "/var/www/{{ domain_name }}/public/phpmyadmin/.htaccess"
+    src: files/.htaccess
+    dest: /var/www/{{ domain_name }}/public/phpmyadmin/.htaccess
     mode: 0644
   when: phpmyadmin['install'] == "yes" and phpmyadmin['protect']['enable'] == "yes"
   tags:
-    - phpmyadmin
-    - protecting_phpmyadmin
+  - phpmyadmin
+  - protecting_phpmyadmin
