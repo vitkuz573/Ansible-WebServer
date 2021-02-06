@@ -1,4 +1,5 @@
-# Ansible-WebServer PLAYBOOK
+# [Ansible WebServer](https://github.com/vitkuz573/Ansible-WebServer) [<img src="https://raw.githubusercontent.com/vitkuz573/Ansible-WebServer/master/.github/ansible-webserver.svg?sanitize=true" width="200" height="200" align="right" alt="">](https://github.com/vitkuz573/Ansible-WebServer)
+
 [![License](https://img.shields.io/github/license/vitkuz573/Ansible-WebServer)](https://github.com/vitkuz573/Ansible-WebServer/blob/master/LICENSE)
 [![Help Wanted](https://img.shields.io/github/issues/vitkuz573/Ansible-WebServer/help%20wanted?color=green)](https://github.com/vitkuz573/Ansible-WebServer/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![Lines Of Code](https://tokei.rs/b1/github/vitkuz573/Ansible-WebServer?category=code)](https://github.com/vitkuz573/Ansible-WebServer)
@@ -9,29 +10,32 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
 
 ## Usage
 
-First, install ansible:
+1) Install Ansible:
+
+Debian:
 ```
 sudo apt install ansible
 ```
 
-Then run init.sh and follow the instructions:
+2) Run init.sh and follow the instructions:
 ```
 ./init.sh
 ```
 WARNING: For correct playbook operation, do not run it directly from the server where the deployment is planned. Instead, use another server (your PC or virtual machine).
 
-NOTE: In case of deploying a web server with HTTPS, the *.crt and *.key files must be on the server at the time of deployment!
+NOTE: In case of deploying a web server with HTTPS, the certificate and key files must be on the server at the time of deployment!
 
 ## What will be installed and configured?
-- Nginx
-- Apache
+- Nginx (Frontend)
+- Apache (Backend)
+- Apache Modules
+  - mod_fastcgi
+  - mod_remoteip
 - PHP-FPM
-- mod_fastcgi
-- mod_remoteip
 - MariaDB
-- phpMyAdmin
-- Knockd
-- SFTP Server
+- phpMyAdmin (optional)
+- Knockd (optional)
+- SFTP Server (optional)
 - UFW
 
 ## What will be done to improve security?
@@ -45,5 +49,6 @@ NOTE: In case of deploying a web server with HTTPS, the *.crt and *.key files mu
 # Roadmap
 
 - [X] Adding HTTPS support
+- [ ] Code optimization
 - [ ] GUI development for easier deployment
 - [ ] Adding support for other OSes
