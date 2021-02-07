@@ -17,37 +17,37 @@
 
 - name: Checking for the existence of an available host
   stat:
-    path: /etc/apache2/sites-available/{{ domain_name }}.conf
+    path: /etc/apache2/sites-available/{{ domain['name'] }}.conf
   register: available_host_details
 
 - name: Creating a virtual host
   template:
     src: templates/apache.conf.j2
-    dest: /etc/apache2/sites-available/{{ domain_name }}.conf
+    dest: /etc/apache2/sites-available/{{ domain['name'] }}.conf
     mode: 0644
   when: not available_host_details.stat.exists
 
 - name: Creating a directory for the virtual host
   file:
-    path: /var/www/{{ domain_name }}/public
+    path: /var/www/{{ domain['name'] }}/public
     mode: 0755
     state: directory
 
 - name: Generating index.html
   template:
     src: templates/index.html.j2
-    dest: /var/www/{{ domain_name }}/public/index.html
+    dest: /var/www/{{ domain['name'] }}/public/index.html
     mode: 0644
   tags:
   - gen_index
 
 - name: Checking for the existence of an enabled host
   stat:
-    path: /etc/apache2/sites-enabled/{{ domain_name }}.conf
+    path: /etc/apache2/sites-enabled/{{ domain['name'] }}.conf
   register: enable_host_details
 
 - name: Enabling the virtual host
-  command: sudo a2ensite {{ domain_name }}
+  command: sudo a2ensite {{ domain['name'] }}
   when: not enable_host_details.stat.exists
 
 - name: Hiding the Apache version

@@ -15,9 +15,14 @@ if [[ $continue == "yes" ]]; then
     while [[ true ]]; do
         read -p "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: " generate_ssh_key
         case $generate_ssh_key in
-            [Yy]* ) ssh-keygen; break ;;
-            [Nn]* ) echo -e "You refused to create a key!\n"; break ;;
-            * ) echo "Incorrect answer!" ;;
+            [Yy]* )
+                ssh-keygen;
+                break ;;
+            [Nn]* )
+                echo -e "You refused to create a key!\n";
+                break ;;
+            * )
+                echo "Incorrect answer!" ;;
         esac
     done
 
@@ -49,8 +54,8 @@ if [[ $continue == "yes" ]]; then
                     echo -e "\n1) Use a certificate obtained in advance\n2) Generate a Let's Encrypt certificate\n";
                     read -p "Choose the right option: " ssl_option;
                     if [[ $ssl_option == "1" ]]; then
-                        read -p "Enter SSL Certificate Path: " ssl_certificate_path
-                        read -p "Enter SSL Trusted Certificate Path: " ssl_trusted_certificate
+                        read -p "Enter SSL Certificate Path (chain): " ssl_certificate_path
+                        read -p "Enter SSL Trusted Certificate Path (fullchain): " ssl_trusted_certificate
                         read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
                     fi
                     if [[ $ssl_option == "2" ]]; then
@@ -61,16 +66,26 @@ if [[ $continue == "yes" ]]; then
                         while [[ true ]]; do
                             read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
                             case $ocsp_must_staple in
-                                [Yy]* ) ocsp_must_staple=true; break ;;
-                                [Nn]* ) ocsp_must_staple=false; break ;;
-                                * ) echo "Incorrect answer!" ;;
+                                [Yy]* )
+                                    ocsp_must_staple=true;
+                                    break ;;
+                                [Nn]* )
+                                    ocsp_must_staple=false;
+                                    break ;;
+                                * )
+                                    echo "Incorrect answer!" ;;
                             esac
                         done
                     fi
 
-                    echo ""; break ;;
-                [Nn]* ) https_enable=no; echo ""; break ;;
-                * ) echo "Incorrect answer!";
+                    echo "";
+                    break ;;
+                [Nn]* )
+                    https_enable=no;
+                    echo "";
+                    break ;;
+                * )
+                    echo "Incorrect answer!";
             esac
         done
 
@@ -85,9 +100,14 @@ if [[ $continue == "yes" ]]; then
                         read -p "Enter .htpasswd Username: " htpasswd_username
                         read -p "Enter .htpasswd Password: " htpasswd_password
                     fi;
-                    echo ""; break ;;
-                [Nn]* ) phpmyadmin_install=no; echo ""; break ;;
-                * ) echo "Incorrect answer!" ;;
+                    echo "";
+                    break ;;
+                [Nn]* )
+                    phpmyadmin_install=no;
+                    echo "";
+                    break ;;
+                * )
+                    echo "Incorrect answer!" ;;
             esac
         done
 
@@ -100,8 +120,12 @@ if [[ $continue == "yes" ]]; then
                     read -p "Enter command timeout (example: 10): " command_timeout;
                     echo "";
                     break ;;
-                [Nn]* ) knockd_install=no; echo ""; break ;;
-                * ) echo "Incorrect answer!" ;;
+                [Nn]* )
+                    knockd_install=no;
+                    echo "";
+                    break ;;
+                * )
+                    echo "Incorrect answer!" ;;
             esac
         done
 
@@ -115,8 +139,12 @@ if [[ $continue == "yes" ]]; then
                     read -p "Enter sftp password: " sftp_password;
                     break;
                     echo "" ;;
-                [Nn]* ) sftp_configure=no; echo ""; break ;;
-                * ) echo "Incorrect answer!" ;;
+                [Nn]* )
+                    sftp_configure=no;
+                    echo "";
+                    break ;;
+                * )
+                    echo "Incorrect answer!" ;;
             esac
         done
 
@@ -128,9 +156,11 @@ if [[ $continue == "yes" ]]; then
 
         cat <<EOF> host_vars/$server_ip.yml
 ---
-domain_name: "$domain_name"
+host:
+  name: "$hostname"
 
-hostname: "$hostname"
+domain:
+  name: "$domain_name"
 
 https:
   enable: "$https_enable"
@@ -139,8 +169,8 @@ https:
     certificate: "$ssl_certificate_path"
     trusted_certificate: "$ssl_trusted_certificate"
     certificate_key: "$ssl_certificate_key_path"
-  ocsp:
-    must_staple: "$ocsp_must_staple"
+    ocsp:
+      must_staple: "$ocsp_must_staple"
 
 phpmyadmin:
   install: "$phpmyadmin_install"
@@ -208,9 +238,14 @@ EOF
     while [[ true ]]; do
         read -p "To start deploying? [yes, no]: " deploy
         case $deploy in
-            [Yy]* ) ansible-playbook playbook.yml; break ;;
-            [Nn]* ) echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml"; break ;;
-            * ) echo "Incorrect answer!" ;;
+            [Yy]* )
+                ansible-playbook playbook.yml;
+                break ;;
+            [Nn]* )
+                echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml";
+                break ;;
+            * )
+                echo "Incorrect answer!" ;;
         esac
     done
 

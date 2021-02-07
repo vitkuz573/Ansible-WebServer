@@ -1,6 +1,6 @@
 galaxy_info:
   author: vitkuz573
-  description: mod_fastcgi for Linux
+  description: Let's Encrypt for Linux
   license: license (BSD, MIT)
   min_ansible_version: 2.10
   platforms:
@@ -9,10 +9,6 @@ galaxy_info:
     - all
   galaxy_tags:
   - web
-  - apache
-  - webserver
-  - httpd
-  - modfastcgi
-  - fastcgi
+  - letsencrypt
 
 dependencies: []

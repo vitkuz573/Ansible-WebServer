@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Welcome to {{ domain_name }}</title>
+  <title>Welcome to {{ domain['name'] }}</title>
 </head>
 <body>
 
@@ -13,7 +13,7 @@
 <article>
  Brief info: <br><br>
  Server IP address: {{ ansible_ssh_host }} <br>
- Domain name: {{ domain_name }} <br><br>
+ Domain name: {{ domain['name'] }} <br><br>
 
  OS: {{ ansible_system }} <br>
  OS Family: {{ ansible_os_family }} <br>

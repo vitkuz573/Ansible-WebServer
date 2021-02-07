@@ -1,0 +1,143 @@
+- name: Checking the letsencrypt domain directory for existence
+  stat:
+    path: /etc/letsencrypt/live/{{ domain['name'] }}
+  register: letsencrypt_domain_details
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Creating a directory for letsencrypt domain
+  file:
+    path: /etc/letsencrypt/live/{{ domain['name'] }}
+    mode: 0755
+    state: directory
+  when: https['enable'] == "yes" and https['option'] == "2" and not letsencrypt_domain_details.stat.exists
+  tags:
+  - letsencrypt
+
+- name: Generating a private key (account)
+  openssl_privatekey:
+    path: /etc/letsencrypt/live/{{ domain['name'] }}/account_privkey.pem
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Generating a private key (certificate)
+  openssl_privatekey:
+    path: /etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem
+  when: https['enable'] == "yes" and https['option'] == "2"
+  register: cert_key
+  tags:
+  - letsencrypt
+
+- name: Checking the csr directory for existence
+  stat:
+    path: /etc/ssl/csr
+  register: csr_details
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Creating a directory for CSR
+  file:
+    path: /etc/ssl/csr
+    mode: 0755
+    state: directory
+  when: https['enable'] == "yes" and https['option'] == "2" and not csr_details.stat.exists
+  tags:
+  - letsencrypt
+
+- name: Creating a CSR
+  openssl_csr:
+    path: /etc/letsencrypt/live/{{ domain['name'] }}/{{ domain['name'] }}.csr
+    privatekey_path: /etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem
+    force: true
+    common_name: "{{ domain['name'] }}"
+    ocsp_must_staple: "{{ https['ssl']['ocsp']['must_staple'] }}"
+  when: https['enable'] == "yes" and https['option'] == "2" and cert_key is changed
+  tags:
+  - letsencrypt
+
+- name: Checking the ACME challenge directory for existence
+  stat:
+    path: /var/www/_letsencrypt/.well-known/acme-challenge
+  register: well_known_acme_challenge_details
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Creating ACME challenge directory
+  file:
+    path: /var/www/_letsencrypt/.well-known/acme-challenge
+    mode: 0755
+    state: directory
+  when: https['enable'] == "yes" and https['option'] == "2" and not well_known_acme_challenge_details.stat.exists
+  tags:
+  - letsencrypt
+
+- name: Obtaining a certificate (step 1)
+  acme_certificate:
+    acme_directory: https://acme-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/letsencrypt/live/{{ domain['name'] }}/account_privkey.pem
+    terms_agreed: true
+    challenge: http-01
+    csr: /etc/letsencrypt/live/{{ domain['name'] }}/{{ domain['name'] }}.csr
+    dest: /etc/letsencrypt/live/{{ domain['name'] }}.pem
+    chain_dest: /etc/letsencrypt/live/{{ domain['name'] }}/chain.pem
+    fullchain_dest: /etc/letsencrypt/live/{{ domain['name'] }}/fullchain.pem
+    remaining_days: 60
+    deactivate_authzs: true
+    force: true
+  register: challenge
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Obtaining a certificate (step 2)
+  copy:
+    dest: /var/www/_letsencrypt/{% challenge['challenge_data']['{{ domain['name'] }}']['http-01']['resource'] %}
+    content: "{% challenge['challenge_data']['{{ domain['name'] }}']['http-01']['resource_value'] %}"
+    mode: 0644
+  when: https['enable'] == "yes" and https['option'] == "2" and challenge is changed
+  tags:
+  - letsencrypt
+
+- name: Obtaining a certificate (step 3)
+  acme_certificate:
+    acme_directory: https://acme-v02.api.letsencrypt.org/directory
+    acme_version: 2
+    account_key_src: /etc/letsencrypt/live/{{ domain['name'] }}/account_privkey.pem
+    terms_agreed: true
+    challenge: http-01
+    csr: /etc/ssl/csr/{{ domain['name'] }}.csr
+    dest: /etc/letsencrypt/live/{{ domain['name'] }}.pem
+    chain_dest: /etc/letsencrypt/live/{{ domain['name'] }}/chain.pem
+    fullchain_dest: /etc/letsencrypt/live/{{ domain['name'] }}/fullchain.pem
+    remaining_days: 60
+    deactivate_authzs: true
+    force: true
+    data: '{{ challenge }}'
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Creating a host (with HTTPS) (option 2)
+  template:
+    src: templates/domain_https_letsencrypt.conf.j2
+    dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
+    mode: 0644
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt
+
+- name: Enabling the host
+  file:
+    src: /etc/nginx/sites-available/{{ domain['name'] }}.conf
+    dest: /etc/nginx/sites-enabled/{{ domain['name'] }}.conf
+    state: link
+    force: true
+  when: https['enable'] == "yes" and https['option'] == "2"
+  notify: Restart Nginx (Debian)
+  tags:
+  - letsencrypt

@@ -2,7 +2,7 @@ galaxy_info:
   author: vitkuz573
   description: Knockd for Linux
   license: license (BSD, MIT)
-  min_ansible_version: 2.1
+  min_ansible_version: 2.10
   platforms:
   - name: Debian
     versions:

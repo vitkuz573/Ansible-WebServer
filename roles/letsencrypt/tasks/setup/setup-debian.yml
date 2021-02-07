@@ -1,0 +1,9 @@
+- name: Installing required packages
+  apt:
+    pkg:
+    - openssl
+    - python3-cryptography
+    - python3-openssl
+  when: https['enable'] == "yes" and https['option'] == "2"
+  tags:
+  - letsencrypt

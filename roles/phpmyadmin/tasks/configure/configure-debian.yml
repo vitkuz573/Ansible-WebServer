@@ -1,6 +1,6 @@
 - name: Checking the config.inc.php file for existence
   stat:
-    path: /var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php
+    path: /var/www/{{ domain['name'] }}/public/phpmyadmin/config.inc.php
   register: config_inc_php_details
   when: phpmyadmin['install'] == "yes"
   tags:
@@ -16,7 +16,7 @@
 - name: Setting up phpMyAdmin
   template:
     src: templates/config.inc.php.j2
-    dest: /var/www/{{ domain_name }}/public/phpmyadmin/config.inc.php
+    dest: /var/www/{{ domain['name'] }}/public/phpmyadmin/config.inc.php
     mode: 0644
   when: phpmyadmin['install'] == "yes" and not config_inc_php_details.stat.exists
   tags:
@@ -37,7 +37,7 @@
 - name: Copying .htaccess
   copy:
     src: files/.htaccess
-    dest: /var/www/{{ domain_name }}/public/phpmyadmin/.htaccess
+    dest: /var/www/{{ domain['name'] }}/public/phpmyadmin/.htaccess
     mode: 0644
   when: phpmyadmin['install'] == "yes" and phpmyadmin['protect']['enable'] == "yes"
   tags:

@@ -1,8 +1,8 @@
 server {
     listen                {{ ansible_ssh_host }}:80;
     listen                [::]:80;
-    server_name           {{ domain_name }};
-    root                  /var/www/{{ domain_name }}/public;
+    server_name           {{ domain['name'] }};
+    root                  /var/www/{{ domain['name'] }}/public;
     client_body_timeout   {{ nginx['timeout']['client']['body'] }}s;
     client_header_timeout {{ nginx['timeout']['client']['header'] }}s;
     charset               utf-8;
@@ -11,8 +11,8 @@ server {
         return '405';
     }
 
-    access_log /var/log/nginx/{{ domain_name }}.access.log;
-    error_log  /var/log/nginx/{{ domain_name }}.error.log warn;
+    access_log /var/log/nginx/{{ domain['name'] }}.access.log;
+    error_log  /var/log/nginx/{{ domain['name'] }}.error.log warn;
 
     index index.php index.html;
 
@@ -22,7 +22,7 @@ server {
 
     location ~ ^/phpmyadmin/* {
         proxy_pass http://{{ ansible_ssh_host }}:{{ apache['port'] }};
-        root /var/www/{{ domain_name }}/public/phpmyadmin/;
+        root /var/www/{{ domain['name'] }}/public/phpmyadmin/;
         include    ansiblewebserver.configs/proxy.conf;
     }
 

@@ -1,11 +1,11 @@
 - name: Setting hostname
   hostname:
-    name: '{{ hostname }}'
+    name: "{{ host['name'] }}"
 
 - name: Creating a script to connect to SSH
   template:
     src: templates/ssh_knock.sh.j2
-    dest: /home/$USER/ssh_knock_{{ domain_name }}.sh
+    dest: /home/$USER/ssh_knock_{{ domain['name'] }}.sh
     mode: 0644
   when: knockd['install'] == "yes"
   delegate_to: 127.0.0.1
@@ -14,7 +14,7 @@
 
 - name: Changing permissions for knocking script
   file:
-    dest: /home/$USER/ssh_knock_{{ domain_name }}.sh
+    dest: /home/$USER/ssh_knock_{{ domain['name'] }}.sh
     mode: a+x
   when: knockd['install'] == "yes"
   delegate_to: 127.0.0.1
