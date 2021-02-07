@@ -1,0 +1,7 @@
+- name: Installing Firewalld
+  apt:
+    pkg:
+    - firewalld
+  when: firewall['name'] == "firewalld"
+  tags:
+  - firewalld

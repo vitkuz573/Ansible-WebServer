@@ -16,4 +16,5 @@
   - knockd
   - sftp
   - ufw
+  - firewalld
   - post_transaction

@@ -1,5 +1,21 @@
 #!/bin/bash
 
+function valid_ip()
+{
+    local ip=$1
+    local stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+
 read -p "Continuing will erase the current configuration! Continue? [yes, no]: " continue
 if [[ $continue == "yes" ]]; then
     if [[ -e host_vars ]]; then
@@ -22,7 +38,7 @@ if [[ $continue == "yes" ]]; then
                 echo -e "You refused to create a key!\n";
                 break ;;
             * )
-                echo "Incorrect answer!" ;;
+                echo -e "Incorrect answer!\n" ;;
         esac
     done
 
@@ -37,8 +53,16 @@ if [[ $continue == "yes" ]]; then
     do
         echo -e "\nConfigure host" $(($count + 1)) "\n"
 
-        read -p "Enter IP: " server_ip
-        echo ""
+        while [[ true ]]; do
+            read -p "Enter IP: " server_ip
+            valid_ip $server_ip
+            if [[ $? -eq 0 ]]; then
+                echo ""
+                break;
+            else
+                echo -e "Incorrect IP address!\n"
+            fi
+        done
 
         read -p "Enter domain name: " domain_name
         echo ""
@@ -85,7 +109,7 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 * )
-                    echo "Incorrect answer!";
+                    echo -e "Incorrect answer!\n";
             esac
         done
 
@@ -107,7 +131,7 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 * )
-                    echo "Incorrect answer!" ;;
+                    echo -e "Incorrect answer!\n" ;;
             esac
         done
 
@@ -125,7 +149,7 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 * )
-                    echo "Incorrect answer!" ;;
+                    echo -e "Incorrect answer!\n" ;;
             esac
         done
 
@@ -144,13 +168,34 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 * )
-                    echo "Incorrect answer!" ;;
+                    echo -e "Incorrect answer!\n" ;;
             esac
         done
 
         read -p "Enter old MariaDB password (if exists): " mariadb_old_password
         read -p "Enter MariaDB password: " mariadb_password
-        echo ""
+
+        while [[ true ]]; do
+            read -p "Install a firewall? [yes, no]" firewall_install
+            case $firewall_install in
+                [Yy]* )
+                    echo -e "\nAvailable firewalls:\n\n1) UFW\n2) Firewalld\n"
+                    read -p "Choose a suitable firewall: " firewall
+                    if [[ $firewall == "1" ]]; then
+                        firewall_name="ufw"
+                    fi
+                    if [[ $firewall == "2" ]]; then
+                        firewall_name="firewalld"
+                    fi;
+                    echo "";
+                    break ;;
+                [Nn]* )
+                    echo "";
+                    break ;;
+                * )
+                    echo -e "Incorrect answer!\n" ;;
+            esac
+        done
 
         echo $server_ip >> hosts.ini
 
@@ -198,6 +243,9 @@ mariadb:
   password:
     old: "$mariadb_old_password"
     new: "$mariadb_password"
+
+firewall:
+  name: "$firewall_name"
 EOF
 
         echo "Enter your account password on the destination host to copy the public key to it!"

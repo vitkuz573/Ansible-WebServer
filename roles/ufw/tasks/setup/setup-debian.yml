@@ -2,5 +2,6 @@
   apt:
     pkg:
     - ufw
+  when: firewall['name'] == "ufw"
   tags:
   - ufw
