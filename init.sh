@@ -64,11 +64,25 @@ if [[ $continue == "yes" ]]; then
             fi
         done
 
-        read -p "Enter domain name: " domain_name
-        echo ""
+        while [[ true ]]; do
+            read -p "Enter domain name: " domain_name
+            if [[ -z $domain_name ]]; then
+                echo -e "The field cannot be empty!\n"
+            else
+                echo ""
+                break;
+            fi
+        done
 
-        read -p "Enter hostname: " hostname
-        echo ""
+        while [[ true ]]; do
+            read -p "Enter hostname: " hostname
+            if [[ -z $hostname ]]; then
+                echo -e "The field cannot be empty!\n"
+            else
+                echo ""
+                break;
+            fi
+        done
 
         while [[ true ]]; do
             read -p "Enable HTTPS? [yes, no]: " https_enable
@@ -118,7 +132,8 @@ if [[ $continue == "yes" ]]; then
             case $phpmyadmin_install in
                 [Yy]* )
                     phpmyadmin_install=yes;
-                    read -p "Enter phpMyAdmin version (example: 5.0.4): " phpmyadmin_version;
+                    read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version;
+                    phpmyadmin_version=${phpmyadmin_version:-5.0.4}
                     read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect;
                     if [[ $phpmyadmin_protect == "yes" ]]; then
                         read -p "Enter .htpasswd Username: " htpasswd_username
@@ -140,8 +155,10 @@ if [[ $continue == "yes" ]]; then
             case $knockd_install in
                 [Yy]* )
                     knockd_install=yes;
-                    read -p "Enter port sequence (example: 500,1001,456): " port_sequence;
-                    read -p "Enter command timeout (example: 10): " command_timeout;
+                    read -p "Enter port sequence (default: 500,1001,456): " port_sequence;
+                    port_sequence=${port_sequence:-500,1001,456}
+                    read -p "Enter command timeout (default: 10): " command_timeout;
+                    command_timeout=${command_timeout:-10}
                     echo "";
                     break ;;
                 [Nn]* )
@@ -173,10 +190,19 @@ if [[ $continue == "yes" ]]; then
         done
 
         read -p "Enter old MariaDB password (if exists): " mariadb_old_password
-        read -p "Enter MariaDB password: " mariadb_password
 
         while [[ true ]]; do
-            read -p "Install a firewall? [yes, no]" firewall_install
+            read -p "Enter MariaDB password: " mariadb_password
+            if [[ -z $mariadb_password ]]; then
+                echo -e "The field cannot be empty!\n"
+            else
+                echo ""
+                break;
+            fi
+        done
+
+        while [[ true ]]; do
+            read -p "Install a firewall? [yes, no]: " firewall_install
             case $firewall_install in
                 [Yy]* )
                     echo -e "\nAvailable firewalls:\n\n1) UFW\n2) Firewalld\n"
@@ -262,10 +288,13 @@ EOF
     echo -e "\nConfiguration of global parameters\n\nWeb-Server Ports"
     read -p "Enter Apache port: " apache_port
     echo -e "\nPHP configuration"
-    read -p "Enter PHP version (example: 7.3): " php_version
+    read -p "Enter PHP version (default: 7.3): " php_version
+    php_version=${php_version:-7.3}
     echo -e "\nNginx protection"
-    read -p "Enter client body timeout (example: 5): " client_body_timeout
-    read -p "Enter client header timeout (example: 5): " client_header_timeout
+    read -p "Enter client body timeout (default: 5): " client_body_timeout
+    client_body_timeout=${client_body_timeout:-5}
+    read -p "Enter client header timeout (default: 5): " client_header_timeout
+    client_header_timeout=${client_header_timeout:-5}
     echo ""
 
     cat <<EOF> group_vars/vars.yml
@@ -290,7 +319,7 @@ EOF
                 ansible-playbook playbook.yml;
                 break ;;
             [Nn]* )
-                echo "The deployment was aborted. To start the process, run ansible-playbook playbook.yml";
+                echo "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml";
                 break ;;
             * )
                 echo "Incorrect answer!" ;;
