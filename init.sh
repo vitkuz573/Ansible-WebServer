@@ -92,13 +92,40 @@ if [[ $continue == "yes" ]]; then
                     echo -e "\n1) Use a certificate obtained in advance\n2) Generate a Let's Encrypt certificate\n";
                     read -p "Choose the right option: " ssl_option;
                     if [[ $ssl_option == "1" ]]; then
-                        read -p "Enter SSL Certificate Path (chain): " ssl_certificate_path
-                        read -p "Enter SSL Trusted Certificate Path (fullchain): " ssl_trusted_certificate
-                        read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
+                        while [[ true ]]; do
+                            read -p "Enter SSL Certificate Path (chain): " ssl_certificate_path
+                            if [[ -z $ssl_certificate_path ]]; then
+                                echo -e "The field cannot be empty!\n"
+                            else
+                                echo ""
+                                break;
+                            fi
+                        done
+
+                        while [[ true ]]; do
+                            read -p "Enter SSL Trusted Certificate Path (fullchain): " ssl_trusted_certificate_path
+                            if [[ -z $ssl_trusted_certificate_path ]]; then
+                                echo -e "The field cannot be empty!\n"
+                            else
+                                echo ""
+                                break;
+                            fi
+                        done
+
+                        while [[ true ]]; do
+                            read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
+                            if [[ -z $ssl_certificate_key_path ]]; then
+                                echo -e "The field cannot be empty!\n"
+                            else
+                                echo ""
+                                break;
+                            fi
+                        done
+
                     fi
                     if [[ $ssl_option == "2" ]]; then
                         ssl_certificate_path="/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
-                        ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
+                        ssl_trusted_certificate_path="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
                         ssl_certificate_key_path="/etc/letsencrypt/live/{{ domain_name }}/privkey.pem"
                         echo ""
                         while [[ true ]]; do
@@ -238,7 +265,7 @@ https:
   option: "$ssl_option"
   ssl:
     certificate: "$ssl_certificate_path"
-    trusted_certificate: "$ssl_trusted_certificate"
+    trusted_certificate: "$ssl_trusted_certificate_path"
     certificate_key: "$ssl_certificate_key_path"
     ocsp:
       must_staple: "$ocsp_must_staple"
@@ -319,7 +346,7 @@ EOF
                 ansible-playbook playbook.yml;
                 break ;;
             [Nn]* )
-                echo "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml";
+                echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml";
                 break ;;
             * )
                 echo "Incorrect answer!" ;;

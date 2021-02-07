@@ -1,0 +1,41 @@
+- name: Blocking access to the Apache port
+  firewalld:
+    port: "{{ apache['port'] }}"
+    permanent: true
+    state: disabled
+  when: firewall['name'] == "firewalld"
+  tags:
+  - firewalld
+  - security
+  - block_apache_port
+
+- name: Allow SSH access
+  firewalld:
+    service: ssh
+    zone: public
+    permanent: true
+    state: present
+  when: firewall['name'] == "firewalld"
+  tags:
+  - firewalld
+
+- name: Allowing HTTP traffic
+  firewalld:
+    service: http
+    zone: public
+    permanent: true
+    state: present
+  when: firewall['name'] == "firewalld"
+  tags:
+  - firewalld
+
+- name: Allowing HTTPS traffic
+  firewalld:
+    service: https
+    zone: public
+    permanent: true
+    state: present
+  when: firewall['name'] == "firewalld" and https['enable'] == "yes"
+  notify: Restart Firewalld (Debian)
+  tags:
+  - firewalld

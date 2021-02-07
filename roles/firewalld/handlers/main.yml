@@ -1,1 +1,5 @@
-# handlers file for firewalld
+- name: Restart Firewalld (Debian)
+  service:
+    name: firewalld
+    enabled: true
+    state: restarted
