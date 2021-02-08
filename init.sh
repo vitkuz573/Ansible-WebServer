@@ -10,7 +10,7 @@ function valid_ip()
         IFS='.'
         ip=($ip)
         IFS=$OIFS
-        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 && ${ip[2]} -le 255 && ${ip[3]} -lt 255 && ${ip[3]} -gt 0 ]]
         stat=$?
     fi
     return $stat
