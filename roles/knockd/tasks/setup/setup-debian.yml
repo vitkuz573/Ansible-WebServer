@@ -2,6 +2,6 @@
   apt:
     pkg:
     - knockd
-  when: knockd['install'] == "yes"
+  when: knockd['install'] == "true"
   tags:
   - knockd

@@ -3,7 +3,7 @@
     pkg:
     - php-mysql
     - php-mbstring
-  when: phpmyadmin['install'] == "yes"
+  when: phpmyadmin['install'] == "true"
   tags:
   - phpmyadmin
 
@@ -12,7 +12,7 @@
     src: https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin['version'] }}/phpMyAdmin-{{ phpmyadmin['version'] }}-all-languages.zip
     dest: /var/www/{{ domain['name'] }}/public/
     remote_src: true
-  when: phpmyadmin['install'] == "yes"
+  when: phpmyadmin['install'] == "true"
   tags:
   - phpmyadmin
 
@@ -20,7 +20,7 @@
   stat:
     path: /var/www/{{ domain['name'] }}/public/phpmyadmin
   register: phpmyadmin_details
-  when: phpmyadmin['install'] == "yes"
+  when: phpmyadmin['install'] == "true"
   tags:
   - phpmyadmin
 
@@ -30,6 +30,6 @@
     dest: /var/www/{{ domain['name'] }}/public/phpmyadmin/
     remote_src: true
     mode: 0755
-  when: phpmyadmin['install'] == "yes" and not phpmyadmin_details.stat.exists
+  when: phpmyadmin['install'] == "true" and not phpmyadmin_details.stat.exists
   tags:
   - phpmyadmin

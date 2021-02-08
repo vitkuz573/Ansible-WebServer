@@ -3,14 +3,14 @@
     src: files/nginx_http.conf
     dest: /etc/nginx/nginx.conf
     mode: 0644
-  when: https['enable'] == "no"
+  when: https['enable'] == "false"
 
 - name: Setting up Nginx (with HTTPS)
   copy:
     src: files/nginx_https.conf
     dest: /etc/nginx/nginx.conf
     mode: 0644
-  when: https['enable'] == "yes"
+  when: https['enable'] == "true"
 
 - name: Checking the ansiblewebserver.configs directory for existence
   stat:
@@ -29,21 +29,21 @@
     src: files/security_http.conf
     dest: /etc/nginx/ansiblewebserver.configs/security.conf
     mode: 0644
-  when: https['enable'] == "no"
+  when: https['enable'] == "false"
 
 - name: Copying security.conf (with HTTPS)
   copy:
     src: files/security_https.conf
     dest: /etc/nginx/ansiblewebserver.configs/security.conf
     mode: 0644
-  when: https['enable'] == "yes"
+  when: https['enable'] == "true"
 
 - name: Copying letsencrypt.conf
   copy:
     src: files/letsencrypt.conf
     dest: /etc/nginx/ansiblewebserver.configs/letsencrypt.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
 
 - name: Checking dhparam.pem file for existence
   stat:
@@ -55,7 +55,7 @@
     path: /etc/nginx/dhparam.pem
     size: 4096
     force: true
-  when: https['enable'] == "yes" and not dhparam_details.stat.exists
+  when: https['enable'] == "true" and not dhparam_details.stat.exists
 
 - name: Copying general.conf
   copy:
@@ -74,21 +74,21 @@
     src: templates/domain_http.conf.j2
     dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "no"
+  when: https['enable'] == "false"
 
 - name: Creating a host (with HTTPS) (option 1)
   template:
     src: templates/domain_https.conf.j2
     dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "1"
+  when: https['enable'] == "true" and https['option'] == "1"
 
 - name: Creating a host (with HTTPS) (option 2)
   template:
     src: templates/domain_letsencrypt.conf.j2
     dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
 
 - name: Enabling the host
   file:

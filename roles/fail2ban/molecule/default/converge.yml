@@ -1,0 +1,6 @@
+- name: Converge
+  hosts: all
+  tasks:
+  - name: Include fail2ban
+    include_role:
+      name: fail2ban

@@ -88,7 +88,7 @@ if [[ $continue == "yes" ]]; then
             read -p "Enable HTTPS? [yes, no]: " https_enable
             case $https_enable in
                 [Yy]* )
-                    https_enable=yes;
+                    https_enable=true;
                     echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n";
                     read -p "Choose the right option: " ssl_option;
                     if [[ $ssl_option == "1" ]]; then
@@ -146,7 +146,7 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 [Nn]* )
-                    https_enable=no;
+                    https_enable=false;
                     echo "";
                     break ;;
                 * )
@@ -158,7 +158,7 @@ if [[ $continue == "yes" ]]; then
             read -p "Install phpMyAdmin? [yes, no]: " phpmyadmin_install
             case $phpmyadmin_install in
                 [Yy]* )
-                    phpmyadmin_install=yes;
+                    phpmyadmin_install=true;
                     read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version;
                     phpmyadmin_version=${phpmyadmin_version:-5.0.4}
                     read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect;
@@ -169,7 +169,23 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 [Nn]* )
-                    phpmyadmin_install=no;
+                    phpmyadmin_install=false;
+                    echo "";
+                    break ;;
+                * )
+                    echo -e "Incorrect answer!\n" ;;
+            esac
+        done
+
+        while [[ true ]]; do
+            read -p "Install fail2ban? [yes, no]: " fail2ban_install
+            case $fail2ban_install in
+                [Yy]* )
+                    fail2ban_install=true;
+                    echo "";
+                    break ;;
+                [Nn]* )
+                    fail2ban_install=false;
                     echo "";
                     break ;;
                 * )
@@ -181,7 +197,7 @@ if [[ $continue == "yes" ]]; then
             read -p "Install knockd? [yes, no]: " knockd_install
             case $knockd_install in
                 [Yy]* )
-                    knockd_install=yes;
+                    knockd_install=true;
                     read -p "Enter port sequence (default: 500,1001,456): " port_sequence;
                     port_sequence=${port_sequence:-500,1001,456}
                     read -p "Enter command timeout (default: 10): " command_timeout;
@@ -189,7 +205,7 @@ if [[ $continue == "yes" ]]; then
                     echo "";
                     break ;;
                 [Nn]* )
-                    knockd_install=no;
+                    knockd_install=false;
                     echo "";
                     break ;;
                 * )
@@ -201,31 +217,19 @@ if [[ $continue == "yes" ]]; then
             read -p "Configure sftp? [yes, no]: " sftp_configure
             case $sftp_configure in
                 [Yy]* )
-                    sftp_configure=yes;
+                    sftp_configure=true;
                     read -p "Enter sftp root directory: " sftp_root;
                     read -p "Enter sftp username: " sftp_user;
                     read -p "Enter sftp password: " sftp_password;
                     break;
                     echo "" ;;
                 [Nn]* )
-                    sftp_configure=no;
+                    sftp_configure=false;
                     echo "";
                     break ;;
                 * )
                     echo -e "Incorrect answer!\n" ;;
             esac
-        done
-
-        read -p "Enter old MariaDB password (if exists): " mariadb_old_password
-
-        while [[ true ]]; do
-            read -p "Enter MariaDB password: " mariadb_password
-            if [[ -z $mariadb_password ]]; then
-                echo -e "The field cannot be empty!\n"
-            else
-                echo ""
-                break;
-            fi
         done
 
         while [[ true ]]; do
@@ -248,6 +252,18 @@ if [[ $continue == "yes" ]]; then
                 * )
                     echo -e "Incorrect answer!\n" ;;
             esac
+        done
+
+        read -p "Enter old MariaDB password (if exists): " mariadb_old_password
+
+        while [[ true ]]; do
+            read -p "Enter MariaDB password: " mariadb_password
+            if [[ -z $mariadb_password ]]; then
+                echo -e "The field cannot be empty!\n"
+            else
+                echo ""
+                break;
+            fi
         done
 
         echo $server_ip >> hosts.ini
@@ -278,6 +294,9 @@ phpmyadmin:
     credentials:
       user: "$htpasswd_username"
       password: "$htpasswd_password"
+
+fail2ban:
+  install: "$fail2ban_install"
 
 knockd:
   install: "$knockd_install"

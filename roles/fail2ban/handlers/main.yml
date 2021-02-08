@@ -1,0 +1,5 @@
+- name: Restart Fail2ban (Debian)
+  service:
+    name: fail2ban
+    enabled: true
+    state: restarted

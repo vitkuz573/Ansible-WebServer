@@ -1,5 +1,5 @@
 - name: Blocking access to the Apache port
-  firewalld:
+  ansible.posix.firewalld:
     port: "{{ apache['port'] }}"
     permanent: true
     state: disabled
@@ -10,7 +10,7 @@
   - block_apache_port
 
 - name: Allow SSH access
-  firewalld:
+  ansible.posix.firewalld:
     service: ssh
     zone: public
     permanent: true
@@ -20,7 +20,7 @@
   - firewalld
 
 - name: Allowing HTTP traffic
-  firewalld:
+  ansible.posix.firewalld:
     service: http
     zone: public
     permanent: true
@@ -30,12 +30,12 @@
   - firewalld
 
 - name: Allowing HTTPS traffic
-  firewalld:
+  ansible.posix.firewalld:
     service: https
     zone: public
     permanent: true
     state: present
-  when: firewall['name'] == "firewalld" and https['enable'] == "yes"
+  when: firewall['name'] == "firewalld" and https['enable'] == "true"
   notify: Restart Firewalld (Debian)
   tags:
   - firewalld

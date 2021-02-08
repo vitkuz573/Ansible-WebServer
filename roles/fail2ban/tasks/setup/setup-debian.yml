@@ -1,0 +1,7 @@
+- name: Installing fail2ban
+  apt:
+    pkg:
+    - fail2ban
+  when: fail2ban['install'] == "true"
+  tags:
+  - fail2ban

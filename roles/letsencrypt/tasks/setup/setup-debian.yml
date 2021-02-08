@@ -4,6 +4,6 @@
     - openssl
     - python3-cryptography
     - python3-openssl
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt

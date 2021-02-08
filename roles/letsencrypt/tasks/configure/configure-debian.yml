@@ -2,7 +2,7 @@
   stat:
     path: /etc/letsencrypt/live/{{ domain['name'] }}
   register: letsencrypt_domain_details
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
@@ -11,21 +11,21 @@
     path: /etc/letsencrypt/live/{{ domain['name'] }}
     mode: 0755
     state: directory
-  when: https['enable'] == "yes" and https['option'] == "2" and not letsencrypt_domain_details.stat.exists
+  when: https['enable'] == "true" and https['option'] == "2" and not letsencrypt_domain_details.stat.exists
   tags:
   - letsencrypt
 
 - name: Generating a private key (account)
   openssl_privatekey:
     path: /etc/letsencrypt/live/{{ domain['name'] }}/account_privkey.pem
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
 - name: Generating a private key (certificate)
   openssl_privatekey:
     path: /etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   register: cert_key
   tags:
   - letsencrypt
@@ -34,7 +34,7 @@
   stat:
     path: /etc/ssl/csr
   register: csr_details
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
@@ -43,7 +43,7 @@
     path: /etc/ssl/csr
     mode: 0755
     state: directory
-  when: https['enable'] == "yes" and https['option'] == "2" and not csr_details.stat.exists
+  when: https['enable'] == "true" and https['option'] == "2" and not csr_details.stat.exists
   tags:
   - letsencrypt
 
@@ -54,7 +54,7 @@
     force: true
     common_name: "{{ domain['name'] }}"
     ocsp_must_staple: "{{ https['ssl']['ocsp']['must_staple'] }}"
-  when: https['enable'] == "yes" and https['option'] == "2" and cert_key is changed
+  when: https['enable'] == "true" and https['option'] == "2" and cert_key is changed
   tags:
   - letsencrypt
 
@@ -62,7 +62,7 @@
   stat:
     path: /var/www/_letsencrypt/.well-known/acme-challenge
   register: well_known_acme_challenge_details
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
@@ -71,7 +71,7 @@
     path: /var/www/_letsencrypt/.well-known/acme-challenge
     mode: 0755
     state: directory
-  when: https['enable'] == "yes" and https['option'] == "2" and not well_known_acme_challenge_details.stat.exists
+  when: https['enable'] == "true" and https['option'] == "2" and not well_known_acme_challenge_details.stat.exists
   tags:
   - letsencrypt
 
@@ -90,7 +90,7 @@
     deactivate_authzs: true
     force: true
   register: challenge
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
@@ -99,7 +99,7 @@
     dest: /var/www/_letsencrypt/{% challenge['challenge_data']['{{ domain['name'] }}']['http-01']['resource'] %}
     content: "{% challenge['challenge_data']['{{ domain['name'] }}']['http-01']['resource_value'] %}"
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2" and challenge is changed
+  when: https['enable'] == "true" and https['option'] == "2" and challenge is changed
   tags:
   - letsencrypt
 
@@ -118,7 +118,7 @@
     deactivate_authzs: true
     force: true
     data: '{{ challenge }}'
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
@@ -127,7 +127,7 @@
     src: templates/domain_https_letsencrypt.conf.j2
     dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   tags:
   - letsencrypt
 
@@ -137,7 +137,7 @@
     dest: /etc/nginx/sites-enabled/{{ domain['name'] }}.conf
     state: link
     force: true
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
   notify: Restart Nginx (Debian)
   tags:
   - letsencrypt

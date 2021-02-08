@@ -20,7 +20,7 @@
   ufw:
     rule: allow
     name: OpenSSH
-  when: firewall['name'] == "ufw" and knockd['install'] == "no"
+  when: firewall['name'] == "ufw" and knockd['install'] == "false"
   tags:
   - ufw
 
@@ -28,7 +28,7 @@
   ufw:
     rule: allow
     name: Nginx HTTP
-  when: firewall['name'] == "ufw" and https['enable'] == "no"
+  when: firewall['name'] == "ufw" and https['enable'] == "false"
   tags:
   - ufw
 
@@ -36,7 +36,7 @@
   ufw:
     rule: allow
     name: Nginx Full
-  when: firewall['name'] == "ufw" and https['enable'] == "yes"
+  when: firewall['name'] == "ufw" and https['enable'] == "true"
   tags:
   - ufw
 

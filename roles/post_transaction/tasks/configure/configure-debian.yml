@@ -7,7 +7,7 @@
     src: templates/ssh_knock.sh.j2
     dest: /home/$USER/ssh_knock_{{ domain['name'] }}.sh
     mode: 0644
-  when: knockd['install'] == "yes"
+  when: knockd['install'] == "true"
   delegate_to: 127.0.0.1
   tags:
   - knockd
@@ -16,7 +16,7 @@
   file:
     dest: /home/$USER/ssh_knock_{{ domain['name'] }}.sh
     mode: a+x
-  when: knockd['install'] == "yes"
+  when: knockd['install'] == "true"
   delegate_to: 127.0.0.1
   tags:
   - knockd
