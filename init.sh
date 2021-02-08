@@ -89,12 +89,12 @@ if [[ $continue == "yes" ]]; then
             case $https_enable in
                 [Yy]* )
                     https_enable=yes;
-                    echo -e "\n1) Use a certificate obtained in advance\n2) Generate a Let's Encrypt certificate\n";
+                    echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n";
                     read -p "Choose the right option: " ssl_option;
                     if [[ $ssl_option == "1" ]]; then
                         while [[ true ]]; do
-                            read -p "Enter SSL Certificate Path (chain): " ssl_certificate_path
-                            if [[ -z $ssl_certificate_path ]]; then
+                            read -p "Enter SSL Certificate Path (chain): " ssl_certificate
+                            if [[ -z $ssl_certificate ]]; then
                                 echo -e "The field cannot be empty!\n"
                             else
                                 echo ""
@@ -103,8 +103,8 @@ if [[ $continue == "yes" ]]; then
                         done
 
                         while [[ true ]]; do
-                            read -p "Enter SSL Trusted Certificate Path (fullchain): " ssl_trusted_certificate_path
-                            if [[ -z $ssl_trusted_certificate_path ]]; then
+                            read -p "Enter SSL Trusted Certificate Path (fullchain): " ssl_trusted_certificate
+                            if [[ -z $ssl_trusted_certificate ]]; then
                                 echo -e "The field cannot be empty!\n"
                             else
                                 echo ""
@@ -113,8 +113,8 @@ if [[ $continue == "yes" ]]; then
                         done
 
                         while [[ true ]]; do
-                            read -p "Enter SSL Certificate Key Path: " ssl_certificate_key_path
-                            if [[ -z $ssl_certificate_key_path ]]; then
+                            read -p "Enter SSL Certificate Key Path: " ssl_certificate_key
+                            if [[ -z $ssl_certificate_key ]]; then
                                 echo -e "The field cannot be empty!\n"
                             else
                                 echo ""
@@ -124,9 +124,9 @@ if [[ $continue == "yes" ]]; then
 
                     fi
                     if [[ $ssl_option == "2" ]]; then
-                        ssl_certificate_path="/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
-                        ssl_trusted_certificate_path="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
-                        ssl_certificate_key_path="/etc/letsencrypt/live/{{ domain_name }}/privkey.pem"
+                        ssl_certificate="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
+                        ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
+                        ssl_certificate_key="/etc/letsencrypt/live/{{ domain_name }}/privkey.pem"
                         echo ""
                         while [[ true ]]; do
                             read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
@@ -264,9 +264,9 @@ https:
   enable: "$https_enable"
   option: "$ssl_option"
   ssl:
-    certificate: "$ssl_certificate_path"
-    trusted_certificate: "$ssl_trusted_certificate_path"
-    certificate_key: "$ssl_certificate_key_path"
+    certificate: "$ssl_certificate"
+    trusted_certificate: "$ssl_trusted_certificate"
+    certificate_key: "$ssl_certificate_key"
     ocsp:
       must_staple: "$ocsp_must_staple"
 
