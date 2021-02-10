@@ -10,9 +10,11 @@
   - mod_fastcgi
   - mod_remoteip
   - nginx
+  - letsencrypt
   - mariadb
   - phpmyadmin
   - knockd
   - sftp
   - ufw
+  - firewalld
   - post_transaction

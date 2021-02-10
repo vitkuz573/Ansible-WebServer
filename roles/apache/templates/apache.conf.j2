@@ -1,8 +1,8 @@
 <VirtualHost *:{{ apache['port'] }}>
-    ServerName {{ domain_name }}
-    ServerAlias www.{{ domain_name }}
-    DocumentRoot /var/www/{{ domain_name }}/public
-    <Directory /var/www/{{ domain_name }}/public>
+    ServerName {{ domain['name'] }}
+    ServerAlias www.{{ domain['name'] }}
+    DocumentRoot /var/www/{{ domain['name'] }}/public
+    <Directory /var/www/{{ domain['name'] }}/public>
         AllowOverride All
     </Directory>
 </VirtualHost>

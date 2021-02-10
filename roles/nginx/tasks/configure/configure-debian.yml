@@ -1,16 +1,40 @@
+- name: Checking the sites-available directory for existence
+  stat:
+    path: /etc/nginx/sites-available
+  register: sites_available_details
+
+- name: Creating sites-available directory
+  file:
+    path: /etc/nginx/sites-available/
+    state: directory
+    mode: 0755
+  when: not sites_available_details.stat.exists
+
+- name: Checking the sites-enabled directory for existence
+  stat:
+    path: /etc/nginx/sites-enabled
+  register: sites_enabled_details
+
+- name: Creating sites-enabled directory
+  file:
+    path: /etc/nginx/sites-enabled/
+    state: directory
+    mode: 0755
+  when: not sites_enabled_details.stat.exists
+
 - name: Setting up Nginx (without HTTPS)
   copy:
     src: files/nginx_http.conf
     dest: /etc/nginx/nginx.conf
     mode: 0644
-  when: https['enable'] == "no"
+  when: https['enable'] == "false"
 
 - name: Setting up Nginx (with HTTPS)
   copy:
     src: files/nginx_https.conf
     dest: /etc/nginx/nginx.conf
     mode: 0644
-  when: https['enable'] == "yes"
+  when: https['enable'] == "true"
 
 - name: Checking the ansiblewebserver.configs directory for existence
   stat:
@@ -29,33 +53,33 @@
     src: files/security_http.conf
     dest: /etc/nginx/ansiblewebserver.configs/security.conf
     mode: 0644
-  when: https['enable'] == "no"
+  when: https['enable'] == "false"
 
 - name: Copying security.conf (with HTTPS)
   copy:
     src: files/security_https.conf
     dest: /etc/nginx/ansiblewebserver.configs/security.conf
     mode: 0644
-  when: https['enable'] == "yes"
+  when: https['enable'] == "true"
 
 - name: Copying letsencrypt.conf
   copy:
     src: files/letsencrypt.conf
     dest: /etc/nginx/ansiblewebserver.configs/letsencrypt.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
 
 - name: Checking dhparam.pem file for existence
   stat:
     path: /etc/nginx/dhparam.pem
-  register: dhparam_pem_details
+  register: dhparam_details
 
 - name: Generation of Diffie-Hellman parameters
   openssl_dhparam:
     path: /etc/nginx/dhparam.pem
     size: 2048
     force: true
-  when: https['enable'] == "yes" and not dhparam_pem_details.stat.exists
+  when: https['enable'] == "true" and not dhparam_details.stat.exists
 
 - name: Copying general.conf
   copy:
@@ -72,176 +96,32 @@
 - name: Creating a host (without HTTPS)
   template:
     src: templates/domain_http.conf.j2
-    dest: /etc/nginx/sites-available/{{ domain_name }}.conf
+    dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "no"
-
-- name: Creating a host (option 2)
-  template:
-    src: templates/domain_letsencrypt.conf.j2
-    dest: /etc/nginx/sites-available/{{ domain_name }}.conf
-    mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2"
-
-- name: Enabling the host (with HTTPS) (option 2)
-  file:
-    src: /etc/nginx/sites-available/{{ domain_name }}.conf
-    dest: /etc/nginx/sites-enabled/{{ domain_name }}.conf
-    state: link
-  when: https['enable'] == "yes" and https['option'] == "2"
-
-- name: Restart Nginx
-  service:
-    name: nginx
-    state: restarted
-  when: https['enable'] == "yes" and https['option'] == "2"
-
-- name: Checking the letsencrypt domain directory for existence
-  stat:
-    path: /etc/letsencrypt/live/{{ domain_name }}
-  register: letsencrypt_domain_details
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt
-
-- name: Creating a directory for letsencrypt domain
-  file:
-    path: /etc/letsencrypt/live/{{ domain_name }}
-    mode: 0755
-    state: directory
-  when: https['enable'] == "yes" and https['option'] == "2" and not letsencrypt_domain_details.stat.exists
-  tags:
-  - letsencrypt
-
-- name: Generating a private key (account)
-  openssl_privatekey:
-    path: /etc/letsencrypt/live/{{ domain_name }}/account_privkey.pem
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt
-
-- name: Generating a private key (certificate)
-  openssl_privatekey:
-    path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
-  when: https['enable'] == "yes" and https['option'] == "2"
-  register: cert_key
-  tags:
-  - letsencrypt
-
-- name: Checking the csr directory for existence
-  stat:
-    path: /etc/ssl/csr
-  register: csr_details
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt
-
-- name: Creating a directory for CSR
-  file:
-    path: /etc/ssl/csr
-    mode: 0755
-    state: directory
-  when: https['enable'] == "yes" and https['option'] == "2" and not csr_details.stat.exists
-  tags:
-  - letsencrypt
-
-- name: Creating a CSR
-  openssl_csr:
-    path: /etc/letsencrypt/live/{{ domain_name }}/{{ domain_name }}.csr
-    privatekey_path: /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
-    force: true
-    common_name: '{{ domain_name }}'
-    ocsp_must_staple: "{{ https['ocsp']['must_staple'] }}"
-  when: https['enable'] == "yes" and https['option'] == "2" and cert_key is changed
-  tags:
-  - letsencrypt
-
-- name: Checking the ACME challenge directory for existence
-  stat:
-    path: /var/www/_letsencrypt/.well-known/acme-challenge
-  register: well_known_acme_challenge_details
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt
-
-- name: Creating ACME challenge directory
-  file:
-    path: /var/www/_letsencrypt/.well-known/acme-challenge
-    mode: 0755
-    state: directory
-  when: https['enable'] == "yes" and https['option'] == "2" and not well_known_acme_challenge_details.stat.exists
-  tags:
-  - letsencrypt
-
-- name: Obtaining a certificate (step 1)
-  acme_certificate:
-    acme_directory: https://acme-v02.api.letsencrypt.org/directory
-    acme_version: 2
-    account_key_src: /etc/letsencrypt/live/{{ domain_name }}/account_privkey.pem
-    terms_agreed: true
-    challenge: http-01
-    csr: /etc/letsencrypt/live/{{ domain_name }}/{{ domain_name }}.csr
-    dest: /etc/letsencrypt/live/{{ domain_name }}.pem
-    chain_dest: /etc/letsencrypt/live/{{ domain_name }}/chain.pem
-    fullchain_dest: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-    remaining_days: 60
-    deactivate_authzs: true
-    force: true
-  register: challenge
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt
-
-- name: Obtaining a certificate (step 2)
-  copy:
-    dest: /var/www/_letsencrypt/{% challenge['challenge_data']['{{ domain_name }}']['http-01']['resource'] %}
-    content: "{% challenge['challenge_data']['{{ domain_name }}']['http-01']['resource_value'] %}"
-    mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2" and challenge is changed
-  tags:
-  - letsencrypt
-
-- name: Obtaining a certificate (step 3)
-  acme_certificate:
-    acme_directory: https://acme-v02.api.letsencrypt.org/directory
-    acme_version: 2
-    account_key_src: /etc/letsencrypt/live/{{ domain_name }}/account_privkey.pem
-    terms_agreed: true
-    challenge: http-01
-    csr: /etc/ssl/csr/{{ domain_name }}.csr
-    dest: /etc/letsencrypt/live/{{ domain_name }}.pem
-    chain_dest: /etc/letsencrypt/live/{{ domain_name }}/chain.pem
-    fullchain_dest: /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem
-    remaining_days: 60
-    deactivate_authzs: true
-    force: true
-    data: '{{ challenge }}'
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt
+  when: https['enable'] == "false"
 
 - name: Creating a host (with HTTPS) (option 1)
   template:
     src: templates/domain_https.conf.j2
-    dest: /etc/nginx/sites-available/{{ domain_name }}.conf
+    dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "1"
+  when: https['enable'] == "true" and https['option'] == "1"
 
 - name: Creating a host (with HTTPS) (option 2)
   template:
-    src: templates/domain_https_letsencrypt.conf.j2
-    dest: /etc/nginx/sites-available/{{ domain_name }}.conf
+    src: templates/domain_letsencrypt.conf.j2
+    dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
     mode: 0644
-  when: https['enable'] == "yes" and https['option'] == "2"
+  when: https['enable'] == "true" and https['option'] == "2"
 
 - name: Enabling the host
   file:
-    src: /etc/nginx/sites-available/{{ domain_name }}.conf
-    dest: /etc/nginx/sites-enabled/{{ domain_name }}.conf
+    src: /etc/nginx/sites-available/{{ domain['name'] }}.conf
+    dest: /etc/nginx/sites-enabled/{{ domain['name'] }}.conf
     state: link
     force: true
 
-- name: Enabling Nginx
+- name: Restarting Nginx
   service:
     name: nginx
     state: restarted

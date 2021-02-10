@@ -1,14 +1,14 @@
 server {
-    listen              443 ssl http2;
-    listen              [::]:443 ssl http2;
-    server_name         {{ domain['name'] }};
-    root                /var/www/{{ domain['name'] }}/public;
+    listen                  443 ssl http2;
+    listen                  [::]:443 ssl http2;
+    server_name             {{ domain['name'] }};
+    root                    /var/www/{{ domain['name'] }}/public;
 
-    ssl_certificate     {{ https['ssl']['certificate'] }};
-    ssl_certificate_key {{ https['ssl']['certificate_key'] }};
+    ssl_certificate         {{ https['ssl']['certificate'] }};
+    ssl_certificate_key     {{ https['ssl']['certificate_key'] }};
     ssl_trusted_certificate {{ https['ssl']['trusted_certificate'] }};
 
-    include             ansiblewebserver.configs/security.conf;
+    include                 ansiblewebserver.configs/security.conf;
 
     if ($request_method !~ ^(GET|POST|HEAD)$) {
         return '405';
@@ -40,18 +40,23 @@ server {
 }
 
 server {
-    listen              443 ssl http2;
-    listen              [::]:443 ssl http2;
-    server_name         *.{{ domain['name'] }};
+    listen                  443 ssl http2;
+    listen                  [::]:443 ssl http2;
+    server_name             *.{{ domain['name'] }};
 
-    ssl_certificate     {{ https['ssl']['certificate'] }};
-    ssl_certificate_key {{ https['ssl']['certificate_key'] }};
-    return              301 https://{{ domain['name'] }}$request_uri;
+    ssl_certificate         {{ https['ssl']['certificate'] }};
+    ssl_certificate_key     {{ https['ssl']['certificate_key'] }};
+    ssl_trusted_certificate {{ https['ssl']['trusted_certificate'] }};
+    return                  301 https://{{ domain['name'] }}$request_uri;
 }
 
 server {
     listen      80;
     listen      [::]:80;
     server_name .{{ domain['name'] }};
-    return      301 https://{{ domain['name'] }}$request_uri;
+    include     ansiblewebserver.configs/letsencrypt.conf;
+
+    location / {
+        return 301 https://{{ domain['name'] }}$request_uri;
+    }
 }

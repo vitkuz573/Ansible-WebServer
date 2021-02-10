@@ -1,14 +1,25 @@
+- name: Installing requirements
+  apt:
+    pkg:
+    - curl
+    - gnupg2
+    - ca-certificates
+    - lsb-release
+
+- name: Adding nginx repository
+  copy:
+    src: files/nginx.list
+    dest: /etc/apt/sources.list.d/nginx.list
+    mode: 0644
+
+- name: Adding nginx key
+  apt_key:
+    id: 573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62
+    url: https://nginx.org/keys/nginx_signing.key
+    state: present
+
 - name: Installing Nginx
   apt:
+    update_cache: true
     pkg:
     - nginx
-
-- name: Installing required packages (option 2)
-  apt:
-    pkg:
-    - openssl
-    - python3-cryptography
-    - python3-openssl
-  when: https['enable'] == "yes" and https['option'] == "2"
-  tags:
-  - letsencrypt

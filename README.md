@@ -36,7 +36,9 @@ NOTE: In case of deploying a web server with HTTPS, the certificate and key file
 - phpMyAdmin (optional)
 - Knockd (optional)
 - SFTP Server (optional)
-- UFW
+- Firewall (optional)
+  - UFW
+  - Firewalld
 
 ## What will be done to improve security?
 - Hiding Nginx and Apache versions

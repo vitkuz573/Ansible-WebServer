@@ -4,7 +4,7 @@
 
 [open_close_SSH]
         sequence          = {{ knockd['port_sequence'] }}
-        seq_timeout       = 15
+        seq_timeout       = {{ knockd['sequence_timeout'] }}
         start_command     = /sbin/iptables -A INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
         cmd_timeout       = {{ knockd['command_timeout'] }}
         stop_command      = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
