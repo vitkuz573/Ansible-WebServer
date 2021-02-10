@@ -1,1 +1,2 @@
-# tasks file for letsencrypt
+- include_tasks: setup/setup-{{ ansible_os_family | lower }}.yml
+- include_tasks: configure/configure-{{ ansible_os_family | lower }}.yml

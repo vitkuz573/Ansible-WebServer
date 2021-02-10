@@ -18,11 +18,17 @@ server {
     error_log  /var/log/nginx/{{ domain['name'] }}.error.log warn;
 
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /index.php?$query_string;
     }
 
     location ~ ^/api/ {
         try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ ^/phpmyadmin/* {
+        proxy_pass http://{{ ansible_ssh_host }}:{{ apache['port'] }};
+        root /var/www/{{ domain['name'] }}/public/phpmyadmin/;
+        include    ansiblewebserver.configs/proxy.conf;
     }
 
     location ~ \.php$ {

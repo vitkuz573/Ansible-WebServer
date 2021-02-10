@@ -2,6 +2,14 @@
   hostname:
     name: "{{ host['name'] }}"
 
+- name: Generating index.html
+  template:
+    src: templates/index.html.j2
+    dest: /var/www/{{ domain['name'] }}/public/index.html
+    mode: 0644
+  tags:
+  - gen_index
+
 - name: Creating a script to connect to SSH
   template:
     src: templates/ssh_knock.sh.j2

@@ -1,3 +1,27 @@
+- name: Checking the sites-available directory for existence
+  stat:
+    path: /etc/nginx/sites-available
+  register: sites_available_details
+
+- name: Creating sites-available directory
+  file:
+    path: /etc/nginx/sites-available/
+    state: directory
+    mode: 0755
+  when: not sites_available_details.stat.exists
+
+- name: Checking the sites-enabled directory for existence
+  stat:
+    path: /etc/nginx/sites-enabled
+  register: sites_enabled_details
+
+- name: Creating sites-enabled directory
+  file:
+    path: /etc/nginx/sites-enabled/
+    state: directory
+    mode: 0755
+  when: not sites_enabled_details.stat.exists
+
 - name: Setting up Nginx (without HTTPS)
   copy:
     src: files/nginx_http.conf
@@ -53,7 +77,7 @@
 - name: Generation of Diffie-Hellman parameters
   openssl_dhparam:
     path: /etc/nginx/dhparam.pem
-    size: 4096
+    size: 2048
     force: true
   when: https['enable'] == "true" and not dhparam_details.stat.exists
 
@@ -96,4 +120,9 @@
     dest: /etc/nginx/sites-enabled/{{ domain['name'] }}.conf
     state: link
     force: true
-  notify: Restart Nginx (Debian)
+
+- name: Restarting Nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: true

@@ -29,7 +29,7 @@
     name: "{{ phpmyadmin['protect']['credentials']['user'] }}"
     password: "{{ phpmyadmin['protect']['credentials']['password'] }}"
     crypt_scheme: md5_crypt
-  when: phpmyadmin['install'] == "true" and phpmyadmin['protect']['enable'] == "yes"
+  when: phpmyadmin['install'] == "true" and phpmyadmin['protect']['enable'] == "true"
   tags:
   - phpmyadmin
   - protecting_phpmyadmin
@@ -39,7 +39,7 @@
     src: files/.htaccess
     dest: /var/www/{{ domain['name'] }}/public/phpmyadmin/.htaccess
     mode: 0644
-  when: phpmyadmin['install'] == "true" and phpmyadmin['protect']['enable'] == "yes"
+  when: phpmyadmin['install'] == "true" and phpmyadmin['protect']['enable'] == "true"
   tags:
   - phpmyadmin
   - protecting_phpmyadmin

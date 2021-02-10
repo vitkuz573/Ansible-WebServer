@@ -27,6 +27,7 @@ if [[ $continue == "yes" ]]; then
     if [[ -e hosts.ini ]]; then
         rm hosts.ini
     fi
+    echo "";
 
     while [[ true ]]; do
         read -p "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: " generate_ssh_key
@@ -91,23 +92,22 @@ if [[ $continue == "yes" ]]; then
                     https_enable=true;
                     echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n";
                     read -p "Choose the right option: " ssl_option;
+                    echo ""
                     if [[ $ssl_option == "1" ]]; then
                         while [[ true ]]; do
-                            read -p "Enter SSL Certificate Path (chain): " ssl_certificate
+                            read -p "Enter SSL Certificate Path (fullchain): " ssl_certificate
                             if [[ -z $ssl_certificate ]]; then
                                 echo -e "The field cannot be empty!\n"
                             else
-                                echo ""
                                 break;
                             fi
                         done
 
                         while [[ true ]]; do
-                            read -p "Enter SSL Trusted Certificate Path (fullchain): " ssl_trusted_certificate
+                            read -p "Enter SSL Trusted Certificate Path (chain): " ssl_trusted_certificate
                             if [[ -z $ssl_trusted_certificate ]]; then
                                 echo -e "The field cannot be empty!\n"
                             else
-                                echo ""
                                 break;
                             fi
                         done
@@ -124,9 +124,9 @@ if [[ $continue == "yes" ]]; then
 
                     fi
                     if [[ $ssl_option == "2" ]]; then
-                        ssl_certificate="/etc/letsencrypt/live/{{ domain_name }}/chain.pem"
-                        ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem"
-                        ssl_certificate_key="/etc/letsencrypt/live/{{ domain_name }}/privkey.pem"
+                        ssl_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/fullchain.pem"
+                        ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/chain.pem"
+                        ssl_certificate_key="/etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem"
                         echo ""
                         while [[ true ]]; do
                             read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
@@ -142,12 +142,9 @@ if [[ $continue == "yes" ]]; then
                             esac
                         done
                     fi
-
-                    echo "";
                     break ;;
                 [Nn]* )
                     https_enable=false;
-                    echo "";
                     break ;;
                 * )
                     echo -e "Incorrect answer!\n";
@@ -161,12 +158,23 @@ if [[ $continue == "yes" ]]; then
                     phpmyadmin_install=true;
                     read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version;
                     phpmyadmin_version=${phpmyadmin_version:-5.0.4}
-                    read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect;
-                    if [[ $phpmyadmin_protect == "yes" ]]; then
-                        read -p "Enter .htpasswd Username: " htpasswd_username
-                        read -p "Enter .htpasswd Password: " htpasswd_password
-                    fi;
-                    echo "";
+                    while [[ true ]]; do
+                        read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect;
+                        case $phpmyadmin_protect in
+                            [Yy]* )
+                                phpmyadmin_protect=true
+                                read -p "Enter .htpasswd Username: " htpasswd_username
+                                read -p "Enter .htpasswd Password: " htpasswd_password
+                                echo "";
+                                break ;;
+                            [Nn]* )
+                                phpmyadmin_protect=false;
+                                echo ""
+                                break ;;
+                            * )
+                                echo -e "Incorrect answer!\n" ;;
+                        esac
+                    done
                     break ;;
                 [Nn]* )
                     phpmyadmin_install=false;
@@ -177,21 +185,21 @@ if [[ $continue == "yes" ]]; then
             esac
         done
 
-        while [[ true ]]; do
-            read -p "Install fail2ban? [yes, no]: " fail2ban_install
-            case $fail2ban_install in
-                [Yy]* )
-                    fail2ban_install=true;
-                    echo "";
-                    break ;;
-                [Nn]* )
-                    fail2ban_install=false;
-                    echo "";
-                    break ;;
-                * )
-                    echo -e "Incorrect answer!\n" ;;
-            esac
-        done
+        #        while [[ true ]]; do
+        #            read -p "Install fail2ban? [yes, no]: " fail2ban_install
+        #            case $fail2ban_install in
+        #                [Yy]* )
+        #                    fail2ban_install=true;
+        #                    echo "";
+        #                    break ;;
+        #                [Nn]* )
+        #                    fail2ban_install=false;
+        #                    echo "";
+        #                    break ;;
+        #                * )
+        #                    echo -e "Incorrect answer!\n" ;;
+        #            esac
+        #        done
 
         while [[ true ]]; do
             read -p "Install knockd? [yes, no]: " knockd_install
@@ -200,6 +208,8 @@ if [[ $continue == "yes" ]]; then
                     knockd_install=true;
                     read -p "Enter port sequence (default: 500,1001,456): " port_sequence;
                     port_sequence=${port_sequence:-500,1001,456}
+                    read -p "Enter sequence timeout (default: 15): " sequence_timeout
+                    sequence_timeout=${sequence_timeout:-15}
                     read -p "Enter command timeout (default: 10): " command_timeout;
                     command_timeout=${command_timeout:-10}
                     echo "";
@@ -236,14 +246,14 @@ if [[ $continue == "yes" ]]; then
             read -p "Install a firewall? [yes, no]: " firewall_install
             case $firewall_install in
                 [Yy]* )
-                    echo -e "\nAvailable firewalls:\n\n1) UFW\n2) Firewalld\n"
+                    echo -e "\nAvailable firewalls:\n\n1) UFW\n"
                     read -p "Choose a suitable firewall: " firewall
                     if [[ $firewall == "1" ]]; then
                         firewall_name="ufw"
                     fi
-                    if [[ $firewall == "2" ]]; then
-                        firewall_name="firewalld"
-                    fi;
+                    #                    if [[ $firewall == "2" ]]; then
+                    #                        firewall_name="firewalld"
+                    #                    fi;
                     echo "";
                     break ;;
                 [Nn]* )

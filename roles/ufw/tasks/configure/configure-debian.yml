@@ -24,18 +24,18 @@
   tags:
   - ufw
 
-- name: Allowing HTTP traffic (Nginx)
+- name: Allowing HTTP traffic
   ufw:
     rule: allow
-    name: Nginx HTTP
+    name: WWW
   when: firewall['name'] == "ufw" and https['enable'] == "false"
   tags:
   - ufw
 
-- name: Allowing HTTP and HTTPS traffic (Nginx)
+- name: Allowing HTTP and HTTPS traffic
   ufw:
     rule: allow
-    name: Nginx Full
+    name: WWW Full
   when: firewall['name'] == "ufw" and https['enable'] == "true"
   tags:
   - ufw

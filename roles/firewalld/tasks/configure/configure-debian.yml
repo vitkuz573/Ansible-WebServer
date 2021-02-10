@@ -1,6 +1,6 @@
 - name: Blocking access to the Apache port
   ansible.posix.firewalld:
-    port: "{{ apache['port'] }}"
+    port: "{{ apache['port'] }}/tcp"
     permanent: true
     state: disabled
   when: firewall['name'] == "firewalld"

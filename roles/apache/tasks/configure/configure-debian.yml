@@ -33,14 +33,6 @@
     mode: 0755
     state: directory
 
-- name: Generating index.html
-  template:
-    src: templates/index.html.j2
-    dest: /var/www/{{ domain['name'] }}/public/index.html
-    mode: 0644
-  tags:
-  - gen_index
-
 - name: Checking for the existence of an enabled host
   stat:
     path: /etc/apache2/sites-enabled/{{ domain['name'] }}.conf
