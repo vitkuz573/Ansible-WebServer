@@ -7,8 +7,8 @@
     - lsb-release
 
 - name: Adding nginx repository
-  copy:
-    src: files/nginx.list
+  template:
+    src: templates/nginx.list
     dest: /etc/apt/sources.list.d/nginx.list
     mode: 0644
 
