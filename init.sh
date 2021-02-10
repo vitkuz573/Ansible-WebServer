@@ -1,7 +1,6 @@
 #!/bin/bash
 
-function valid_ip()
-{
+function valid_ip() {
     local ip=$1
     local stat=1
 
@@ -91,57 +90,62 @@ if [[ $continue == "yes" ]]; then
                 [Yy]* )
                     https_enable=true;
                     echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n";
-                    read -p "Choose the right option: " ssl_option;
-                    echo ""
-                    if [[ $ssl_option == "1" ]]; then
-                        while [[ true ]]; do
-                            read -p "Enter SSL Certificate Path (fullchain): " ssl_certificate
-                            if [[ -z $ssl_certificate ]]; then
-                                echo -e "The field cannot be empty!\n"
-                            else
-                                break;
-                            fi
-                        done
 
-                        while [[ true ]]; do
-                            read -p "Enter SSL Trusted Certificate Path (chain): " ssl_trusted_certificate
-                            if [[ -z $ssl_trusted_certificate ]]; then
-                                echo -e "The field cannot be empty!\n"
-                            else
-                                break;
-                            fi
-                        done
+                    while [[ true ]]; do
+                        read -p "Choose the right option: " ssl_option;
+                        case $ssl_option in
+                            1 )
+                                while [[ true ]]; do
+                                    echo ""
+                                    read -p "Enter SSL Certificate Path (fullchain): " ssl_certificate
+                                    if [[ -z $ssl_certificate ]]; then
+                                        echo -e "The field cannot be empty!\n"
+                                    else
+                                        break;
+                                    fi
+                                done
+                                while [[ true ]]; do
+                                    read -p "Enter SSL Trusted Certificate Path (chain): " ssl_trusted_certificate
+                                    if [[ -z $ssl_trusted_certificate ]]; then
+                                        echo -e "The field cannot be empty!\n"
+                                    else
+                                        break;
+                                    fi
+                                done
 
-                        while [[ true ]]; do
-                            read -p "Enter SSL Certificate Key Path: " ssl_certificate_key
-                            if [[ -z $ssl_certificate_key ]]; then
-                                echo -e "The field cannot be empty!\n"
-                            else
+                                while [[ true ]]; do
+                                    read -p "Enter SSL Certificate Key Path: " ssl_certificate_key
+                                    if [[ -z $ssl_certificate_key ]]; then
+                                        echo -e "The field cannot be empty!\n"
+                                    else
+                                        break;
+                                    fi
+                                done
+                                break ;;
+                            2 )
+                                ssl_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/fullchain.pem"
+                                ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/chain.pem"
+                                ssl_certificate_key="/etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem"
                                 echo ""
-                                break;
-                            fi
-                        done
-
-                    fi
-                    if [[ $ssl_option == "2" ]]; then
-                        ssl_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/fullchain.pem"
-                        ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/chain.pem"
-                        ssl_certificate_key="/etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem"
-                        echo ""
-                        while [[ true ]]; do
-                            read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
-                            case $ocsp_must_staple in
-                                [Yy]* )
-                                    ocsp_must_staple=true;
-                                    break ;;
-                                [Nn]* )
-                                    ocsp_must_staple=false;
-                                    break ;;
-                                * )
-                                    echo "Incorrect answer!" ;;
-                            esac
-                        done
-                    fi
+                                while [[ true ]]; do
+                                    read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
+                                    case $ocsp_must_staple in
+                                        [Yy]* )
+                                            ocsp_must_staple=true;
+                                            break ;;
+                                        [Nn]* )
+                                            ocsp_must_staple=false;
+                                            break ;;
+                                        * )
+                                            echo "Incorrect answer!" ;;
+                                    esac
+                                done
+                                break ;;
+                            * )
+                                echo -e "Incorrect option!\n"
+                        esac
+                    done
+                    echo ""
                     break ;;
                 [Nn]* )
                     https_enable=false;
