@@ -8,6 +8,8 @@ server {
     ssl_certificate_key {{ https['ssl']['certificate_key'] }};
     ssl_trusted_certificate {{ https['ssl']['trusted_certificate'] }};
 
+    ssl_early_data      on;
+
     include             ansiblewebserver.configs/security.conf;
 
     if ($request_method !~ ^(GET|POST|HEAD)$) {

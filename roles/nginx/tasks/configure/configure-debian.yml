@@ -87,11 +87,19 @@
     dest: /etc/nginx/ansiblewebserver.configs/general.conf
     mode: 0644
 
-- name: Copying proxy.conf
+- name: Copying proxy.conf (without HTTPS)
   copy:
-    src: files/proxy.conf
+    src: files/proxy_http.conf
     dest: /etc/nginx/ansiblewebserver.configs/proxy.conf
     mode: 0644
+  when: https['enable'] == "false"
+
+- name: Copying proxy.conf (with HTTPS)
+  copy:
+    src: files/proxy_https.conf
+    dest: /etc/nginx/ansiblewebserver.configs/proxy.conf
+    mode: 0644
+  when: https['enable'] == "true"
 
 - name: Creating a host (without HTTPS)
   template:
