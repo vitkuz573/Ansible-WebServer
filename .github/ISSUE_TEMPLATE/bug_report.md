@@ -17,8 +17,10 @@ Steps to reproduce the behavior.
 A clear and concise description of what you expected to happen.
 
 **Desktop (please complete the following information):**
- - Distribution: [e.g. Debian 10]
- - Ansible verision: [e.g. 2.10]
+
+- Distribution: [e.g. Debian 10]
+- Ansible verision: [e.g. 2.10]
 
 **Remote Server (please complete the following information):**
- - Distribution: [e.g. Debian 10]
+
+- Distribution: [e.g. Debian 10]

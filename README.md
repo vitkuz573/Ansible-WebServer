@@ -1,4 +1,4 @@
-# [Ansible WebServer](https://github.com/vitkuz573/Ansible-WebServer) [<img src="https://raw.githubusercontent.com/vitkuz573/Ansible-WebServer/master/.github/ansible-webserver.svg?sanitize=true" width="200" height="200" align="right" alt="">](https://github.com/vitkuz573/Ansible-WebServer)
+# [Ansible WebServer](https://raw.githubusercontent.com/vitkuz573/Ansible-WebServer/master/.github/ansible-webserver.svg?sanitize=true)
 
 [![License](https://img.shields.io/github/license/vitkuz573/Ansible-WebServer)](https://github.com/vitkuz573/Ansible-WebServer/blob/master/LICENSE)
 [![Help Wanted](https://img.shields.io/github/issues/vitkuz573/Ansible-WebServer/help%20wanted?color=green)](https://github.com/vitkuz573/Ansible-WebServer/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
@@ -12,20 +12,25 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
 
 1) Install Ansible:
 
-Debian:
-```
-sudo apt install ansible
-```
+   Debian:
+
+   ```bash
+   sudo apt install ansible
+   ```
 
 2) Run init.sh and follow the instructions:
-```
-./init.sh
-```
-WARNING: For correct playbook operation, do not run it directly from the server where the deployment is planned. Instead, use another server (your PC or virtual machine).
 
-NOTE: In case of deploying a web server with HTTPS, the certificate and key files must be on the server at the time of deployment!
+   ```bash
+   ./init.sh
+   ```
+
+WARNING: Do not run the playbook directly from the server on which you plan to deploy!
+
+NOTE: In case of deploying a web server with HTTPS, the certificate and key
+files must be on the server at the time of deployment!
 
 ## What will be installed and configured?
+
 - Nginx (Frontend)
 - Apache (Backend)
 - Apache Modules
@@ -41,6 +46,7 @@ NOTE: In case of deploying a web server with HTTPS, the certificate and key file
   - Firewalld
 
 ## What will be done to improve security?
+
 - Hiding Nginx and Apache versions
 - Blocking access to the Apache port
 - Blocking access to MariaDB from outside
@@ -48,7 +54,7 @@ NOTE: In case of deploying a web server with HTTPS, the certificate and key file
 - SSH protection with Port-Knocking
 - Blocking access to phpMyAdmin via .htpasswd and .htaccess
 
-# Roadmap
+## Roadmap
 
 - [X] Adding HTTPS support
 - [ ] Code optimization

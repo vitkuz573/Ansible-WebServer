@@ -9,7 +9,7 @@ repos:
   - id: fix-byte-order-marker
 
 - repo: https://github.com/ansible/ansible-lint.git
-  rev: v5.0.0a2
+  rev: v5.0.0
   hooks:
   - id: ansible-lint
     files: \.(yaml|yml)$
@@ -32,3 +32,9 @@ repos:
   rev: 6.0.1
   hooks:
   - id: beautysh
+
+- repo: https://github.com/igorshubovych/markdownlint-cli.git
+  rev: v0.26.0
+  hooks:
+  - id: markdownlint
+    args: [--fix]
