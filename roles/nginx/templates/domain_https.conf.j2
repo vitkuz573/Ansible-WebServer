@@ -1,8 +1,11 @@
 server {
-    listen              443 ssl http2;
-    listen              [::]:443 ssl http2;
-    server_name         {{ domain['name'] }};
-    root                /var/www/{{ domain['name'] }}/public;
+    listen                443 ssl http2;
+    listen                [::]:443 ssl http2;
+    server_name           {{ domain['name'] }};
+    root                  /var/www/{{ domain['name'] }}/public;
+    client_body_timeout   {{ nginx['timeout']['client']['body'] }}s;
+    client_header_timeout {{ nginx['timeout']['client']['header'] }}s;
+    charset               utf-8;
 
     ssl_certificate     {{ https['ssl']['certificate'] }};
     ssl_certificate_key {{ https['ssl']['certificate_key'] }};
