@@ -70,7 +70,15 @@ if [[ $continue == "yes" ]]; then
         read -p "What user do I need to login as? (default: root): " ansible_user
         ansible_user=${ansible_user:-root}
 
-        echo ""
+        while [[ true ]]; do
+            read -p "Enter the password of the user you want to connect with: " ansible_password
+            if [[ -z $ansible_password ]]; then
+                echo -e "The field cannot be empty!\n"
+            else
+                echo ""
+                break;
+            fi
+        done
 
         while [[ true ]]; do
             read -p "Enter domain name: " domain_name
@@ -297,7 +305,7 @@ if [[ $continue == "yes" ]]; then
             fi
         done
 
-        echo $server_ip ansible_port=$ansible_port ansible_user=$ansible_user >> hosts.ini
+        echo $server_ip ansible_port=$ansible_port ansible_user=$ansible_user ansible_become_password=$ansible_password >> hosts.ini
 
         cat <<EOF> host_vars/$server_ip.yml
 ---
@@ -349,10 +357,6 @@ mariadb:
 
 firewall:
   name: "$firewall_name"
-
-ssh_log_in:
-  port: "$ansible_port"
-  user: "$ansible_user"
 EOF
 
         echo "Enter your account password on the destination host to copy the public key to it!"
@@ -431,10 +435,10 @@ EOF
         read -p "To start deploying? [yes, no]: " deploy
         case $deploy in
             [Yy]* )
-                ansible-playbook playbook.yml --ask-become-pass;
+                ansible-playbook playbook.yml;
                 break ;;
             [Nn]* )
-                echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml --ask-become-pass";
+                echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml";
                 break ;;
             * )
                 echo "Incorrect answer!" ;;
