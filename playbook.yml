@@ -1,5 +1,8 @@
 - hosts: debian
   gather_facts: true
+  become: true
+  become_method: sudo
+  become_user: root
   vars_files:
   - ./group_vars/vars.yml
   - ./host_vars/{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}.yml
@@ -17,4 +20,5 @@
   - sftp
   - ufw
   - firewalld
+  - sshd
   - post_transaction

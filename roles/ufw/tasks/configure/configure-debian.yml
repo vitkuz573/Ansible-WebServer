@@ -19,7 +19,8 @@
 - name: Allow SSH access
   ufw:
     rule: allow
-    name: OpenSSH
+    port: "{{ ssh['port'] }}"
+    proto: tcp
   when: firewall['name'] == "ufw" and knockd['install'] == "false"
   tags:
   - ufw

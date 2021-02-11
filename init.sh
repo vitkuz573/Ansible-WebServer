@@ -64,6 +64,14 @@ if [[ $continue == "yes" ]]; then
             fi
         done
 
+        read -p "What port do I need to connect to? (default: 22): " ansible_port
+        ansible_port=${ansible_port:-22}
+
+        read -p "What user do I need to login as? (default: root): " ansible_user
+        ansible_user=${ansible_user:-root}
+
+        echo ""
+
         while [[ true ]]; do
             read -p "Enter domain name: " domain_name
             if [[ -z $domain_name ]]; then
@@ -149,6 +157,7 @@ if [[ $continue == "yes" ]]; then
                     break ;;
                 [Nn]* )
                     https_enable=false;
+                    echo ""
                     break ;;
                 * )
                     echo -e "Incorrect answer!\n";
@@ -189,21 +198,21 @@ if [[ $continue == "yes" ]]; then
             esac
         done
 
-        #        while [[ true ]]; do
-        #            read -p "Install fail2ban? [yes, no]: " fail2ban_install
-        #            case $fail2ban_install in
-        #                [Yy]* )
-        #                    fail2ban_install=true;
-        #                    echo "";
-        #                    break ;;
-        #                [Nn]* )
-        #                    fail2ban_install=false;
-        #                    echo "";
-        #                    break ;;
-        #                * )
-        #                    echo -e "Incorrect answer!\n" ;;
-        #            esac
-        #        done
+        #while [[ true ]]; do
+        #    read -p "Install fail2ban? [yes, no]: " fail2ban_install
+        #    case $fail2ban_install in
+        #        [Yy]* )
+        #            fail2ban_install=true;
+        #            echo "";
+        #            break ;;
+        #        [Nn]* )
+        #            fail2ban_install=false;
+        #            echo "";
+        #            break ;;
+        #        * )
+        #            echo -e "Incorrect answer!\n" ;;
+        #    esac
+        #done
 
         while [[ true ]]; do
             read -p "Install knockd? [yes, no]: " knockd_install
@@ -251,13 +260,21 @@ if [[ $continue == "yes" ]]; then
             case $firewall_install in
                 [Yy]* )
                     echo -e "\nAvailable firewalls:\n\n1) UFW\n"
-                    read -p "Choose a suitable firewall: " firewall
-                    if [[ $firewall == "1" ]]; then
-                        firewall_name="ufw"
-                    fi
-                    #                    if [[ $firewall == "2" ]]; then
-                    #                        firewall_name="firewalld"
-                    #                    fi;
+                    while [[ true ]]; do
+                        read -p "Choose a suitable firewall: " firewall
+                        case $firewall in
+                            1 )
+                                firewall_name="ufw";
+                                echo "";
+                                break ;;
+                                #2 )
+                                #    firewall_name="firewalld";
+                                #    echo "";
+                                #    break ;;
+                            * )
+                                echo -e "Incorrect option!\n" ;;
+                        esac
+                    done
                     echo "";
                     break ;;
                 [Nn]* )
@@ -280,7 +297,7 @@ if [[ $continue == "yes" ]]; then
             fi
         done
 
-        echo $server_ip >> hosts.ini
+        echo $server_ip ansible_port=$ansible_port ansible_user=$ansible_user >> hosts.ini
 
         cat <<EOF> host_vars/$server_ip.yml
 ---
@@ -332,11 +349,15 @@ mariadb:
 
 firewall:
   name: "$firewall_name"
+
+ssh_log_in:
+  port: "$ansible_port"
+  user: "$ansible_user"
 EOF
 
         echo "Enter your account password on the destination host to copy the public key to it!"
 
-        ssh-copy-id root@$server_ip
+        ssh-copy-id -p $ansible_port $ansible_user@$server_ip
 
         echo "Host $server_ip ($domain_name) successfully configured!"
         echo " "
@@ -355,6 +376,34 @@ EOF
     client_body_timeout=${client_body_timeout:-5}
     read -p "Enter client header timeout (default: 5): " client_header_timeout
     client_header_timeout=${client_header_timeout:-5}
+    echo -e "\nProtecting SSH"
+
+    while [[ true ]]; do
+        read -p "Enter the port for SSH: " ssh_port
+        if [[ -z $ssh_port ]]; then
+            echo -e "The field cannot be empty!\n"
+        else
+            break;
+        fi
+    done
+
+    while [[ true ]]; do
+        read -p "Enter the username: " ssh_username
+        if [[ -z $ssh_username ]]; then
+            echo -e "The field cannot be empty!\n"
+        else
+            break;
+        fi
+    done
+
+    while [[ true ]]; do
+        read -p "Enter the password: " ssh_password
+        if [[ -z $ssh_password ]]; then
+            echo -e "The field cannot be empty!\n"
+        else
+            break;
+        fi
+    done
     echo ""
 
     cat <<EOF> group_vars/vars.yml
@@ -370,16 +419,22 @@ nginx:
 
 php:
   version: "$php_version"
+
+ssh:
+  port: "$ssh_port"
+  credentials:
+    user: "$ssh_username"
+    password: "$ssh_password"
 EOF
 
     while [[ true ]]; do
         read -p "To start deploying? [yes, no]: " deploy
         case $deploy in
             [Yy]* )
-                ansible-playbook playbook.yml;
+                ansible-playbook playbook.yml --ask-become-pass;
                 break ;;
             [Nn]* )
-                echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml";
+                echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml --ask-become-pass";
                 break ;;
             * )
                 echo "Incorrect answer!" ;;

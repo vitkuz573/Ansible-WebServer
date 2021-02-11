@@ -11,10 +11,9 @@
 
 - name: Allow SSH access
   ansible.posix.firewalld:
-    service: ssh
-    zone: public
+    port: "{{ ssh['port'] }}/tcp"
     permanent: true
-    state: present
+    state: enabled
   when: firewall['name'] == "firewalld"
   tags:
   - firewalld
@@ -24,7 +23,7 @@
     service: http
     zone: public
     permanent: true
-    state: present
+    state: enabled
   when: firewall['name'] == "firewalld"
   tags:
   - firewalld
@@ -34,7 +33,7 @@
     service: https
     zone: public
     permanent: true
-    state: present
+    state: enabled
   when: firewall['name'] == "firewalld" and https['enable'] == "true"
   notify: Restart Firewalld (Debian)
   tags:
