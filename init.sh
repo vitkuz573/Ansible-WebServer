@@ -26,19 +26,22 @@ if [[ $continue == "yes" ]]; then
   if [[ -e hosts.ini ]]; then
     rm hosts.ini
   fi
-  echo "";
+  echo ""
 
   while [[ true ]]; do
     read -p "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: " generate_ssh_key
     case $generate_ssh_key in
       [Yy]* )
-        ssh-keygen;
-        break ;;
+        ssh-keygen
+        break
+        ;;
       [Nn]* )
-        echo -e "You refused to create a key!\n";
-        break ;;
+        echo -e "You refused to create a key!\n"
+        break
+        ;;
       * )
-        echo -e "Incorrect answer!\n" ;;
+        echo -e "Incorrect answer!\n"
+        ;;
     esac
   done
 
@@ -58,7 +61,7 @@ if [[ $continue == "yes" ]]; then
       valid_ip $server_ip
       if [[ $? -eq 0 ]]; then
         echo ""
-        break;
+        break
       else
         echo -e "Incorrect IP address!\n"
       fi
@@ -76,7 +79,7 @@ if [[ $continue == "yes" ]]; then
         echo -e "The field cannot be empty!\n"
       else
         echo ""
-        break;
+        break
       fi
     done
 
@@ -86,7 +89,7 @@ if [[ $continue == "yes" ]]; then
         echo -e "The field cannot be empty!\n"
       else
         echo ""
-        break;
+        break
       fi
     done
 
@@ -96,7 +99,7 @@ if [[ $continue == "yes" ]]; then
         echo -e "The field cannot be empty!\n"
       else
         echo ""
-        break;
+        break
       fi
     done
 
@@ -104,8 +107,8 @@ if [[ $continue == "yes" ]]; then
       read -p "Enable HTTPS? [yes, no]: " https_enable
       case $https_enable in
         [Yy]* )
-          https_enable=true;
-          echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n";
+          https_enable=true
+          echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n"
 
           while [[ true ]]; do
             read -p "Choose the right option: " ssl_option;
@@ -117,15 +120,16 @@ if [[ $continue == "yes" ]]; then
                   if [[ -z $ssl_certificate ]]; then
                     echo -e "The field cannot be empty!\n"
                   else
-                    break;
+                    break
                   fi
                 done
+
                 while [[ true ]]; do
                   read -p "Enter SSL Trusted Certificate Path (chain): " ssl_trusted_certificate
                   if [[ -z $ssl_trusted_certificate ]]; then
                     echo -e "The field cannot be empty!\n"
                   else
-                    break;
+                    break
                   fi
                 done
 
@@ -134,10 +138,11 @@ if [[ $continue == "yes" ]]; then
                   if [[ -z $ssl_certificate_key ]]; then
                     echo -e "The field cannot be empty!\n"
                   else
-                    break;
+                    break
                   fi
                 done
-                break ;;
+                break
+                ;;
               2 )
                 ssl_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/fullchain.pem"
                 ssl_trusted_certificate="/etc/letsencrypt/live/{{ domain['name'] }}/chain.pem"
@@ -147,28 +152,36 @@ if [[ $continue == "yes" ]]; then
                   read -p "Enable OCSP Must Staple? [yes, no]: " ocsp_must_staple
                   case $ocsp_must_staple in
                     [Yy]* )
-                      ocsp_must_staple=true;
-                      break ;;
+                      ocsp_must_staple=true
+                      break
+                      ;;
                     [Nn]* )
-                      ocsp_must_staple=false;
-                      break ;;
+                      ocsp_must_staple=false
+                      break
+                      ;;
                     * )
-                      echo "Incorrect answer!" ;;
+                      echo "Incorrect answer!"
+                      ;;
                   esac
                 done
-                break ;;
+                break
+                ;;
               * )
                 echo -e "Incorrect option!\n"
+                ;;
             esac
           done
           echo ""
-          break ;;
+          break
+          ;;
         [Nn]* )
-          https_enable=false;
+          https_enable=false
           echo ""
-          break ;;
+          break
+          ;;
         * )
-          echo -e "Incorrect answer!\n";
+          echo -e "Incorrect answer!\n"
+          ;;
       esac
     done
 
@@ -176,33 +189,39 @@ if [[ $continue == "yes" ]]; then
       read -p "Install phpMyAdmin? [yes, no]: " phpmyadmin_install
       case $phpmyadmin_install in
         [Yy]* )
-          phpmyadmin_install=true;
-          read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version;
+          phpmyadmin_install=true
+          read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version
           phpmyadmin_version=${phpmyadmin_version:-5.0.4}
           while [[ true ]]; do
-            read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect;
+            read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect
             case $phpmyadmin_protect in
               [Yy]* )
                 phpmyadmin_protect=true
                 read -p "Enter .htpasswd Username: " htpasswd_username
                 read -p "Enter .htpasswd Password: " htpasswd_password
-                echo "";
-                break ;;
-              [Nn]* )
-                phpmyadmin_protect=false;
                 echo ""
-                break ;;
+                break
+                ;;
+              [Nn]* )
+                phpmyadmin_protect=false
+                echo ""
+                break
+                ;;
               * )
-                echo -e "Incorrect answer!\n" ;;
+                echo -e "Incorrect answer!\n"
+                ;;
             esac
           done
-          break ;;
+          break
+          ;;
         [Nn]* )
-          phpmyadmin_install=false;
-          echo "";
-          break ;;
+          phpmyadmin_install=false
+          echo ""
+          break
+          ;;
         * )
-          echo -e "Incorrect answer!\n" ;;
+          echo -e "Incorrect answer!\n"
+          ;;
       esac
     done
 
@@ -210,15 +229,18 @@ if [[ $continue == "yes" ]]; then
     #    read -p "Install fail2ban? [yes, no]: " fail2ban_install
     #    case $fail2ban_install in
     #        [Yy]* )
-    #            fail2ban_install=true;
-    #            echo "";
-    #            break ;;
+    #            fail2ban_install=true
+    #            echo ""
+    #            break
+    #            ;;
     #        [Nn]* )
-    #            fail2ban_install=false;
-    #            echo "";
-    #            break ;;
+    #            fail2ban_install=false
+    #            echo ""
+    #            break
+    #            ;;
     #        * )
-    #            echo -e "Incorrect answer!\n" ;;
+    #            echo -e "Incorrect answer!\n"
+    #            ;;
     #    esac
     #done
 
@@ -226,21 +248,24 @@ if [[ $continue == "yes" ]]; then
       read -p "Install knockd? [yes, no]: " knockd_install
       case $knockd_install in
         [Yy]* )
-          knockd_install=true;
-          read -p "Enter port sequence (default: 500,1001,456): " port_sequence;
+          knockd_install=true
+          read -p "Enter port sequence (default: 500,1001,456): " port_sequence
           port_sequence=${port_sequence:-500,1001,456}
           read -p "Enter sequence timeout (default: 15): " sequence_timeout
           sequence_timeout=${sequence_timeout:-15}
-          read -p "Enter command timeout (default: 10): " command_timeout;
+          read -p "Enter command timeout (default: 10): " command_timeout
           command_timeout=${command_timeout:-10}
-          echo "";
-          break ;;
+          echo ""
+          break
+          ;;
         [Nn]* )
-          knockd_install=false;
-          echo "";
-          break ;;
+          knockd_install=false
+          echo ""
+          break
+          ;;
         * )
-          echo -e "Incorrect answer!\n" ;;
+          echo -e "Incorrect answer!\n"
+          ;;
       esac
     done
 
@@ -248,18 +273,21 @@ if [[ $continue == "yes" ]]; then
       read -p "Configure sftp? [yes, no]: " sftp_configure
       case $sftp_configure in
         [Yy]* )
-          sftp_configure=true;
-          read -p "Enter sftp root directory: " sftp_root;
-          read -p "Enter sftp username: " sftp_user;
-          read -p "Enter sftp password: " sftp_password;
-          break;
-          echo "" ;;
+          sftp_configure=true
+          read -p "Enter sftp root directory: " sftp_root
+          read -p "Enter sftp username: " sftp_user
+          read -p "Enter sftp password: " sftp_password
+          break
+          echo ""
+          ;;
         [Nn]* )
-          sftp_configure=false;
-          echo "";
-          break ;;
+          sftp_configure=false
+          echo ""
+          break
+          ;;
         * )
-          echo -e "Incorrect answer!\n" ;;
+          echo -e "Incorrect answer!\n"
+          ;;
       esac
     done
 
@@ -272,24 +300,29 @@ if [[ $continue == "yes" ]]; then
             read -p "Choose a suitable firewall: " firewall
             case $firewall in
               1 )
-                firewall_name="ufw";
-                echo "";
-                break ;;
+                firewall_name="ufw"
+                echo ""
+                break
+                ;;
                 #2 )
-                #    firewall_name="firewalld";
-                #    echo "";
-                #    break ;;
+                #    firewall_name="firewalld"
+                #    echo ""
+                #    break
+                #    ;;
               * )
-                echo -e "Incorrect option!\n" ;;
+                echo -e "Incorrect option!\n"
+                ;;
             esac
           done
-          echo "";
-          break ;;
+          break
+          ;;
         [Nn]* )
-          echo "";
-          break ;;
+          echo ""
+          break
+          ;;
         * )
-          echo -e "Incorrect answer!\n" ;;
+          echo -e "Incorrect answer!\n"
+          ;;
       esac
     done
 
@@ -301,7 +334,7 @@ if [[ $continue == "yes" ]]; then
         echo -e "The field cannot be empty!\n"
       else
         echo ""
-        break;
+        break
       fi
     done
 
@@ -340,7 +373,7 @@ fail2ban:
 knockd:
   install: "$knockd_install"
   port_sequence: "$port_sequence"
-  port_sequence_spaces: "${port_sequence//,/ }"
+  port_sequence_whitespaces: "${port_sequence//,/ }"
   command_timeout: "$command_timeout"
 
 sftp:
@@ -387,7 +420,7 @@ EOF
     if [[ -z $ssh_port ]]; then
       echo -e "The field cannot be empty!\n"
     else
-      break;
+      break
     fi
   done
 
@@ -396,7 +429,7 @@ EOF
     if [[ -z $ssh_username ]]; then
       echo -e "The field cannot be empty!\n"
     else
-      break;
+      break
     fi
   done
 
@@ -405,7 +438,7 @@ EOF
     if [[ -z $ssh_password ]]; then
       echo -e "The field cannot be empty!\n"
     else
-      break;
+      break
     fi
   done
   echo ""
@@ -435,13 +468,16 @@ EOF
     read -p "To start deploying? [yes, no]: " deploy
     case $deploy in
       [Yy]* )
-        ansible-playbook playbook.yml;
-        break ;;
+        ansible-playbook playbook.yml
+        break
+        ;;
       [Nn]* )
-        echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml";
-        break ;;
+        echo -e "\nThe deployment was aborted. To start the process, run ansible-playbook playbook.yml"
+        break
+        ;;
       * )
-        echo "Incorrect answer!" ;;
+        echo "Incorrect answer!"
+        ;;
     esac
   done
 
