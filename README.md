@@ -1,4 +1,4 @@
-# [Ansible WebServer](https://raw.githubusercontent.com/vitkuz573/Ansible-WebServer/master/.github/ansible-webserver.svg?sanitize=true)
+# Ansible WebServer
 
 [![License](https://img.shields.io/github/license/vitkuz573/Ansible-WebServer)](https://github.com/vitkuz573/Ansible-WebServer/blob/master/LICENSE)
 [![Help Wanted](https://img.shields.io/github/issues/vitkuz573/Ansible-WebServer/help%20wanted?color=green)](https://github.com/vitkuz573/Ansible-WebServer/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
