@@ -122,6 +122,13 @@
     mode: 0644
   when: https['enable'] == "true" and https['option'] == "2"
 
+- name: Creating a host (with HTTPS) (option 3)
+  template:
+    src: templates/domain_http.conf.j2
+    dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
+    mode: 0644
+  when: https['enable'] == "true" and https['option'] == "3"
+
 - name: Enabling the host
   file:
     src: /etc/nginx/sites-available/{{ domain['name'] }}.conf
