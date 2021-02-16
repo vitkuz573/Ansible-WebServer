@@ -108,7 +108,7 @@ if [[ $continue == "yes" ]]; then
       case $https_enable in
         [Yy]* )
           https_enable=true
-          echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n"
+          echo -e "\n1) Use a certificate obtained in advance\n2) Get a certificate from Let's Encrypt\n3) Generate a self-signed certificate\n"
 
           while [[ true ]]; do
             read -p "Choose the right option: " ssl_option;
@@ -164,6 +164,11 @@ if [[ $continue == "yes" ]]; then
                       ;;
                   esac
                 done
+                break
+                ;;
+              3 )
+                ssl_certificate="/etc/ssl/self-signed/{{ domain['name'] }}/certificate.pem"
+                ssl_certificate_key="/etc/ssl/self-signed/{{ domain['name'] }}/privkey.pem"
                 break
                 ;;
               * )

@@ -1,0 +1,71 @@
+- name: Checking the directory for SSL certificates
+  stat:
+    path: /etc/ssl/self-signed/{{ domain['name'] }}
+  register: ssl_certificates_dir_details
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
+
+- name: Creating a directory for SSL certificates
+  file:
+    path: /etc/ssl/self-signed/{{ domain['name'] }}
+    mode: 0755
+    state: directory
+  when: https['enable'] == "true" and https['option'] == "3" and not ssl_certificates_dir_details.stat.exists
+  tags:
+  - self_signed_certificate
+
+- name: Generating a private key
+  openssl_privatekey:
+    path: /etc/ssl/self-signed/{{ domain['name'] }}/privkey.pem
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
+
+- name: Creating a CSR
+  openssl_csr:
+    path: /etc/ssl/self-signed/{{ domain['name'] }}/request.csr
+    privatekey_path: /etc/ssl/self-signed/{{ domain['name'] }}/privkey.pem
+    force: true
+    common_name: "{{ domain['name'] }}"
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
+
+- name: Generating a self-signed certificate
+  openssl_certificate:
+    path: /etc/ssl/self-signed/{{ domain['name'] }}/certificate.pem
+    privatekey_path: /etc/ssl/self-signed/{{ domain['name'] }}/privkey.pem
+    csr_path: /etc/ssl/self-signed/{{ domain['name'] }}/request.csr
+    provider: selfsigned
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
+
+- name: Creating a host (with HTTPS) (option 3)
+  template:
+    src: templates/domain_https_self_signed.conf.j2
+    dest: /etc/nginx/sites-available/{{ domain['name'] }}.conf
+    mode: 0644
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
+
+- name: Enabling the host
+  file:
+    src: /etc/nginx/sites-available/{{ domain['name'] }}.conf
+    dest: /etc/nginx/sites-enabled/{{ domain['name'] }}.conf
+    state: link
+    force: true
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
+
+- name: Restarting Nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: true
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate

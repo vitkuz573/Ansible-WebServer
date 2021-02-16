@@ -14,6 +14,7 @@
   - mod_remoteip
   - nginx
   - letsencrypt
+  - self_signed_certificate
   - mariadb
   - phpmyadmin
   - knockd

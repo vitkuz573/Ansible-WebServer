@@ -26,8 +26,16 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
 
 WARNING: Do not run the playbook directly from the server on which you plan to deploy!
 
-NOTE: In case of deploying a web server with HTTPS, the certificate and key
-files must be on the server at the time of deployment!
+NOTE: In case of deploying a web server with HTTPS (option 1), the certificate
+and key files must be on the server at the time of deployment!
+
+## Deployment options
+
+- HTTP
+- HTTPS
+  - With a pre-prepared certificate (option 1)
+  - With a certificate obtained from Let's Encrypt (option 2)
+  - With a self-signed certificate (option 3)
 
 ## What will be installed and configured?
 
@@ -41,9 +49,10 @@ files must be on the server at the time of deployment!
 - phpMyAdmin (optional)
 - Knockd (optional)
 - SFTP Server (optional)
+- Fail2ban (optional) (in development)
 - Firewall (optional)
   - UFW
-  - Firewalld
+  - Firewalld (in development)
 
 ## What will be done to improve security?
 
@@ -51,12 +60,13 @@ files must be on the server at the time of deployment!
 - Blocking access to the Apache port
 - Blocking access to MariaDB from outside
 - Protecting Nginx from slow requests
-- SSH protection with Port-Knocking
-- Blocking access to phpMyAdmin via .htpasswd and .htaccess
+- SSH protection with Port-Knocking (optional)
+- Blocking access to phpMyAdmin via .htpasswd and .htaccess (optional)
 
 ## Roadmap
 
 - [X] Adding HTTPS support
 - [ ] Code optimization
+- [ ] Adding the ability to select the DBMS (coming soon)
 - [ ] GUI development for easier deployment
 - [ ] Adding support for other OSes

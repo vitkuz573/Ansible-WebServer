@@ -1,0 +1,9 @@
+- name: Installing required packages
+  apt:
+    pkg:
+    - openssl
+    - python3-cryptography
+    - python3-openssl
+  when: https['enable'] == "true" and https['option'] == "3"
+  tags:
+  - self_signed_certificate
