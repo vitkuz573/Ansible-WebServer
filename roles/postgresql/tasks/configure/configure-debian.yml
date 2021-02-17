@@ -1,0 +1,62 @@
+- name: Editing listen_addresses
+  lineinfile:
+    dest: /etc/postgresql/11/main/postgresql.conf
+    regexp: ^#?#listen_addresses
+    line: listen_addresses = '*'
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Changing authentication
+  lineinfile:
+    dest: /etc/postgresql/11/main/pg_hba.conf
+    regexp: ^#?local   all             postgres                                peer
+    line: local   all             postgres                                trust
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Adding line to pg_hba.conf
+  lineinfile:
+    dest: /etc/postgresql/11/main/pg_hba.conf
+    line: host    all             all             0.0.0.0/0               md5
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Restarting PostgreSQL
+  service:
+    name: postgresql
+    enabled: true
+    state: restarted
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Setting the root password
+  postgresql_user:
+    name: root
+    password: "{{ dbms['credentials']['password']['new'] }}"
+    login_unix_socket: /var/run/postgresql/
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Restoring listen_addresses
+  lineinfile:
+    dest: /etc/postgresql/11/main/postgresql.conf
+    regexp: ^#?#listen_addresses
+    line: listen_addresses = 'localhost'
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Modifying pg_hba.conf
+  copy:
+    src: files/pg_hba.conf
+    dest: /etc/postgresql/11/main/pg_hba.conf
+    mode: 0644
+  notify: Restart PostgreSQL (Debian)
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql

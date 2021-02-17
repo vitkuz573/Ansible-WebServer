@@ -2,6 +2,6 @@
   apt:
     pkg:
     - firewalld
-  when: firewall['name'] == "firewalld"
+  when: firewall['install'] and firewall['name'] == "firewalld"
   tags:
   - firewalld

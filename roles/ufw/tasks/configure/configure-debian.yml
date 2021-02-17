@@ -1,7 +1,7 @@
 - name: Setting the default policy
   ufw:
     policy: deny
-  when: firewall['name'] == "ufw"
+  when: firewall['install'] and firewall['name'] == "ufw"
   tags:
   - ufw
 
@@ -10,7 +10,7 @@
     rule: deny
     port: "{{ apache['port'] }}"
     proto: tcp
-  when: firewall['name'] == "ufw"
+  when: firewall['install'] and firewall['name'] == "ufw"
   tags:
   - ufw
   - security
@@ -21,7 +21,7 @@
     rule: allow
     port: "{{ ssh['port'] }}"
     proto: tcp
-  when: firewall['name'] == "ufw" and knockd['install'] == "false"
+  when: firewall['install'] and firewall['name'] == "ufw" and knockd['install'] == "false"
   tags:
   - ufw
 
@@ -29,7 +29,7 @@
   ufw:
     rule: allow
     name: WWW
-  when: firewall['name'] == "ufw" and https['enable'] == "false"
+  when: firewall['install'] and firewall['name'] == "ufw" and https['enable'] == "false"
   tags:
   - ufw
 
@@ -37,7 +37,7 @@
   ufw:
     rule: allow
     name: WWW Full
-  when: firewall['name'] == "ufw" and https['enable'] == "true"
+  when: firewall['install'] and firewall['name'] == "ufw" and https['enable'] == "true"
   tags:
   - ufw
 
@@ -45,13 +45,13 @@
   ufw:
     rule: allow
     name: WWW
-  when: firewall['name'] == "ufw"
+  when: firewall['install'] and firewall['name'] == "ufw"
   tags:
   - ufw
 
 - name: Enabling UFW
   ufw:
     state: enabled
-  when: firewall['name'] == "ufw"
+  when: firewall['install'] and firewall['name'] == "ufw"
   tags:
   - ufw

@@ -1,0 +1,16 @@
+- name: Copying mysql.list
+  template:
+    src: templates/mysql.list.j2
+    dest: /etc/apt/sources.list.d/mysql.list
+  when: dbms['install'] == "true" and dbms['name'] == "mysql"
+  tags:
+  - mysql
+
+- name: Installing MySQL
+  apt:
+    update_cache: true
+    pkg:
+    - mysql-server
+  when: dbms['install'] == "true" and dbms['name'] == "mysql"
+  tags:
+  - mysql

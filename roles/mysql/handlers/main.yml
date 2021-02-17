@@ -1,0 +1,5 @@
+- name: Restart MySQL (Debian)
+  service:
+    name: mysql
+    enabled: true
+    state: restarted

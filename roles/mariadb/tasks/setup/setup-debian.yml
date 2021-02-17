@@ -3,6 +3,7 @@
     pkg:
     - mariadb-server
     - python3-pymysql
+  when: dbms['install'] == "true" and dbms['name'] == "mariadb"
   tags:
   - mariadb
 
@@ -10,5 +11,6 @@
   pip:
     name: pymysql
     executable: pip3
+  when: dbms['install'] == "true" and dbms['name'] == "mariadb"
   tags:
   - mariadb

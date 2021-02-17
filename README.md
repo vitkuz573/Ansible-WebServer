@@ -45,7 +45,10 @@ and key files must be on the server at the time of deployment!
   - mod_fastcgi
   - mod_remoteip
 - PHP-FPM
-- MariaDB
+- DBMS (optional)
+  - MariaDB
+  - MySQL
+  - PostgreSQL (in development)
 - phpMyAdmin (optional)
 - Knockd (optional)
 - SFTP Server (optional)
@@ -58,7 +61,7 @@ and key files must be on the server at the time of deployment!
 
 - Hiding Nginx and Apache versions
 - Blocking access to the Apache port
-- Blocking access to MariaDB from outside
+- Blocking access to DBMS from outside
 - Protecting Nginx from slow requests
 - SSH protection with Port-Knocking (optional)
 - Blocking access to phpMyAdmin via .htpasswd and .htaccess (optional)
@@ -67,6 +70,7 @@ and key files must be on the server at the time of deployment!
 
 - [X] Adding HTTPS support
 - [ ] Code optimization
-- [ ] Adding the ability to select the DBMS (coming soon)
+- [X] Adding the ability to select the DBMS
+- [ ] Adding support for phpPgAdmin
 - [ ] GUI development for easier deployment
 - [ ] Adding support for other OSes

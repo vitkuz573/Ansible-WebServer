@@ -5,9 +5,9 @@
     login_user: root
     login_password: "{{ dbms['credentials']['password']['old'] }}"
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  when: dbms['install'] == "true" and dbms['name'] == "mariadb"
+  when: dbms['install'] == "true" and dbms['name'] == "mysql"
   tags:
-  - mariadb
+  - mysql
 
 - name: Deleting all anonymous users
   mysql_user:
@@ -16,9 +16,9 @@
     state: absent
     login_user: root
     login_password: "{{ dbms['credentials']['password']['new'] }}"
-  when: dbms['install'] == "true" and dbms['name'] == "mariadb"
+  when: dbms['install'] == "true" and dbms['name'] == "mysql"
   tags:
-  - mariadb
+  - mysql
 
 - name: Deleting the test database
   mysql_db:
@@ -26,9 +26,9 @@
     state: absent
     login_user: root
     login_password: "{{ dbms['credentials']['password']['new'] }}"
-  when: dbms['install'] == "true" and dbms['name'] == "mariadb"
+  when: dbms['install'] == "true" and dbms['name'] == "mysql"
   tags:
-  - mariadb
+  - mysql
 
 - name: Prohibiting connections to the DBMS from the outside
   blockinfile:
@@ -36,9 +36,9 @@
     block: |
       [mysqld]
       bind-address = 127.0.0.1
-  when: dbms['install'] == "true" and dbms['name'] == "mariadb"
+  when: dbms['install'] == "true" and dbms['name'] == "mysql"
   tags:
-  - mariadb
+  - mysql
   - security
   - bind-localhost
-  notify: Restart MariaDB (Debian)
+  notify: Restart MySQL (Debian)

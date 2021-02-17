@@ -1,0 +1,5 @@
+- name: Restart PostgreSQL (Debian)
+  service:
+    name: postgresql
+    enabled: true
+    state: restarted

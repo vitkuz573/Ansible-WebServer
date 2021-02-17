@@ -3,7 +3,7 @@
     port: "{{ apache['port'] }}/tcp"
     permanent: true
     state: disabled
-  when: firewall['name'] == "firewalld"
+  when: firewall['install'] and firewall['name'] == "firewalld"
   tags:
   - firewalld
   - security
@@ -14,7 +14,7 @@
     port: "{{ ssh['port'] }}/tcp"
     permanent: true
     state: enabled
-  when: firewall['name'] == "firewalld"
+  when: firewall['install'] and firewall['name'] == "firewalld"
   tags:
   - firewalld
 
@@ -24,7 +24,7 @@
     zone: public
     permanent: true
     state: enabled
-  when: firewall['name'] == "firewalld"
+  when: firewall['install'] and firewall['name'] == "firewalld"
   tags:
   - firewalld
 
@@ -34,7 +34,7 @@
     zone: public
     permanent: true
     state: enabled
-  when: firewall['name'] == "firewalld" and https['enable'] == "true"
+  when: firewall['install'] and firewall['name'] == "firewalld" and https['enable'] == "true"
   notify: Restart Firewalld (Debian)
   tags:
   - firewalld

@@ -16,6 +16,8 @@
   - letsencrypt
   - self_signed_certificate
   - mariadb
+  - mysql
+  - postgresql
   - phpmyadmin
   - knockd
   - sftp

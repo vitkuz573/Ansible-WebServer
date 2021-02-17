@@ -191,36 +191,119 @@ if [[ $continue == "yes" ]]; then
     done
 
     while [[ true ]]; do
-      read -p "Install phpMyAdmin? [yes, no]: " phpmyadmin_install
-      case $phpmyadmin_install in
+      read -p "Install DBMS? [yes, no]: " dbms_install
+      case $dbms_install in
         [Yy]* )
-          phpmyadmin_install=true
-          read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version
-          phpmyadmin_version=${phpmyadmin_version:-5.0.4}
+          dbms_install=true
+          echo -e "\nAvailable DBMS:\n\n1) MariaDB\n2) MySQL\n3) PostgreSQL\n"
           while [[ true ]]; do
-            read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect
-            case $phpmyadmin_protect in
-              [Yy]* )
-                phpmyadmin_protect=true
-                read -p "Enter .htpasswd Username: " htpasswd_username
-                read -p "Enter .htpasswd Password: " htpasswd_password
+            read -p "Choose a suitable DBMS: " dbms
+            case $dbms in
+              1 )
+                dbms_name="mariadb"
+
+                echo ""
+                read -p "Enter old MariaDB password (if exists): " dbms_old_password
+
+                while [[ true ]]; do
+                  read -p "Enter MariaDB password: " dbms_new_password
+                  if [[ -z $dbms_new_password ]]; then
+                    echo -e "The field cannot be empty!\n"
+                  else
+                    break
+                  fi
+                done
+
                 echo ""
                 break
                 ;;
-              [Nn]* )
-                phpmyadmin_protect=false
+              2 )
+                dbms_name="mysql"
+
+                echo ""
+                read -p "Enter old MySQL password (if exists): " dbms_old_password
+
+                while [[ true ]]; do
+                  read -p "Enter MySQL password: " dbms_new_password
+                  if [[ -z $dbms_new_password ]]; then
+                    echo -e "The field cannot be empty!\n"
+                  else
+                    break
+                  fi
+                done
+
+                echo ""
+                break
+                ;;
+              3 )
+                dbms_name="postgresql"
+
+                echo ""
+
+                while [[ true ]]; do
+                  read -p "Enter PostgreSQL password: " dbms_new_password
+                  if [[ -z $dbms_new_password ]]; then
+                    echo -e "The field cannot be empty!\n"
+                  else
+                    break
+                  fi
+                done
+
                 echo ""
                 break
                 ;;
               * )
-                echo -e "Incorrect answer!\n"
+                echo -e "Incorrect option!\n"
                 ;;
             esac
           done
+
+          if [[ $dbms_name != "postgresql" ]]; then
+            while [[ true ]]; do
+              read -p "Install phpMyAdmin? [yes, no]: " phpmyadmin_install
+              case $phpmyadmin_install in
+                [Yy]* )
+                  phpmyadmin_install=true
+                  read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version
+                  phpmyadmin_version=${phpmyadmin_version:-5.0.4}
+                  while [[ true ]]; do
+                    read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect
+                    case $phpmyadmin_protect in
+                      [Yy]* )
+                        phpmyadmin_protect=true
+                        read -p "Enter .htpasswd Username: " htpasswd_username
+                        read -p "Enter .htpasswd Password: " htpasswd_password
+                        echo ""
+                        break
+                        ;;
+                      [Nn]* )
+                        phpmyadmin_protect=false
+                        echo ""
+                        break
+                        ;;
+                      * )
+                        echo -e "Incorrect answer!\n"
+                        ;;
+                    esac
+                  done
+                  break
+                  ;;
+                [Nn]* )
+                  phpmyadmin_install=false
+                  echo ""
+                  break
+                  ;;
+                * )
+                  echo -e "Incorrect answer!\n"
+                  ;;
+              esac
+            done
+          fi
+
           break
           ;;
         [Nn]* )
-          phpmyadmin_install=false
+          dbms_install=false
           echo ""
           break
           ;;
@@ -331,18 +414,6 @@ if [[ $continue == "yes" ]]; then
       esac
     done
 
-    read -p "Enter old MariaDB password (if exists): " mariadb_old_password
-
-    while [[ true ]]; do
-      read -p "Enter MariaDB password: " mariadb_password
-      if [[ -z $mariadb_password ]]; then
-        echo -e "The field cannot be empty!\n"
-      else
-        echo ""
-        break
-      fi
-    done
-
     echo $server_ip ansible_port=$ansible_port ansible_user=$ansible_user ansible_become_password=$ansible_password >> hosts.ini
 
     cat <<EOF> host_vars/$server_ip.yml
@@ -362,6 +433,14 @@ https:
     certificate_key: "$ssl_certificate_key"
     ocsp:
       must_staple: "$ocsp_must_staple"
+
+dbms:
+  install: "$dbms_install"
+  name: "$dbms_name"
+  credentials:
+    password:
+      old: "$dbms_old_password"
+      new: "$dbms_new_password"
 
 phpmyadmin:
   install: "$phpmyadmin_install"
@@ -388,12 +467,8 @@ sftp:
     user: "$sftp_user"
     password: "$sftp_password"
 
-mariadb:
-  password:
-    old: "$mariadb_old_password"
-    new: "$mariadb_password"
-
 firewall:
+  install: "$firewall_install"
   name: "$firewall_name"
 EOF
 

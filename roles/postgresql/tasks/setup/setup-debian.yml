@@ -1,0 +1,8 @@
+- name: Installing PostgreSQL
+  apt:
+    pkg:
+    - postgresql
+    - python3-psycopg2
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
