@@ -488,8 +488,8 @@ EOF
   echo -e "\nConfiguration of global parameters\n\nWeb-Server Ports"
   read -p "Enter Apache port: " apache_port
   echo -e "\nPHP configuration"
-  read -p "Enter PHP version (default: 7.3): " php_version
-  php_version=${php_version:-7.3}
+  read -p "Enter PHP version (default: 8.0): " php_version
+  php_version=${php_version:-8.0}
   echo -e "\nNginx protection"
   read -p "Enter client body timeout (default: 5): " client_body_timeout
   client_body_timeout=${client_body_timeout:-5}

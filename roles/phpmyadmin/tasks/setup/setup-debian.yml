@@ -3,6 +3,8 @@
     pkg:
     - php-mysql
     - php-mbstring
+    - php8.0-mysql
+    - php8.0-mbstring
   when: phpmyadmin['install'] == "true"
   tags:
   - phpmyadmin

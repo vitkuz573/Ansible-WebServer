@@ -6,9 +6,12 @@
     - wget
     - pwgen
     - unzip
+    - net-tools
     - python3-apt
     - python3-pip
     - python3-passlib
+    - apt-transport-https
+    - ca-certificates
 
 - name: Installing the required python packages
   pip:

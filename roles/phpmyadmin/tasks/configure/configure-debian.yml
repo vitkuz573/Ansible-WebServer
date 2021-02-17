@@ -43,3 +43,14 @@
   tags:
   - phpmyadmin
   - protecting_phpmyadmin
+
+- name: Importing create_tables.sql
+  mysql_db:
+    state: import
+    name: phpmyadmin
+    target: /var/www/{{ domain['name'] }}/public/phpmyadmin/sql/create_tables.sql
+    login_user: root
+    login_password: "{{ dbms['credentials']['password']['new'] }}"
+  when: phpmyadmin['install'] == "true"
+  tags:
+  - phpmyadmin

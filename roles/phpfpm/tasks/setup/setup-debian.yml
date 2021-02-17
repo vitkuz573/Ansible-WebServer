@@ -1,5 +1,21 @@
+- name: Downloading GPG
+  get_url:
+    url: https://packages.sury.org/php/apt.gpg
+    dest: /etc/apt/trusted.gpg.d/php.gpg
+  tags:
+  - phpfpm
+
+
+- name: Copying php.list
+  template:
+    src: templates/php.list.j2
+    dest: /etc/apt/sources.list.d/php.list
+  tags:
+  - phpfpm
+
 - name: Installing PHP-FPM
   apt:
+    update_cache: true
     pkg:
     - php{{ php['version'] }}-fpm
   tags:
