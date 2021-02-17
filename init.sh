@@ -239,6 +239,8 @@ if [[ $continue == "yes" ]]; then
                 dbms_name="postgresql"
 
                 echo ""
+                read -p "Enter PostgreSQL version (default: 12): " postgresql_version
+                postgresql_version=${postgresql_version:-12}
 
                 while [[ true ]]; do
                   read -p "Enter PostgreSQL password: " dbms_new_password
@@ -443,6 +445,9 @@ dbms:
     password:
       old: "$dbms_old_password"
       new: "$dbms_new_password"
+
+postgresql:
+  version: "$postgresql_version"
 
 phpmyadmin:
   install: "$phpmyadmin_install"

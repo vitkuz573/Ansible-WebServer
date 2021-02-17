@@ -1,7 +1,25 @@
+- name: Copying pgdg.list
+  template:
+    src: templates/pgdg.list.j2
+    dest: /etc/apt/sources.list.d/pgdg.list
+    mode: 0644
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
+- name: Importing repository key
+  apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+  when: dbms['install'] == "true" and dbms['name'] == "postgresql"
+  tags:
+  - postgresql
+
 - name: Installing PostgreSQL
   apt:
+    update_cache: true
     pkg:
-    - postgresql
+    - postgresql-{{ postgresql['version'] }}
     - python3-psycopg2
   when: dbms['install'] == "true" and dbms['name'] == "postgresql"
   tags:
