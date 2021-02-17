@@ -383,6 +383,7 @@ if [[ $continue == "yes" ]]; then
       read -p "Install a firewall? [yes, no]: " firewall_install
       case $firewall_install in
         [Yy]* )
+          firewall_install="true"
           echo -e "\nAvailable firewalls:\n\n1) UFW\n"
           while [[ true ]]; do
             read -p "Choose a suitable firewall: " firewall
@@ -405,6 +406,7 @@ if [[ $continue == "yes" ]]; then
           break
           ;;
         [Nn]* )
+          firewall_install="false"
           echo ""
           break
           ;;
