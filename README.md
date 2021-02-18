@@ -52,6 +52,7 @@ and key files must be on the server at the time of deployment!
   - MySQL
   - PostgreSQL (in development)
 - phpMyAdmin (optional)
+- pgAdmin (optional)
 - Knockd (optional)
 - SFTP Server (optional)
 - Fail2ban (optional) (in development)
@@ -73,6 +74,6 @@ and key files must be on the server at the time of deployment!
 - [X] Adding HTTPS support
 - [ ] Code optimization
 - [X] Adding the ability to select the DBMS
-- [ ] Adding support for pgAdmin
+- [X] Adding support for pgAdmin
 - [ ] GUI development for easier deployment
 - [ ] Adding support for other OSes

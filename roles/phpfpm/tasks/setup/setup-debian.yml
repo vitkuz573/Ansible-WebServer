@@ -5,11 +5,11 @@
   tags:
   - phpfpm
 
-
 - name: Copying php.list
   template:
     src: templates/php.list.j2
     dest: /etc/apt/sources.list.d/php.list
+    mode: 0644
   tags:
   - phpfpm
 

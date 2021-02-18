@@ -52,13 +52,13 @@ if [[ $continue == "yes" ]]; then
   mkdir {host_vars,group_vars}
   echo "[debian]" > hosts.ini
 
-  while [ $count -lt $hosts_number ]
+  while [ "$count" -lt "$hosts_number" ]
   do
-    echo -e "\nConfigure host" $(($count + 1)) "\n"
+    echo -e "\nConfigure host" $((count + 1)) "\n"
 
     while [[ true ]]; do
       read -p "Enter IP: " server_ip
-      valid_ip $server_ip
+      valid_ip "$server_ip"
       if [[ $? -eq 0 ]]; then
         echo ""
         break
@@ -266,8 +266,10 @@ if [[ $continue == "yes" ]]; then
               case $phpmyadmin_install in
                 [Yy]* )
                   phpmyadmin_install=true
+
                   read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version
                   phpmyadmin_version=${phpmyadmin_version:-5.0.4}
+
                   while [[ true ]]; do
                     read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect
                     case $phpmyadmin_protect in
@@ -288,11 +290,53 @@ if [[ $continue == "yes" ]]; then
                         ;;
                     esac
                   done
+
                   break
                   ;;
                 [Nn]* )
                   phpmyadmin_install=false
                   echo ""
+                  break
+                  ;;
+                * )
+                  echo -e "Incorrect answer!\n"
+                  ;;
+              esac
+            done
+          fi
+
+          if [[ $dbms_name == "postgresql" ]]; then
+            while [[ true ]]; do
+              read -p "Install pgAdmin? [yes, no]: " pgadmin_install
+              case $pgadmin_install in
+                [Yy]* )
+                  pgadmin_install=true
+
+                  while [[ true ]]; do
+                    read -p "Protecting pgAdmin? [yes, no]: " phpmyadmin_protect
+                    case $pgadmin_protect in
+                      [Yy]* )
+                        pgadmin_protect=true
+                        read -p "Enter .htpasswd Username: " htpasswd_username
+                        read -p "Enter .htpasswd Password: " htpasswd_password
+                        echo ""
+                        break
+                        ;;
+                      [Nn]* )
+                        pgadmin_protect=false
+                        echo ""
+                        break
+                        ;;
+                      * )
+                        echo -e "Incorrect answer!\n"
+                        ;;
+                    esac
+                  done
+
+                  break
+                  ;;
+                [Nn]* )
+                  pgadmin_install=false
                   break
                   ;;
                 * )
@@ -418,9 +462,9 @@ if [[ $continue == "yes" ]]; then
       esac
     done
 
-    echo $server_ip ansible_port=$ansible_port ansible_user=$ansible_user ansible_become_password=$ansible_password >> hosts.ini
+    echo "$server_ip" ansible_port="$ansible_port" ansible_user="$ansible_user" ansible_become_password="$ansible_password" >> hosts.ini
 
-    cat <<EOF> host_vars/$server_ip.yml
+    cat <<EOF> host_vars/"$server_ip".yml
 ---
 host:
   name: "$hostname"
@@ -458,6 +502,14 @@ phpmyadmin:
       user: "$htpasswd_username"
       password: "$htpasswd_password"
 
+pgadmin:
+  install: "$pgadmin_install"
+  protect:
+    enable: "$pgadmin_protect"
+    credentials:
+      user: "$htpasswd_username"
+      password: "$htpasswd_password"
+
 fail2ban:
   install: "$fail2ban_install"
 
@@ -481,7 +533,7 @@ EOF
 
     echo "Enter your account password on the destination host to copy the public key to it!"
 
-    ssh-copy-id -p $ansible_port $ansible_user@$server_ip
+    ssh-copy-id -p "$ansible_port" "$ansible_user"@"$server_ip"
 
     echo "Host $server_ip ($domain_name) successfully configured!"
     echo " "

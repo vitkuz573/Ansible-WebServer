@@ -1,0 +1,25 @@
+- name: Importing repository key
+  apt_key:
+    url: https://www.pgadmin.org/static/packages_pgadmin_org.pub
+    state: present
+  when: pgadmin['install'] == "true"
+  tags:
+  - pgadmin
+
+- name: Copying pgadmin4.list
+  template:
+    src: templates/pgadmin4.list.j2
+    dest: /etc/apt/sources.list.d/pgadmin4.list
+    mode: 0644
+  when: pgadmin['install'] == "true"
+  tags:
+  - pgadmin
+
+- name: Installing pgAdmin
+  apt:
+    update_cache: true
+    pkg:
+    - pgadmin4-web
+  when: pgadmin['install'] == "true"
+  tags:
+  - pgadmin
