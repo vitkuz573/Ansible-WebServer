@@ -267,8 +267,8 @@ if [[ $continue == "yes" ]]; then
                 [Yy]* )
                   phpmyadmin_install=true
 
-                  read -p "Enter phpMyAdmin version (default: 5.0.4): " phpmyadmin_version
-                  phpmyadmin_version=${phpmyadmin_version:-5.0.4}
+                  read -p "Enter phpMyAdmin version (default: 5.1.0): " phpmyadmin_version
+                  phpmyadmin_version=${phpmyadmin_version:-5.1.0}
 
                   while [[ true ]]; do
                     read -p "Protecting phpMyAdmin? [yes, no]: " phpmyadmin_protect
