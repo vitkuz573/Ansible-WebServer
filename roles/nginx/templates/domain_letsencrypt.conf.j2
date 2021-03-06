@@ -1,6 +1,6 @@
 server {
-    listen                {{ ansible_ssh_host }}:80;
-    listen                [::]:80;
+    listen                {{ ansible_ssh_host }}:80 default_server;
+    listen                [::]:80 default_server;
     server_name           {{ domain['name'] }};
     root                  /var/www/{{ domain['name'] }}/public;
     client_body_timeout   {{ nginx['timeout']['client']['body'] }}s;

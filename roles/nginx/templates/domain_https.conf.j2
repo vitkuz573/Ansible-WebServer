@@ -55,8 +55,8 @@ server {
 }
 
 server {
-    listen      80;
-    listen      [::]:80;
+    listen      80 default_server;
+    listen      [::]:80 default_server;
     server_name .{{ domain['name'] }};
     return      301 https://{{ domain['name'] }}$request_uri;
 }
