@@ -191,7 +191,7 @@ if [[ $continue == "yes" ]]; then
                 break
                 ;;
               * )
-                echo "$(gettext "init" "Incorrect option!")"
+                echo "$(gettext "init" "Incorrect answer!")"
                 echo ""
                 ;;
             esac
@@ -288,7 +288,7 @@ if [[ $continue == "yes" ]]; then
                 break
                 ;;
               * )
-                echo "$(gettext "init" "Incorrect option!")"
+                echo "$(gettext "init" "Incorrect answer!")"
                 echo ""
                 ;;
             esac
@@ -491,7 +491,7 @@ if [[ $continue == "yes" ]]; then
                 #    break
                 #    ;;
               * )
-                echo "$(gettext "init" "Incorrect option!")"
+                echo "$(gettext "init" "Incorrect answer!")"
                 echo ""
                 ;;
             esac
