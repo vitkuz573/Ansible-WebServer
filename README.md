@@ -20,10 +20,17 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
    sudo apt install ansible
    ```
 
-2) Run init.sh and follow the instructions:
+2) Install the language files:
 
    ```bash
-   ./init.sh
+   sudo install languages/en.mo /usr/share/locale/en/LC_MESSAGES/init.mo
+   sudo install languages/ru.mo /usr/share/locale/ru/LC_MESSAGES/init.mo
+   ```
+
+3) Run init.sh and follow the instructions:
+
+   ```bash
+   LANGUAGE=en ./init.sh
    ```
 
 WARNING: Do not run the playbook directly from the server on which you plan to deploy!
