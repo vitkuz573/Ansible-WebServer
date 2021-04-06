@@ -340,48 +340,48 @@ if [[ $continue == "yes" ]]; then
             done
           fi
 
-          if [[ $dbms_name == "postgresql" ]]; then
-            while [[ true ]]; do
-              read -p "$(GETTEXT "Install pgAdmin? [yes, no]: ")" pgadmin_install
-              case $pgadmin_install in
-                [Yy]* )
-                  pgadmin_install=true
-
-                  while [[ true ]]; do
-                    read -p "$(GETTEXT "Protecting pgAdmin? [yes, no]: ")" pgadmin_protect
-                    case $pgadmin_protect in
-                      [Yy]* )
-                        pgadmin_protect=true
-                        read -p "$(GETTEXT "Login: ")" htpasswd_username
-                        read -p "$(GETTEXT "Password: ")" htpasswd_password
-                        echo ""
-                        break
-                        ;;
-                      [Nn]* )
-                        pgadmin_protect=false
-                        echo ""
-                        break
-                        ;;
-                      * )
-                        echo "$(GETTEXT "Incorrect answer!")"
-                        echo ""
-                        ;;
-                    esac
-                  done
-
-                  break
-                  ;;
-                [Nn]* )
-                  pgadmin_install=false
-                  break
-                  ;;
-                * )
-                  echo "$(GETTEXT "Incorrect answer!")"
-                  echo ""
-                  ;;
-              esac
-            done
-          fi
+          # if [[ $dbms_name == "postgresql" ]]; then
+          #   while [[ true ]]; do
+          #     read -p "$(GETTEXT "Install pgAdmin? [yes, no]: ")" pgadmin_install
+          #     case $pgadmin_install in
+          #       [Yy]* )
+          #         pgadmin_install=true
+          #
+          #         while [[ true ]]; do
+          #           read -p "$(GETTEXT "Protecting pgAdmin? [yes, no]: ")" pgadmin_protect
+          #           case $pgadmin_protect in
+          #             [Yy]* )
+          #               pgadmin_protect=true
+          #               read -p "$(GETTEXT "Login: ")" htpasswd_username
+          #               read -p "$(GETTEXT "Password: ")" htpasswd_password
+          #               echo ""
+          #               break
+          #               ;;
+          #             [Nn]* )
+          #               pgadmin_protect=false
+          #               echo ""
+          #               break
+          #               ;;
+          #             * )
+          #               echo "$(GETTEXT "Incorrect answer!")"
+          #               echo ""
+          #               ;;
+          #           esac
+          #         done
+          #
+          #         break
+          #         ;;
+          #       [Nn]* )
+          #         pgadmin_install=false
+          #         break
+          #         ;;
+          #       * )
+          #         echo "$(GETTEXT "Incorrect answer!")"
+          #         echo ""
+          #         ;;
+          #     esac
+          #   done
+          # fi
 
           break
           ;;
