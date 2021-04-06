@@ -61,7 +61,7 @@ if [[ $continue == "yes" ]]; then
     echo ""
 
     while [[ true ]]; do
-      read -p "Enter IP: " server_ip
+      read -p "IP Address: " server_ip
       valid_ip "$server_ip"
       if [[ $? -eq 0 ]]; then
         echo ""
@@ -120,9 +120,7 @@ if [[ $continue == "yes" ]]; then
           https_enable=true
           echo ""
         echo "$(gettext "init" "1) Use a certificate obtained in advance")"
-          echo ""
         echo "$(gettext "init" "2) Get a certificate from Let's Encrypt")"
-          echo ""
         echo "$(gettext "init" "3) Generate a self-signed certificate")"
           echo ""
 
@@ -132,7 +130,7 @@ if [[ $continue == "yes" ]]; then
               1 )
                 while [[ true ]]; do
                   echo ""
-                  read -p "$(gettext "init" "Enter SSL Certificate Path (fullchain): ")" ssl_certificate
+                  read -p "$(gettext "init" "SSL Certificate Path (fullchain): ")" ssl_certificate
                   if [[ -z $ssl_certificate ]]; then
                     echo "$(gettext "init" "The field cannot be empty!")"
                     echo ""
@@ -142,7 +140,7 @@ if [[ $continue == "yes" ]]; then
                 done
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Enter SSL Trusted Certificate Path (chain): ")" ssl_trusted_certificate
+                  read -p "$(gettext "init" "SSL Trusted Certificate Path (chain): ")" ssl_trusted_certificate
                   if [[ -z $ssl_trusted_certificate ]]; then
                     echo "$(gettext "init" "The field cannot be empty!")"
                     echo ""
@@ -152,7 +150,7 @@ if [[ $continue == "yes" ]]; then
                 done
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Enter SSL Certificate Key Path: ")" ssl_certificate_key
+                  read -p "$(gettext "init" "SSL Certificate Key Path: ")" ssl_certificate_key
                   if [[ -z $ssl_certificate_key ]]; then
                     echo "$(gettext "init" "The field cannot be empty!")"
                     echo ""
@@ -220,9 +218,7 @@ if [[ $continue == "yes" ]]; then
           echo "$(gettext "init" "Available DBMS:")"
           echo ""
         echo "$(gettext "init" "1) MariaDB")"
-          echo ""
         echo "$(gettext "init" "2) MySQL")"
-          echo ""
         echo "$(gettext "init" "3) PostgreSQL")"
           echo ""
 
@@ -233,10 +229,10 @@ if [[ $continue == "yes" ]]; then
                 dbms_name="mariadb"
 
                 echo ""
-                read -p "$(gettext "init" "Enter old MariaDB password (if exists): ")" dbms_old_password
+                read -p "$(gettext "init" "Old password (if exists): ")" dbms_old_password
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Enter MariaDB password: ")" dbms_new_password
+                  read -p "$(gettext "init" "Password: ")" dbms_new_password
                   if [[ -z $dbms_new_password ]]; then
                     echo "$(gettext "init" "The field cannot be empty!")"
                     echo ""
@@ -252,10 +248,10 @@ if [[ $continue == "yes" ]]; then
                 dbms_name="mysql"
 
                 echo ""
-                read -p "$(gettext "init" "Enter old MySQL password (if exists): ")" dbms_old_password
+                read -p "$(gettext "init" "Old password (if exists): ")" dbms_old_password
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Enter MySQL password: ")" dbms_new_password
+                  read -p "$(gettext "init" "Password: ")" dbms_new_password
                   if [[ -z $dbms_new_password ]]; then
                     echo "$(gettext "init" "The field cannot be empty!")"
                     echo ""
@@ -271,11 +267,11 @@ if [[ $continue == "yes" ]]; then
                 dbms_name="postgresql"
 
                 echo ""
-                read -p "$(gettext "init" "Enter PostgreSQL version (default: 12): ")" postgresql_version
+                read -p "$(gettext "init" "Version (default: 12): ")" postgresql_version
                 postgresql_version=${postgresql_version:-12}
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Enter PostgreSQL password: ")" dbms_new_password
+                  read -p "$(gettext "init" "Password: ")" dbms_new_password
                   if [[ -z $dbms_new_password ]]; then
                     echo "$(gettext "init" "The field cannot be empty!")"
                     echo ""
@@ -301,7 +297,7 @@ if [[ $continue == "yes" ]]; then
                 [Yy]* )
                   phpmyadmin_install=true
 
-                  read -p "$(gettext "init" "Enter phpMyAdmin version (default: 5.1.0): ")" phpmyadmin_version
+                  read -p "$(gettext "init" "Version (default: 5.1.0): ")" phpmyadmin_version
                   phpmyadmin_version=${phpmyadmin_version:-5.1.0}
 
                   while [[ true ]]; do
@@ -309,8 +305,8 @@ if [[ $continue == "yes" ]]; then
                     case $phpmyadmin_protect in
                       [Yy]* )
                         phpmyadmin_protect=true
-                        read -p "$(gettext "init" "Enter .htpasswd Username: ")" htpasswd_username
-                        read -p "$(gettext "init" "Enter .htpasswd Password: ")" htpasswd_password
+                        read -p "$(gettext "init" "Login: ")" htpasswd_username
+                        read -p "$(gettext "init" "Password: ")" htpasswd_password
                         echo ""
                         break
                         ;;
@@ -349,12 +345,12 @@ if [[ $continue == "yes" ]]; then
                   pgadmin_install=true
 
                   while [[ true ]]; do
-                    read -p "$(gettext "init" "Protecting pgAdmin? [yes, no]: ")" phpmyadmin_protect
+                    read -p "$(gettext "init" "Protecting pgAdmin? [yes, no]: ")" pgadmin_protect
                     case $pgadmin_protect in
                       [Yy]* )
                         pgadmin_protect=true
-                        read -p "$(gettext "init" "Enter .htpasswd Username: ")" htpasswd_username
-                        read -p "$(gettext "init" "Enter .htpasswd Password: ")" htpasswd_password
+                        read -p "$(gettext "init" "Login: ")" htpasswd_username
+                        read -p "$(gettext "init" "Password: ")" htpasswd_password
                         echo ""
                         break
                         ;;
@@ -422,11 +418,11 @@ if [[ $continue == "yes" ]]; then
       case $knockd_install in
         [Yy]* )
           knockd_install=true
-          read -p "$(gettext "init" "Enter port sequence (default: 500,1001,456): ")" port_sequence
+          read -p "$(gettext "init" "Port sequence (default: 500,1001,456): ")" port_sequence
           port_sequence=${port_sequence:-500,1001,456}
-          read -p "$(gettext "init" "Enter sequence timeout (default: 15): ")" sequence_timeout
+          read -p "$(gettext "init" "Sequence timeout (default: 15): ")" sequence_timeout
           sequence_timeout=${sequence_timeout:-15}
-          read -p "$(gettext "init" "Enter command timeout (default: 10): ")" command_timeout
+          read -p "$(gettext "init" "Command timeout (default: 10): ")" command_timeout
           command_timeout=${command_timeout:-10}
           echo ""
           break
@@ -448,9 +444,9 @@ if [[ $continue == "yes" ]]; then
       case $sftp_configure in
         [Yy]* )
           sftp_configure=true
-          read -p "$(gettext "init" "Enter sftp root directory: ")" sftp_root
-          read -p "$(gettext "init" "Enter sftp username: ")" sftp_user
-          read -p "$(gettext "init" "Enter sftp password: ")" sftp_password
+          read -p "$(gettext "init" "Root directory: ")" sftp_root
+          read -p "$(gettext "init" "Login: ")" sftp_user
+          read -p "$(gettext "init" "Password: ")" sftp_password
           break
           echo ""
           ;;
@@ -594,22 +590,22 @@ EOF
   echo ""
   echo "$(gettext "init" "Web-Server Ports")"
   echo ""
-  read -p "$(gettext "init" "Enter Apache port: ")" apache_port
+  read -p "$(gettext "init" "Apache port: ")" apache_port
   echo ""
 
   # PHP Configuration
   echo "$(gettext "init" "PHP configuration")"
   echo ""
-  read -p "$(gettext "init" "Enter PHP version (default: 8.0): ")" php_version
+  read -p "$(gettext "init" "Version (default: 8.0): ")" php_version
   php_version=${php_version:-8.0}
   echo ""
 
   # Nginx Protection
   echo "$(gettext "init" "Nginx protection")"
   echo ""
-  read -p "$(gettext "init" "Enter client body timeout (default: 5): ")" client_body_timeout
+  read -p "$(gettext "init" "Client body timeout (default: 5): ")" client_body_timeout
   client_body_timeout=${client_body_timeout:-5}
-  read -p "$(gettext "init" "Enter client header timeout (default: 5): ")" client_header_timeout
+  read -p "$(gettext "init" "Client header timeout (default: 5): ")" client_header_timeout
   client_header_timeout=${client_header_timeout:-5}
   echo ""
 
@@ -617,7 +613,7 @@ EOF
   echo "$(gettext "init" "SSH Protection")"
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Enter the port for SSH: ")" ssh_port
+    read -p "$(gettext "init" "Port: ")" ssh_port
     if [[ -z $ssh_port ]]; then
       echo "$(gettext "init" "The field cannot be empty!")"
       echo ""
@@ -627,7 +623,7 @@ EOF
   done
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Enter the username: ")" ssh_username
+    read -p "$(gettext "init" "Login: ")" ssh_username
     if [[ -z $ssh_username ]]; then
       echo "$(gettext "init" "The field cannot be empty!")"
       echo ""
@@ -637,7 +633,7 @@ EOF
   done
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Enter the password: ")" ssh_password
+    read -p "$(gettext "init" "Password: ")" ssh_password
     if [[ -z $ssh_password ]]; then
       echo "$(gettext "init" "The field cannot be empty!")"
       echo ""
