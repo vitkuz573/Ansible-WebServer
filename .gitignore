@@ -1,3 +1,7 @@
 group_vars/
 host_vars/
 hosts.ini
+test_playbook.yml
+languages/init.pot
+languages/en.po
+languages/ru.po

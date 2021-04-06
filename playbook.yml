@@ -19,6 +19,7 @@
   - mysql
   - postgresql
   - phpmyadmin
+  - pgadmin
   - knockd
   - sftp
   - ufw

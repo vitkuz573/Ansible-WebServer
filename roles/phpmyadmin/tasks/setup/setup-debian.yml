@@ -1,10 +1,8 @@
 - name: Installing the necessary PHP extensions
   apt:
     pkg:
-    - php-mysql
-    - php-mbstring
-    - php8.0-mysql
-    - php8.0-mbstring
+    - php{{ php['version'] }}-mysql
+    - php{{ php['version'] }}-mbstring
   when: phpmyadmin['install'] == "true"
   tags:
   - phpmyadmin

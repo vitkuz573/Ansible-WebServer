@@ -1,0 +1,32 @@
+- name: Expecting
+  expect:
+    command: /usr/pgadmin4/bin/setup-web.sh
+    responses:
+      ? We can now configure the Apache Web server for you. This involves enabling the wsgi module and configuring the pgAdmin 4 application to mount at /pgadmin4. Do you wish to continue (y/n)?
+      : y
+      The Apache web server is running and must be restarted for the pgAdmin 4 installation to complete. Continue (y/n)?: y
+      'Email address:': "{{ postgresql['email'] }}"
+      'Password:': "{{ dbms['credentials']['password']['new'] }}"
+      'Retype password:': "{{ dbms['credentials']['password']['new'] }}"
+
+- name: Generating .htpasswd
+  htpasswd:
+    path: /var/www/.htpasswd
+    mode: 0644
+    name: "{{ pgadmin['protect']['credentials']['user'] }}"
+    password: "{{ pgadmin['protect']['credentials']['password'] }}"
+    crypt_scheme: md5_crypt
+  when: pgadmin['install'] == "true" and pgadmin['protect']['enable'] == "true"
+  tags:
+  - pgadmin
+  - protecting_pgadmin
+
+- name: Copying .htaccess
+  copy:
+    src: files/.htaccess
+    dest: /usr/pgadmin4/web/.htaccess
+    mode: 0644
+  when: pgadmin['install'] == "true" and pgadmin['protect']['enable'] == "true"
+  tags:
+  - pgadmin
+  - protecting_pgadmin

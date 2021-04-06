@@ -20,10 +20,17 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
    sudo apt install ansible
    ```
 
-2) Run init.sh and follow the instructions:
+2) Install the language files:
 
    ```bash
-   ./init.sh
+   sudo install languages/en.mo /usr/share/locale/en/LC_MESSAGES/init.mo
+   sudo install languages/ru.mo /usr/share/locale/ru/LC_MESSAGES/init.mo
+   ```
+
+3) Run init.sh and follow the instructions:
+
+   ```bash
+   LANGUAGE=en ./init.sh
    ```
 
 WARNING: Do not run the playbook directly from the server on which you plan to deploy!
@@ -48,10 +55,9 @@ and key files must be on the server at the time of deployment!
   - mod_remoteip
 - PHP-FPM
 - DBMS (optional)
-  - MariaDB
-  - MySQL
-  - PostgreSQL (in development)
-- phpMyAdmin (optional)
+  - MariaDB + phpMyAdmin (optional)
+  - MySQL + phpMyAdmin (optional)
+  - PostgreSQL + pgAdmin (optional) (in development)
 - Knockd (optional)
 - SFTP Server (optional)
 - Fail2ban (optional) (in development)
@@ -64,6 +70,7 @@ and key files must be on the server at the time of deployment!
 - Hiding Nginx and Apache versions
 - Blocking access to the Apache port
 - Blocking access to DBMS from outside
+- Blocking direct access via IP (redirect)
 - Protecting Nginx from slow requests
 - SSH protection with Port-Knocking (optional)
 - Blocking access to phpMyAdmin via .htpasswd and .htaccess (optional)
@@ -71,7 +78,6 @@ and key files must be on the server at the time of deployment!
 ## Roadmap
 
 - [X] Adding HTTPS support
-- [ ] Code optimization
 - [X] Adding the ability to select the DBMS
 - [ ] Adding support for pgAdmin
 - [ ] GUI development for easier deployment

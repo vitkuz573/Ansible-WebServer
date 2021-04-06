@@ -2,6 +2,7 @@
   template:
     src: templates/mysql.list.j2
     dest: /etc/apt/sources.list.d/mysql.list
+    mode: 0644
   when: dbms['install'] == "true" and dbms['name'] == "mysql"
   tags:
   - mysql
