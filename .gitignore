@@ -2,7 +2,6 @@ group_vars/
 host_vars/
 hosts.ini
 test_playbook.yml
-translate_init.sh
 languages/init.pot
 languages/en.po
 languages/ru.po

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+shopt -s expand_aliases
+alias GETTEXT='gettext "init"'
+
 function valid_ip() {
   local ip=$1
   local stat=1
@@ -15,7 +18,7 @@ function valid_ip() {
   return $stat
 }
 
-read -p "$(gettext "init" "Continuing will erase the current configuration! Continue? [yes, no]: ")" continue
+read -p "$(GETTEXT "Continuing will erase the current configuration! Continue? [yes, no]: ")" continue
 if [[ $continue == "yes" ]]; then
   if [[ -e host_vars ]]; then
     rm -R host_vars
@@ -29,25 +32,25 @@ if [[ $continue == "yes" ]]; then
   echo ""
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: ")" generate_ssh_key
+    read -p "$(GETTEXT "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: ")" generate_ssh_key
     case $generate_ssh_key in
       [Yy]* )
         ssh-keygen
         break
         ;;
       [Nn]* )
-        echo "$(gettext "init" "You refused to create a key!")"
+        echo "$(GETTEXT "You refused to create a key!")"
         echo ""
         break
         ;;
       * )
-        echo "$(gettext "init" "Incorrect answer!")"
+        echo "$(GETTEXT "Incorrect answer!")"
         echo ""
         ;;
     esac
   done
 
-  read -p "$(gettext "init" "Enter the number of hosts: ")" hosts_number
+  read -p "$(GETTEXT "Enter the number of hosts: ")" hosts_number
 
   count=0
 
@@ -57,33 +60,33 @@ if [[ $continue == "yes" ]]; then
   while [ "$count" -lt "$hosts_number" ]
   do
     echo ""
-    echo "$(gettext "init" "Configure host")" $((count + 1))
+    echo "$(GETTEXT "Configure host")" $((count + 1))
     echo ""
 
     while [[ true ]]; do
-      read -p "IP Address: " server_ip
+      read -p "$(GETTEXT "IP Address: ")" server_ip
       valid_ip "$server_ip"
       if [[ $? -eq 0 ]]; then
         echo ""
         break
       else
-        echo "$(gettext "init" "Incorrect IP address!")"
+        echo "$(GETTEXT "Incorrect IP address!")"
         echo ""
       fi
     done
 
-    echo "$(gettext "init" "Parameters for connecting via SSH:")"
+    echo "$(GETTEXT "Parameters for connecting via SSH:")"
     echo ""
-    read -p "$(gettext "init" "Port (default: 22): ")" ansible_port
+    read -p "$(GETTEXT "Port (default: 22): ")" ansible_port
     ansible_port=${ansible_port:-22}
 
-    read -p "$(gettext "init" "User (default: root): ")" ansible_user
+    read -p "$(GETTEXT "User (default: root): ")" ansible_user
     ansible_user=${ansible_user:-root}
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Password: ")" ansible_password
+      read -p "$(GETTEXT "Password: ")" ansible_password
       if [[ -z $ansible_password ]]; then
-        echo "$(gettext "init" "The field cannot be empty!")"
+        echo "$(GETTEXT "The field cannot be empty!")"
         echo ""
       else
         echo ""
@@ -92,9 +95,9 @@ if [[ $continue == "yes" ]]; then
     done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Domain Name: ")" domain_name
+      read -p "$(GETTEXT "Domain Name: ")" domain_name
       if [[ -z $domain_name ]]; then
-        echo "$(gettext "init" "The field cannot be empty!")"
+        echo "$(GETTEXT "The field cannot be empty!")"
         echo ""
       else
         echo ""
@@ -103,9 +106,9 @@ if [[ $continue == "yes" ]]; then
     done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Hostname: ")" hostname
+      read -p "$(GETTEXT "Hostname: ")" hostname
       if [[ -z $hostname ]]; then
-        echo "$(gettext "init" "The field cannot be empty!")"
+        echo "$(GETTEXT "The field cannot be empty!")"
         echo ""
       else
         echo ""
@@ -114,25 +117,25 @@ if [[ $continue == "yes" ]]; then
     done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Enable HTTPS? [yes, no]: ")" https_enable
+      read -p "$(GETTEXT "Enable HTTPS? [yes, no]: ")" https_enable
       case $https_enable in
         [Yy]* )
           https_enable=true
           echo ""
-        echo "$(gettext "init" "1) Use a certificate obtained in advance")"
-        echo "$(gettext "init" "2) Get a certificate from Let's Encrypt")"
-        echo "$(gettext "init" "3) Generate a self-signed certificate")"
+        echo "$(GETTEXT "1) Use a certificate obtained in advance")"
+        echo "$(GETTEXT "2) Get a certificate from Let's Encrypt")"
+        echo "$(GETTEXT "3) Generate a self-signed certificate")"
           echo ""
 
           while [[ true ]]; do
-            read -p "$(gettext "init" "Choose the right option: ")" ssl_option;
+            read -p "$(GETTEXT "Choose the right option: ")" ssl_option;
             case $ssl_option in
               1 )
                 while [[ true ]]; do
                   echo ""
-                  read -p "$(gettext "init" "SSL Certificate Path (fullchain): ")" ssl_certificate
+                  read -p "$(GETTEXT "SSL Certificate Path (fullchain): ")" ssl_certificate
                   if [[ -z $ssl_certificate ]]; then
-                    echo "$(gettext "init" "The field cannot be empty!")"
+                    echo "$(GETTEXT "The field cannot be empty!")"
                     echo ""
                   else
                     break
@@ -140,9 +143,9 @@ if [[ $continue == "yes" ]]; then
                 done
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "SSL Trusted Certificate Path (chain): ")" ssl_trusted_certificate
+                  read -p "$(GETTEXT "SSL Trusted Certificate Path (chain): ")" ssl_trusted_certificate
                   if [[ -z $ssl_trusted_certificate ]]; then
-                    echo "$(gettext "init" "The field cannot be empty!")"
+                    echo "$(GETTEXT "The field cannot be empty!")"
                     echo ""
                   else
                     break
@@ -150,9 +153,9 @@ if [[ $continue == "yes" ]]; then
                 done
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "SSL Certificate Key Path: ")" ssl_certificate_key
+                  read -p "$(GETTEXT "SSL Certificate Key Path: ")" ssl_certificate_key
                   if [[ -z $ssl_certificate_key ]]; then
-                    echo "$(gettext "init" "The field cannot be empty!")"
+                    echo "$(GETTEXT "The field cannot be empty!")"
                     echo ""
                   else
                     break
@@ -166,7 +169,7 @@ if [[ $continue == "yes" ]]; then
                 ssl_certificate_key="/etc/letsencrypt/live/{{ domain['name'] }}/privkey.pem"
                 echo ""
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Enable OCSP Must Staple? [yes, no]: ")" ocsp_must_staple
+                  read -p "$(GETTEXT "Enable OCSP Must Staple? [yes, no]: ")" ocsp_must_staple
                   case $ocsp_must_staple in
                     [Yy]* )
                       ocsp_must_staple=true
@@ -177,7 +180,7 @@ if [[ $continue == "yes" ]]; then
                       break
                       ;;
                     * )
-                      echo "$(gettext "init" "Incorrect answer!")"
+                      echo "$(GETTEXT "Incorrect answer!")"
                       ;;
                   esac
                 done
@@ -189,7 +192,7 @@ if [[ $continue == "yes" ]]; then
                 break
                 ;;
               * )
-                echo "$(gettext "init" "Incorrect answer!")"
+                echo "$(GETTEXT "Incorrect answer!")"
                 echo ""
                 ;;
             esac
@@ -203,38 +206,38 @@ if [[ $continue == "yes" ]]; then
           break
           ;;
         * )
-          echo "$(gettext "init" "Incorrect answer!")"
+          echo "$(GETTEXT "Incorrect answer!")"
           echo ""
           ;;
       esac
     done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Install DBMS? [yes, no]: ")" dbms_install
+      read -p "$(GETTEXT "Install DBMS? [yes, no]: ")" dbms_install
       case $dbms_install in
         [Yy]* )
           dbms_install=true
           echo ""
-          echo "$(gettext "init" "Available DBMS:")"
+          echo "$(GETTEXT "Available DBMS:")"
           echo ""
-        echo "$(gettext "init" "1) MariaDB")"
-        echo "$(gettext "init" "2) MySQL")"
-        echo "$(gettext "init" "3) PostgreSQL")"
+        echo "$(GETTEXT "1) MariaDB")"
+        echo "$(GETTEXT "2) MySQL")"
+        echo "$(GETTEXT "3) PostgreSQL")"
           echo ""
 
           while [[ true ]]; do
-            read -p "$(gettext "init" "Choose a suitable DBMS: ")" dbms
+            read -p "$(GETTEXT "Choose a suitable DBMS: ")" dbms
             case $dbms in
               1 )
                 dbms_name="mariadb"
 
                 echo ""
-                read -p "$(gettext "init" "Old password (if exists): ")" dbms_old_password
+                read -p "$(GETTEXT "Old password (if exists): ")" dbms_old_password
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Password: ")" dbms_new_password
+                  read -p "$(GETTEXT "Password: ")" dbms_new_password
                   if [[ -z $dbms_new_password ]]; then
-                    echo "$(gettext "init" "The field cannot be empty!")"
+                    echo "$(GETTEXT "The field cannot be empty!")"
                     echo ""
                   else
                     break
@@ -248,12 +251,12 @@ if [[ $continue == "yes" ]]; then
                 dbms_name="mysql"
 
                 echo ""
-                read -p "$(gettext "init" "Old password (if exists): ")" dbms_old_password
+                read -p "$(GETTEXT "Old password (if exists): ")" dbms_old_password
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Password: ")" dbms_new_password
+                  read -p "$(GETTEXT "Password: ")" dbms_new_password
                   if [[ -z $dbms_new_password ]]; then
-                    echo "$(gettext "init" "The field cannot be empty!")"
+                    echo "$(GETTEXT "The field cannot be empty!")"
                     echo ""
                   else
                     break
@@ -267,13 +270,13 @@ if [[ $continue == "yes" ]]; then
                 dbms_name="postgresql"
 
                 echo ""
-                read -p "$(gettext "init" "Version (default: 12): ")" postgresql_version
+                read -p "$(GETTEXT "Version (default: 12): ")" postgresql_version
                 postgresql_version=${postgresql_version:-12}
 
                 while [[ true ]]; do
-                  read -p "$(gettext "init" "Password: ")" dbms_new_password
+                  read -p "$(GETTEXT "Password: ")" dbms_new_password
                   if [[ -z $dbms_new_password ]]; then
-                    echo "$(gettext "init" "The field cannot be empty!")"
+                    echo "$(GETTEXT "The field cannot be empty!")"
                     echo ""
                   else
                     break
@@ -284,7 +287,7 @@ if [[ $continue == "yes" ]]; then
                 break
                 ;;
               * )
-                echo "$(gettext "init" "Incorrect answer!")"
+                echo "$(GETTEXT "Incorrect answer!")"
                 echo ""
                 ;;
             esac
@@ -292,21 +295,21 @@ if [[ $continue == "yes" ]]; then
 
           if [[ $dbms_name != "postgresql" ]]; then
             while [[ true ]]; do
-              read -p "$(gettext "init" "Install phpMyAdmin? [yes, no]: ")" phpmyadmin_install
+              read -p "$(GETTEXT "Install phpMyAdmin? [yes, no]: ")" phpmyadmin_install
               case $phpmyadmin_install in
                 [Yy]* )
                   phpmyadmin_install=true
 
-                  read -p "$(gettext "init" "Version (default: 5.1.0): ")" phpmyadmin_version
+                  read -p "$(GETTEXT "Version (default: 5.1.0): ")" phpmyadmin_version
                   phpmyadmin_version=${phpmyadmin_version:-5.1.0}
 
                   while [[ true ]]; do
-                    read -p "$(gettext "init" "Protecting phpMyAdmin? [yes, no]: ")" phpmyadmin_protect
+                    read -p "$(GETTEXT "Protecting phpMyAdmin? [yes, no]: ")" phpmyadmin_protect
                     case $phpmyadmin_protect in
                       [Yy]* )
                         phpmyadmin_protect=true
-                        read -p "$(gettext "init" "Login: ")" htpasswd_username
-                        read -p "$(gettext "init" "Password: ")" htpasswd_password
+                        read -p "$(GETTEXT "Login: ")" htpasswd_username
+                        read -p "$(GETTEXT "Password: ")" htpasswd_password
                         echo ""
                         break
                         ;;
@@ -316,7 +319,7 @@ if [[ $continue == "yes" ]]; then
                         break
                         ;;
                       * )
-                        echo "$(gettext "init" "Incorrect answer!")"
+                        echo "$(GETTEXT "Incorrect answer!")"
                         echo ""
                         ;;
                     esac
@@ -330,7 +333,7 @@ if [[ $continue == "yes" ]]; then
                   break
                   ;;
                 * )
-                  echo "$(gettext "init" "Incorrect answer!")"
+                  echo "$(GETTEXT "Incorrect answer!")"
                   echo ""
                   ;;
               esac
@@ -339,18 +342,18 @@ if [[ $continue == "yes" ]]; then
 
           if [[ $dbms_name == "postgresql" ]]; then
             while [[ true ]]; do
-              read -p "$(gettext "init" "Install pgAdmin? [yes, no]: ")" pgadmin_install
+              read -p "$(GETTEXT "Install pgAdmin? [yes, no]: ")" pgadmin_install
               case $pgadmin_install in
                 [Yy]* )
                   pgadmin_install=true
 
                   while [[ true ]]; do
-                    read -p "$(gettext "init" "Protecting pgAdmin? [yes, no]: ")" pgadmin_protect
+                    read -p "$(GETTEXT "Protecting pgAdmin? [yes, no]: ")" pgadmin_protect
                     case $pgadmin_protect in
                       [Yy]* )
                         pgadmin_protect=true
-                        read -p "$(gettext "init" "Login: ")" htpasswd_username
-                        read -p "$(gettext "init" "Password: ")" htpasswd_password
+                        read -p "$(GETTEXT "Login: ")" htpasswd_username
+                        read -p "$(GETTEXT "Password: ")" htpasswd_password
                         echo ""
                         break
                         ;;
@@ -360,7 +363,7 @@ if [[ $continue == "yes" ]]; then
                         break
                         ;;
                       * )
-                        echo "$(gettext "init" "Incorrect answer!")"
+                        echo "$(GETTEXT "Incorrect answer!")"
                         echo ""
                         ;;
                     esac
@@ -373,7 +376,7 @@ if [[ $continue == "yes" ]]; then
                   break
                   ;;
                 * )
-                  echo "$(gettext "init" "Incorrect answer!")"
+                  echo "$(GETTEXT "Incorrect answer!")"
                   echo ""
                   ;;
               esac
@@ -388,7 +391,7 @@ if [[ $continue == "yes" ]]; then
           break
           ;;
         * )
-          echo "$(gettext "init" "Incorrect answer!")"
+          echo "$(GETTEXT "Incorrect answer!")"
           echo ""
           ;;
       esac
@@ -408,21 +411,22 @@ if [[ $continue == "yes" ]]; then
     #            break
     #            ;;
     #        * )
-    #            echo -e "Incorrect answer!\n"
+    #            echo "$(GETTEXT "Incorrect answer!")"
+    #            echo ""
     #            ;;
     #    esac
     #done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Install knockd? [yes, no]: ")" knockd_install
+      read -p "$(GETTEXT "Install knockd? [yes, no]: ")" knockd_install
       case $knockd_install in
         [Yy]* )
           knockd_install=true
-          read -p "$(gettext "init" "Port sequence (default: 500,1001,456): ")" port_sequence
+          read -p "$(GETTEXT "Port sequence (default: 500,1001,456): ")" port_sequence
           port_sequence=${port_sequence:-500,1001,456}
-          read -p "$(gettext "init" "Sequence timeout (default: 15): ")" sequence_timeout
+          read -p "$(GETTEXT "Sequence timeout (default: 15): ")" sequence_timeout
           sequence_timeout=${sequence_timeout:-15}
-          read -p "$(gettext "init" "Command timeout (default: 10): ")" command_timeout
+          read -p "$(GETTEXT "Command timeout (default: 10): ")" command_timeout
           command_timeout=${command_timeout:-10}
           echo ""
           break
@@ -433,20 +437,20 @@ if [[ $continue == "yes" ]]; then
           break
           ;;
         * )
-          echo "$(gettext "init" "Incorrect answer!")"
+          echo "$(GETTEXT "Incorrect answer!")"
           echo ""
           ;;
       esac
     done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Configure sftp? [yes, no]: ")" sftp_configure
+      read -p "$(GETTEXT "Configure sftp? [yes, no]: ")" sftp_configure
       case $sftp_configure in
         [Yy]* )
           sftp_configure=true
-          read -p "$(gettext "init" "Root directory: ")" sftp_root
-          read -p "$(gettext "init" "Login: ")" sftp_user
-          read -p "$(gettext "init" "Password: ")" sftp_password
+          read -p "$(GETTEXT "Root directory: ")" sftp_root
+          read -p "$(GETTEXT "Login: ")" sftp_user
+          read -p "$(GETTEXT "Password: ")" sftp_password
           break
           echo ""
           ;;
@@ -456,25 +460,26 @@ if [[ $continue == "yes" ]]; then
           break
           ;;
         * )
-          echo "$(gettext "init" "Incorrect answer!")"
+          echo "$(GETTEXT "Incorrect answer!")"
           echo ""
           ;;
       esac
     done
 
     while [[ true ]]; do
-      read -p "$(gettext "init" "Install a firewall? [yes, no]: ")" firewall_install
+      read -p "$(GETTEXT "Install a firewall? [yes, no]: ")" firewall_install
       case $firewall_install in
         [Yy]* )
           firewall_install="true"
           echo ""
-          echo "$(gettext "init" "Available firewalls:")"
+          echo "$(GETTEXT "Available firewalls:")"
           echo ""
-        echo "$(gettext "init" "1) UFW")"
+        echo "$(GETTEXT "1) UFW")"
+          #echo "$(GETTEXT "2) Firewalld")"
           echo ""
 
           while [[ true ]]; do
-            read -p "$(gettext "init" "Choose a suitable firewall: ")" firewall
+            read -p "$(GETTEXT "Choose a suitable firewall: ")" firewall
             case $firewall in
               1 )
                 firewall_name="ufw"
@@ -487,7 +492,7 @@ if [[ $continue == "yes" ]]; then
                 #    break
                 #    ;;
               * )
-                echo "$(gettext "init" "Incorrect answer!")"
+                echo "$(GETTEXT "Incorrect answer!")"
                 echo ""
                 ;;
             esac
@@ -500,7 +505,7 @@ if [[ $continue == "yes" ]]; then
           break
           ;;
         * )
-          echo "$(gettext "init" "Incorrect answer!")"
+          echo "$(GETTEXT "Incorrect answer!")"
           echo ""
           ;;
       esac
@@ -575,47 +580,58 @@ firewall:
   name: "$firewall_name"
 EOF
 
-    echo "$(gettext "init" "Enter your account password on the destination host to copy the public key to it!")"
+    echo "$(GETTEXT "Enter your account password on the destination host to copy the public key to it!")"
 
     ssh-copy-id -p "$ansible_port" "$ansible_user"@"$server_ip"
 
-    echo "$(gettext "init" "Host $server_ip ($domain_name) successfully configured!")"
+    echo "$(GETTEXT "Host $server_ip ($domain_name) successfully configured!")"
     echo " "
     (( count++ ))
   done
 
   echo -e "\n[debian:vars]\nansible_python_interpreter=/usr/bin/python3" >> hosts.ini
   echo ""
-  echo "$(gettext "init" "Configuration of global parameters")"
+  echo "$(GETTEXT "Configuration of global parameters")"
   echo ""
-  echo "$(gettext "init" "Web-Server Ports")"
+
+  # Web-Server Ports
+  echo "$(GETTEXT "Web-Server ports")"
   echo ""
-  read -p "$(gettext "init" "Apache port: ")" apache_port
+  while [[ true ]]; do
+    read -p "$(GETTEXT "Apache port: ")" apache_port
+    if [[ -z $apache_port ]]; then
+      echo "$(GETTEXT "The field cannot be empty!")"
+      echo ""
+    else
+      break
+    fi
+  done
   echo ""
 
   # PHP Configuration
-  echo "$(gettext "init" "PHP configuration")"
+  echo "$(GETTEXT "PHP configuration")"
   echo ""
-  read -p "$(gettext "init" "Version (default: 8.0): ")" php_version
+  read -p "$(GETTEXT "Version (default: 8.0): ")" php_version
   php_version=${php_version:-8.0}
   echo ""
 
   # Nginx Protection
-  echo "$(gettext "init" "Nginx protection")"
+  echo "$(GETTEXT "Nginx protection")"
   echo ""
-  read -p "$(gettext "init" "Client body timeout (default: 5): ")" client_body_timeout
+  read -p "$(GETTEXT "Client body timeout (default: 5): ")" client_body_timeout
   client_body_timeout=${client_body_timeout:-5}
-  read -p "$(gettext "init" "Client header timeout (default: 5): ")" client_header_timeout
+  read -p "$(GETTEXT "Client header timeout (default: 5): ")" client_header_timeout
   client_header_timeout=${client_header_timeout:-5}
   echo ""
 
   # SSH Protection
-  echo "$(gettext "init" "SSH Protection")"
+  echo "$(GETTEXT "SSH protection")"
+  echo ""
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Port: ")" ssh_port
+    read -p "$(GETTEXT "Port: ")" ssh_port
     if [[ -z $ssh_port ]]; then
-      echo "$(gettext "init" "The field cannot be empty!")"
+      echo "$(GETTEXT "The field cannot be empty!")"
       echo ""
     else
       break
@@ -623,9 +639,9 @@ EOF
   done
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Login: ")" ssh_username
+    read -p "$(GETTEXT "Login: ")" ssh_username
     if [[ -z $ssh_username ]]; then
-      echo "$(gettext "init" "The field cannot be empty!")"
+      echo "$(GETTEXT "The field cannot be empty!")"
       echo ""
     else
       break
@@ -633,9 +649,9 @@ EOF
   done
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "Password: ")" ssh_password
+    read -p "$(GETTEXT "Password: ")" ssh_password
     if [[ -z $ssh_password ]]; then
-      echo "$(gettext "init" "The field cannot be empty!")"
+      echo "$(GETTEXT "The field cannot be empty!")"
       echo ""
     else
       break
@@ -665,7 +681,7 @@ ssh:
 EOF
 
   while [[ true ]]; do
-    read -p "$(gettext "init" "To start deploying? [yes, no]: ")" deploy
+    read -p "$(GETTEXT "To start deploying? [yes, no]: ")" deploy
     case $deploy in
       [Yy]* )
         ansible-playbook playbook.yml
@@ -673,15 +689,15 @@ EOF
         ;;
       [Nn]* )
         echo ""
-        echo "$(gettext "init" "The deployment was aborted. To start the process, run ansible-playbook playbook.yml")"
+        echo "$(GETTEXT "The deployment was aborted. To start the process, run ansible-playbook playbook.yml")"
         break
         ;;
       * )
-        echo "$(gettext "init" "Incorrect answer!")"
+        echo "$(GETTEXT "Incorrect answer!")"
         ;;
     esac
   done
 
 else
-  echo "$(gettext "init" "Execution interrupted. To restart, run ./init.sh")"
+  echo "$(GETTEXT "Execution interrupted. To restart, run ./init.sh")"
 fi
