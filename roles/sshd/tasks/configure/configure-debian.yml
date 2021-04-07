@@ -4,18 +4,21 @@
     password: "{{ ssh['credentials']['password'] | password_hash('sha512') }}"
     group: users
     groups: sudo
+  when: ssh['protect'] == "true"
 
 - name: Changing the port in sshd_config
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: ^#?#Port
     line: Port {{ ssh['port'] }}
+  when: ssh['protect'] == "true"
 
 - name: Disabling root login
   lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: ^#?#PermitRootLogin
     line: PermitRootLogin no
+  when: ssh['protect'] == "true"
 
 - name: Checking the existence of the AllowUsers directive
   command: grep "AllowUsers" /etc/ssh/sshd_config
@@ -28,12 +31,12 @@
     dest: /etc/ssh/sshd_config
     regexp: ^#?AllowUsers
     line: AllowUsers {{ ssh['credentials']['user'] }}
-  when: check_allowusers.rc == "0"
+  when: check_allowusers.rc == "0" and ssh['protect'] == "true"
 
 - name: Adding the AllowUsers directive
   blockinfile:
     path: /etc/ssh/sshd_config
     block: |
       AllowUsers {{ ssh['credentials']['user'] }}
-  when: check_allowusers.rc != "0"
+  when: check_allowusers.rc != "0" and ssh['protect'] == "true"
   notify: Restart SSH (Debian)

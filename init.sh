@@ -397,7 +397,7 @@ if [[ $continue == "yes" ]]; then
       esac
     done
 
-    #while [[ true ]]; do
+    # while [[ true ]]; do
     #    read -p "Install fail2ban? [yes, no]: " fail2ban_install
     #    case $fail2ban_install in
     #        [Yy]* )
@@ -415,7 +415,7 @@ if [[ $continue == "yes" ]]; then
     #            echo ""
     #            ;;
     #    esac
-    #done
+    # done
 
     while [[ true ]]; do
       read -p "$(GETTEXT "Install knockd? [yes, no]: ")" knockd_install
@@ -475,7 +475,7 @@ if [[ $continue == "yes" ]]; then
           echo "$(GETTEXT "Available firewalls:")"
           echo ""
         echo "$(GETTEXT "1) UFW")"
-          #echo "$(GETTEXT "2) Firewalld")"
+          # echo "$(GETTEXT "2) Firewalld")"
           echo ""
 
           while [[ true ]]; do
@@ -486,11 +486,11 @@ if [[ $continue == "yes" ]]; then
                 echo ""
                 break
                 ;;
-                #2 )
-                #    firewall_name="firewalld"
-                #    echo ""
-                #    break
-                #    ;;
+                # 2 )
+                # firewall_name="firewalld"
+                # echo ""
+                # break
+                # ;;
               * )
                 echo "$(GETTEXT "Incorrect answer!")"
                 echo ""
@@ -501,6 +501,56 @@ if [[ $continue == "yes" ]]; then
           ;;
         [Nn]* )
           firewall_install="false"
+          echo ""
+          break
+          ;;
+        * )
+          echo "$(GETTEXT "Incorrect answer!")"
+          echo ""
+          ;;
+      esac
+    done
+
+    while [[ true ]]; do
+      read -p "$(GETTEXT "Protect SSH? [yes, no]: ")" ssh_protection
+      case $ssh_protection in
+        [Yy]* )
+          ssh_protection=true
+          echo ""
+          while [[ true ]]; do
+            read -p "$(GETTEXT "Port: ")" ssh_port
+            if [[ -z $ssh_port ]]; then
+              echo "$(GETTEXT "The field cannot be empty!")"
+              echo ""
+            else
+              break
+            fi
+          done
+
+          while [[ true ]]; do
+            read -p "$(GETTEXT "Login: ")" ssh_username
+            if [[ -z $ssh_username ]]; then
+              echo "$(GETTEXT "The field cannot be empty!")"
+              echo ""
+            else
+              break
+            fi
+          done
+
+          while [[ true ]]; do
+            read -p "$(GETTEXT "Password: ")" ssh_password
+            if [[ -z $ssh_password ]]; then
+              echo "$(GETTEXT "The field cannot be empty!")"
+              echo ""
+            else
+              break
+            fi
+          done
+          echo ""
+          break
+          ;;
+        [Nn]* )
+          ssh_protection=false
           echo ""
           break
           ;;
@@ -578,6 +628,13 @@ sftp:
 firewall:
   install: "$firewall_install"
   name: "$firewall_name"
+
+ssh:
+  protect: "$ssh_protection"
+  port: "$ssh_port"
+  credentials:
+    user: "$ssh_username"
+    password: "$ssh_password"
 EOF
 
     echo "$(GETTEXT "Enter your account password on the destination host to copy the public key to it!")"
@@ -624,41 +681,6 @@ EOF
   client_header_timeout=${client_header_timeout:-5}
   echo ""
 
-  # SSH Protection
-  echo "$(GETTEXT "SSH protection")"
-  echo ""
-
-  while [[ true ]]; do
-    read -p "$(GETTEXT "Port: ")" ssh_port
-    if [[ -z $ssh_port ]]; then
-      echo "$(GETTEXT "The field cannot be empty!")"
-      echo ""
-    else
-      break
-    fi
-  done
-
-  while [[ true ]]; do
-    read -p "$(GETTEXT "Login: ")" ssh_username
-    if [[ -z $ssh_username ]]; then
-      echo "$(GETTEXT "The field cannot be empty!")"
-      echo ""
-    else
-      break
-    fi
-  done
-
-  while [[ true ]]; do
-    read -p "$(GETTEXT "Password: ")" ssh_password
-    if [[ -z $ssh_password ]]; then
-      echo "$(GETTEXT "The field cannot be empty!")"
-      echo ""
-    else
-      break
-    fi
-  done
-  echo ""
-
   cat <<EOF> group_vars/vars.yml
 ---
 apache:
@@ -672,12 +694,6 @@ nginx:
 
 php:
   version: "$php_version"
-
-ssh:
-  port: "$ssh_port"
-  credentials:
-    user: "$ssh_username"
-    password: "$ssh_password"
 EOF
 
   while [[ true ]]; do
@@ -694,6 +710,7 @@ EOF
         ;;
       * )
         echo "$(GETTEXT "Incorrect answer!")"
+        echo ""
         ;;
     esac
   done
