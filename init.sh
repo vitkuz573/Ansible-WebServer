@@ -637,9 +637,9 @@ ssh:
     password: "$ssh_password"
 EOF
 
-    sshpass -p $ansible_password ssh-copy-id -p "$ansible_port" "$ansible_user"@"$server_ip"
+    sshpass -p "$ansible_password" ssh-copy-id -p "$ansible_port" "$ansible_user"@"$server_ip"
 
-    echo "$(GETTEXT "Host")" $server_ip "("$domain_name")" "$(GETTEXT "successfully configured!")"
+    echo "$(GETTEXT "Host")" "$server_ip" "("$domain_name")" "$(GETTEXT "successfully configured!")"
     echo " "
     (( count++ ))
   done

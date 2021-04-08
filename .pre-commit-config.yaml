@@ -9,13 +9,13 @@ repos:
   - id: fix-byte-order-marker
 
 - repo: https://github.com/ansible/ansible-lint.git
-  rev: v5.0.3a0
+  rev: v5.0.7
   hooks:
   - id: ansible-lint
     files: \.(yaml|yml)$
 
 - repo: https://github.com/adrienverge/yamllint.git
-  rev: v1.26.0
+  rev: v1.26.1
   hooks:
   - id: yamllint
     files: \.(yaml|yml)$
