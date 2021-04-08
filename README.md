@@ -12,12 +12,12 @@ Playbook for fully automated deployment of one or more web servers (Nginx + Apac
 
 ## Usage
 
-1) Install Ansible:
+1) Install Ansible and other required packages:
 
    Debian:
 
    ```bash
-   sudo apt install ansible
+   sudo apt install ansible sshpass
    ```
 
 2) Install the language files:
