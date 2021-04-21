@@ -1,5 +1,6 @@
 #!/bin/bash
 
+clear
 shopt -s expand_aliases
 alias GETTEXT='gettext "init"'
 
@@ -29,26 +30,13 @@ if [[ $continue == "yes" ]]; then
   if [[ -e hosts.ini ]]; then
     rm hosts.ini
   fi
-  echo ""
 
-  while [[ true ]]; do
-    read -p "$(GETTEXT "Create an SSH key? NOTE: Only accept if the key has not been created yet! [yes, no]: ")" generate_ssh_key
-    case $generate_ssh_key in
-      [Yy]* )
-        ssh-keygen
-        break
-        ;;
-      [Nn]* )
-        echo "$(GETTEXT "You refused to create a key!")"
-        echo ""
-        break
-        ;;
-      * )
-        echo "$(GETTEXT "Incorrect answer!")"
-        echo ""
-        ;;
-    esac
-  done
+  if [[ ! -f ~/.ssh/id_rsa && ! -f ~/.ssh/id_rsa.pub ]]; then
+    echo ""
+    read -p "$(GETTEXT "Enter the password for the key: ")" key_password
+    ssh-keygen -t rsa -P "$key_password" -f ~/.ssh/id_rsa -q
+  fi
+  echo ""
 
   read -p "$(GETTEXT "Enter the number of hosts: ")" hosts_number
 
@@ -226,7 +214,7 @@ if [[ $continue == "yes" ]]; then
           echo ""
 
           while [[ true ]]; do
-            read -p "$(GETTEXT "Choose a suitable DBMS: ")" dbms
+            read -p "$(GETTEXT "Choose the right option: ")" dbms
             case $dbms in
               1 )
                 dbms_name="mariadb"
@@ -479,7 +467,7 @@ if [[ $continue == "yes" ]]; then
           echo ""
 
           while [[ true ]]; do
-            read -p "$(GETTEXT "Choose a suitable firewall: ")" firewall
+            read -p "$(GETTEXT "Choose the right option: ")" firewall
             case $firewall in
               1 )
                 firewall_name="ufw"
